@@ -1,0 +1,5 @@
+coverage
+jyquickhelper
+pyquickhelper>=1.8
+pythonnet
+wheel
