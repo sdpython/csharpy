@@ -7,6 +7,7 @@
 .metadata
 bin/
 tmp/
+.vs/
 _virtualenv/
 *.tmp
 *.bak
@@ -222,6 +223,8 @@ pip-log.txt
 # py* packages
 temp_*
 out_*
+src/csharpy/binaries/*.dll
+src/csharpy/binaries/*.so
 */sphinxdoc/source/index_*
 */sphinxdoc/source/readme.*
 */sphinxdoc/source/LICENSE.txt
@@ -264,5 +267,4 @@ _doc/sphinxdoc/source/phdoc_static2/style_notebook_snippet.css
 _doc/sphinxdoc/source/phdoc_static/style_notebook_snippet.css
 _doc/sphinxdoc/source/gallery1/*
 _doc/sphinxdoc/source/gallery2/*
-
 _doc/sphinxdoc/source/HISTORY.rst

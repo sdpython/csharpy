@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
+import shutil
 from distutils.core import setup
 from setuptools import find_packages
 
@@ -38,7 +39,7 @@ CLASSIFIERS = [
 
 packages = find_packages('src', exclude='src')
 package_dir = {k: "src/" + k.replace(".", "/") for k in packages}
-package_data = {project_var_name + ".subproject": ["*.tohelp"]}
+package_data = {project_var_name + ".binaries": ["*.dll", "*.so"]}
 
 ############
 # functions
@@ -138,7 +139,37 @@ if not r:
         process_standard_options_for_setup_help(sys.argv)
     from pyquickhelper.pycode import clean_readme
     long_description = clean_readme(long_description)
+    
+    if "build_ext" in sys.argv:
+        # We build a dotnet application.
+        if '--inplace' not in sys.argv:
+            raise Exception("Option --inplace must be set up.")
+        from pyquickhelper.loghelper import run_cmd
+        env = os.environ.get('DOTNET_CLI_TELEMETRY_OPTOUT', None)
+        if env != '1':
+            raise ValueError("Environment variable 'DOTNET_CLI_TELEMETRY_OPTOUT' should be set to 1.")
+        cmds = ['dotnet restore', 'dotnet build -c Release']
+        folder = os.path.abspath("cscode")
+        for cmd in cmds:
+            _, err = run_cmd(cmd, fLOG=print, wait=True, change_path=folder)
+            if len(err) > 0:
+                raise RuntimeError("Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}".format(cmd, err))
+        
+        # Copy files.
+        from pyquickhelper.filehelper import explore_folder_iterfile
+        dest = os.path.join('src', 'csharpy', 'binaries')
+        copied = 0
+        for name in explore_folder_iterfile(folder, pattern='.*[.]dll$'):
+            full = os.path.join(folder, name)
+            if 'Release' not in full:
+                continue
+            copied += 1
+            print("[copy] '{0}'".format(name))
+            shutil.copy(name, dest)
+        if copied == 0:
+            raise RuntimeError("No found binaries in '{0}'".format(folder))
 
+    # Regular setup.
     setup(
         name=project_var_name,
         version='%s%s' % (sversion, subversion),

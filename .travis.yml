@@ -1,8 +1,25 @@
 dist: trusty
 language: python
+mono: none
+dotnet: 2.0.0
+script:
+  - dotnet restore
+  - dotnet build
+
 python:
     - "3.6"
+addons:
+-  apt:
+   - sources:
+      - sourceline: deb http://download.mono-project.com/repo/ubuntu trusty main
+        key_url: http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA6A19B38D3D831EF
+   - packages:
+      - mono-complete
+      - ca-certificates-mono
+    
 install: 
     - pip install -r requirements.txt
+before:
+    - python setup.py build_ext --inplace
 script:
     - python setup.py unittests

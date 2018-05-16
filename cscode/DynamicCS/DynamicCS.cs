@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.Reflection;
@@ -24,13 +21,12 @@ namespace DynamicCS
 
         public static MethodInfo CreateFunction(string functionName, string code, string[] dependencies)
         {
-            CSharpCodeProvider provider = new CSharpCodeProvider();
-            CompilerParameters parameters = new CompilerParameters();
+            var provider = new CSharpCodeProvider();
+            var parameters = new CompilerParameters();
 
             if (dependencies != null) {
                 foreach (var d in dependencies)
-                    parameters.Refer
-                encedAssemblies.Add(d);
+                    parameters.ReferencedAssemblies.Add(d);
             }
 
             parameters.GenerateInMemory = true;
@@ -38,7 +34,7 @@ namespace DynamicCS
 
             code = string.Format(embedCode, "{", "}", functionName, code);
 
-            CompilerResults results = provider.CompileAssemblyFromSource(parameters, code);
+            var results = provider.CompileAssemblyFromSource(parameters, code);
             if (results.Errors.HasErrors) {
                 StringBuilder sb = new StringBuilder();
                 foreach (CompilerError error in results.Errors) {

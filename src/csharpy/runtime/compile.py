@@ -2,7 +2,7 @@
 @file
 @brief Dynamically compile a C# function.
 """
-import clr
+from ..binaries import AddReference
 
 
 def create_cs_function(name, code, dependencies = None):
@@ -15,7 +15,7 @@ def create_cs_function(name, code, dependencies = None):
     @param      dependencies    dependencies (*System*, ...)
     @return                     :epkg:`Python` wrapper on the compiled :epkg:`C#`
     """
-    clr.AddReference("DynamicCS")
+    AddReference("DynamicCS")
     from DynamicCS import DynamicFunction
     from System import String
     from System.Collections.Generic import List
@@ -40,7 +40,7 @@ def run_cs_function(func, params):
     @param      params          parameters
     @return                     results of the :epkg:`C#` function
     """
-    clr.AddReference("DynamicCS")
+    AddReference("DynamicCS")
     from DynamicCS import DynamicFunction
     from System.Collections.Generic import List
     from System import Object

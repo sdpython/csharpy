@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.4
+      - image: circleci/python:3.6.5
     
     working_directory: ~/repo
     
@@ -13,6 +13,19 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "requirements.txt" }}
           - v1-dependencies-
+
+      - run:
+          name: Install mono
+          command: |
+                    sudo apt-get update
+                    sudo apt-get install mono-complete ca-certificates-mono
+                    sudo mono tools/nuget/nuget.exe update -self
+                    
+      - run:
+          name: Install nuget
+          command: |
+                    wget --no-check-certificate https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+                    sudo mono packages/nuget.exe restore
 
       - run:
           name: Install pandoc
@@ -56,6 +69,12 @@ jobs:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
         
+      - run:
+          name: build extension
+          command: |
+            . venv/bin/activate
+            python setup.py build_ext --inplace
+
       - run:
           name: run tests
           command: |
