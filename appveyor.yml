@@ -29,9 +29,6 @@ before_build:
   # Display minimal restore text
   - cmd: dotnet restore ./src/src.csproj --verbosity m
 
-before_script:
-  - "%PYTHON%\\python -u setup.py build_ext --inplace"
-
 build_script:
   # cmd: dotnet publish ./src/src.csproj
   - "%PYTHON%\\python -u setup.py build_ext --inplace"

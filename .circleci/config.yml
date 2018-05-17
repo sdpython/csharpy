@@ -18,14 +18,11 @@ jobs:
           name: Install mono
           command: |
                     sudo apt-get update
-                    sudo apt-get install mono-complete ca-certificates-mono
-                    sudo mono tools/nuget/nuget.exe update -self
-                    
-      - run:
-          name: Install nuget
-          command: |
-                    wget --no-check-certificate https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-                    sudo mono packages/nuget.exe restore
+                    sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
+                    sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
+                    sudo apt-get update
+                    sudo apt-get install dotnet-dev
+                    dotnet restore
 
       - run:
           name: Install pandoc
