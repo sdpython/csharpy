@@ -8,8 +8,8 @@ README
     :target: https://travis-ci.org/sdpython/csharpy
     :alt: Build status
 
-.. image:: https://ci.appveyor.com/api/projects/status/8yv4brsckay4374a?svg=true
-    :target: https://ci.appveyor.com/project/sdpython/python3-module-template
+.. image:: https://ci.appveyor.com/api/projects/status/ldrgt6sxeyfwtoo2?svg=true
+    :target: https://ci.appveyor.com/project/sdpython/csharpy
     :alt: Build Status Windows
 
 .. image:: https://circleci.com/gh/sdpython/csharpy/tree/master.svg?style=svg
@@ -50,3 +50,14 @@ Introduction
 ------------
 
 Helpers to play with C# and Python.
+It can easily compile and wrap a C# function
+into Python:
+
+::
+
+    from csharpy.runtime import create_cs_function
+    code = "public static double SquareX(double x) {return x*x ; }"
+    SquareX = create_cs_function("SquareX", code)
+    print(SquareX(4))
+
+The module relies in `pythonnet <https://github.com/pythonnet/pythonnet>`_.

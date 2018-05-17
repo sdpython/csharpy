@@ -8,8 +8,8 @@ python3_module_template
         :target: https://travis-ci.org/sdpython/python3_module_template
         :alt: Build status
 
-    .. image:: https://ci.appveyor.com/api/projects/status/8yv4brsckay4374a?svg=true
-        :target: https://ci.appveyor.com/project/sdpython/python3-module-template
+    .. image:: https://ci.appveyor.com/api/projects/status/ldrgt6sxeyfwtoo2?svg=true
+        :target: https://ci.appveyor.com/project/sdpython/csharpy
         :alt: Build Status Windows
 
     .. image:: https://circleci.com/gh/sdpython/python3_module_template/tree/master.svg?style=svg
@@ -51,23 +51,18 @@ python3_module_template
 What is it?
 -----------
 
-This project is a template to start a new project. See :ref:`l-README`.
-
-See some examples:
-
-* **Example**
-    * example:  :class:`myclass <python3_module_template.subproject.myexample.myclass>`
-
-Installation
-------------
+Helpers to play with C# and Python.
+It can easily compile and wrap a C# function
+into Python:
 
 ::
 
-    pip install python3_module_template
+    from csharpy.runtime import create_cs_function
+    code = "public static double SquareX(double x) {return x*x ; }"
+    SquareX = create_cs_function("SquareX", code)
+    print(SquareX(4))
 
-To avoid the dependencies::
-
-    pip install python3_module_template --no-deps
+The module relies in `pythonnet <https://github.com/pythonnet/pythonnet>`_.
 
 Documentation
 -------------
@@ -79,8 +74,6 @@ Documentation
     i_ex
     i_faq
     i_nb
-    issues_todoextlist
-    completed_todoextlist
 
 Galleries
 ---------
@@ -88,8 +81,6 @@ Galleries
 .. toctree::
     :maxdepth: 2
 
-    gallery1/index
-    gallery2/index
     all_notebooks
     blog/blogindex
 

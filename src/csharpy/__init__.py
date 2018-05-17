@@ -49,3 +49,13 @@ def _setup_hook(use_print=False):
     # any others things before unit tests are started
     if use_print:
         print("Success: _setup_hook")
+
+
+def load_ipython_extension(ip):
+    """
+    to allow the call ``%load_ext csharpy``
+
+    @param      ip      from ``get_ipython()``
+    """
+    from .notebook import register_magics
+    register_magics(ip)

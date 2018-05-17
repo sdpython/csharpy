@@ -119,13 +119,16 @@ if is_local():
     from pyquickhelper.pycode import process_standard_options_for_setup
     r = process_standard_options_for_setup(
         sys.argv, __file__, project_var_name,
-        extra_ext=["tohelp"],
+        extra_ext=["cs"],
         add_htmlhelp=sys.platform.startswith("win"),
         coverage_options=dict(omit=["*exclude*.py"]),
         github_owner=project_owner,
         fLOG=logging_function, covtoken=(
-            "ce1fc48d-  ", "'_UT_36_std' in outfile"),
-        layout=["rst", "pdf", "epub", "html"])
+            "80f56646-c804-4fb7-8476-2211bb9108d1", "'_UT_36_std' in outfile"),
+        requirements=["pyquickhelper", "jyquickhelper"],
+        additional_notebook_path=["pyquickhelper", "jyquickhelper"],
+        additional_local_path=["pyquickhelper", "jyquickhelper"],
+        copy_add_ext=["dll", 'so'], layout=["pdf", "html"])
     if not r and not ({"bdist_msi", "sdist",
                        "bdist_wheel", "publish", "publish_doc", "register",
                        "upload_docs", "bdist_wininst", "build_ext"} & set(sys.argv)):
