@@ -8,6 +8,8 @@ import sys
 import os
 import unittest
 import warnings
+from contextlib import redirect_stdout, redirect_stderr
+from io import StringIO
 import numpy
 import clr
 from pyquickhelper.pycode import ExtTestCase
@@ -51,22 +53,22 @@ class TestDynamicCS(ExtTestCase):
 
     def test_pythonnet_array(self):
         clr.AddReference("System.Collections")
-        from System import IntPtr, Array, Double
-        from System.Runtime.InteropServices import Marshal
+        from System import IntPtr, Array, Double, Int64
         self.assertTrue(Double is not None)
         self.assertTrue(Array is not None)
         self.assertTrue(IntPtr is not None)
 
         array = numpy.ones((2, 2), dtype=int)
         ar = array.__array_interface__['data'][0]
-        ar2 = Array[int]([0, 0, 0, 0] * 2)
+        ar2 = Array[Int64]([0, 0, 0, 0] * 2)
         self.assertEqual(str(type(ar)), "<class 'int'>")
-        self.assertEqual(str(type(ar2)), "<class 'System.Int32[]'>")
+        self.assertEqual(str(type(ar2)), "<class 'System.Int64[]'>")
         self.assertEqual(list(ar2), [0, 0, 0, 0, 0, 0, 0, 0])
-        try:
-            Marshal.Copy(ar, ar2, 0, len(ar2))
-        except TypeError as e:
-            warnings.warn(str(e))
+        # from System.Runtime.InteropServices import Marshal
+        # try:
+        #     Marshal.Copy(ar, ar2, 0, len(ar2))
+        # except TypeError as e:
+        #     warnings.warn(str(e))
             
     def test_create_cs_function(self):
         code = "public static double SquareX(double x) {return x*x ; }"
@@ -78,34 +80,35 @@ class TestDynamicCS(ExtTestCase):
         cm = CsMagics()
         code = "public static double SquareX(double x) {return x*x ; }"
         code = """
-                public static long[] cs_qsortl(long[] li)
+                public static int[] cs_qsortl(int[] li)
                 {
                     if (li.Length == 0)
-                    {
                         return null;
-                    }
                     else
                     {
                         var pivot = li[0];
                         var lesser = cs_qsortl(li.Skip(1).Where(x => x < pivot).ToArray());
                         var greater = cs_qsortl(li.Skip(1).Where(x => x >= pivot).ToArray());
-                        long[] res = new long[li.Length];
+                        var res = new int[li.Length];
 
-                        if (lesser != null && lesser.Length > 0) Array.Copy(lesser, 0, res, 0, lesser.Length);
+                        if (lesser != null && lesser.Length > 0)
+                            Array.Copy(lesser, 0, res, 0, lesser.Length);
                         int nb = lesser == null ? 0 : lesser.Length;
                         res[nb] = pivot;
-                        if (greater != null && greater.Length > 0) Array.Copy(greater, 0, res, nb + 1, greater.Length);
+                        if (greater != null && greater.Length > 0)
+                            Array.Copy(greater, 0, res, nb + 1, greater.Length);
 
                         return res;
                     }
                 }
 
-                public static long[] cs_qsort(string lis)
+                public static int[] cs_qsort(string lis)
                 {
-                    return cs_qsortl(lis.Split(';').Select(c=>long.Parse(c)).ToArray()) ;
+                    return cs_qsortl(lis.Split(';').Select(c=>int.Parse(c)).ToArray()) ;
                 }
                 """
-        f = cm.CS("cs_qsort", code)
+        f = cm.CS("cs_qsort -i System -i System.Collections -i System.Linq -d System.Core",
+                  code)
         if f is None:
             raise Exception(code)
         li = [2, 4, 5, 3, 1]
@@ -113,6 +116,29 @@ class TestDynamicCS(ExtTestCase):
         x = f(lis)
         self.assertNotEqual(x, 4)
         self.assertTrue(x is not None)        
+        
+        f = cm.CS("cs_qsort -i System.Collections -i System.Linq",
+                  "-i System -d System.Core\n" + code)
+        if f is None:
+            raise Exception(code)
+        li = [2, 4, 5, 3, 1]
+        lis = ";".join(str(i) for i in li)
+        x = f(lis)
+        self.assertNotEqual(x, 4)
+        self.assertTrue(x is not None)        
+        
+        out = StringIO()
+        err = StringIO()
+        with redirect_stdout(out):
+            with redirect_stderr(err):
+                f = cm.CS("cs_qsort -c", code)
+                self.assertEmpty(f)
+        exp = "usage: CS [-h] [-i [IDEP [IDEP ...]]] [-d [DEP [DEP ...]]] [-c CATCH] name"
+        res = out.getvalue().split('\n')[0]
+        self.assertEqual(res, exp)
+        err = err.getvalue().split('\n')[0]
+        self.assertEqual(res, exp)
+        
 
 if __name__ == "__main__":
     unittest.main()

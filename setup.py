@@ -186,6 +186,6 @@ if not r:
         package_dir=package_dir,
         package_data=package_data,
         # data_files=data_files,
-        # install_requires=['numpy', 'ipython'],
+        install_requires=['pythonnet', 'pyquickhelper'],
         # include_package_data=True,
     )

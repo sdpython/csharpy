@@ -4,7 +4,7 @@
 Empty module, template for others.
 """
 
-__version__ = "0.2"
+__version__ = "0.1"
 __author__ = "sdpython"
 __github__ = "https://github.com/sdpython/csharpy"
 __url__ = "http://www.xavierdupre.fr/app/csharpy/helpsphinx/index.html"
