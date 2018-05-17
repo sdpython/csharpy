@@ -61,7 +61,7 @@ class TestRunNotebooks(ExtTestCase):
         res = execute_notebook_list(
             temp, keepnote, fLOG=fLOG, valid=valid, additional_path=addpaths)
         execute_notebook_list_finalize_ut(
-            res, fLOG=fLOG, dump=src.python3_module_template)
+            res, fLOG=fLOG, dump=src.csharpy)
 
 
 if __name__ == "__main__":

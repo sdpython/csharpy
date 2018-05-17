@@ -3,11 +3,8 @@
 @file
 @brief Defines magic commands to interact with C# in a :epkg:`Python` notebook.
 """
-import sys
-
-from IPython.core.magic import magics_class, line_magic, cell_magic
-from IPython.core.magic import line_cell_magic
-from IPython.core.display import HTML
+from IPython.display import Javascript
+from IPython.core.magic import magics_class, cell_magic
 from pyquickhelper.ipythonhelper import MagicCommandParser, MagicClassWithHelpers
 from ..runtime import create_cs_function
 
@@ -17,7 +14,7 @@ class CsMagics(MagicClassWithHelpers):
     """
     Defines magic commands for notebooks.
     """
-    
+
     @staticmethod
     def CS_parser():
         """
@@ -37,7 +34,7 @@ class CsMagics(MagicClassWithHelpers):
     @cell_magic
     def CS(self, line, cell):
         """
-        Defines magic command ``%%CS``.        
+        Defines magic command ``%%CS``.
 
         .. nbref::
             :title: %%CS
@@ -59,14 +56,14 @@ class CsMagics(MagicClassWithHelpers):
             ::
 
                 cspower(3.0, 3.0)
-                
+
             The magic command relies on @see fn create_cs_function
             and adds it to the notebook context. Dependencies are usually
             specified on the first line. However, it is quite inconvenient
             to have a very long first line so the first cell line of the
             cell will be seen as a continuation if they start by ``-``
             like follows:
-            
+
             ::
 
                 %%CS cspower
@@ -75,7 +72,7 @@ class CsMagics(MagicClassWithHelpers):
                 {
                     if (y == 0) return 1.0 ;
                     return System.Math.Pow(x,y) ;
-                }            
+                }
         """
         cell_lines = cell.split('\n')
         last = 0
@@ -89,11 +86,12 @@ class CsMagics(MagicClassWithHelpers):
         if last > 0:
             line += ' ' + ' '.join(cell_lines[:last])
             cell = "\n".join(cell_lines[last:])
-        
+
         parser = self.get_parser(CsMagics.CS_parser, "CS")
         args = self.get_args(line, parser)
-        
+
         def linearise(ll):
+            "list of lists into list"
             if ll is None:
                 return None
             res = []
@@ -108,13 +106,13 @@ class CsMagics(MagicClassWithHelpers):
             name = args.name
             dep = linearise(args.dep)
             idep = linearise(args.idep)
-            
+
             if args.catch:
                 try:
                     f = create_cs_function(name, cell, idep, dep)
                 except Exception as e:
                     print(str(e).replace('\r', ''))
-                    return
+                    return None
             else:
                 f = create_cs_function(name, cell, idep, dep)
             if self.shell is not None:
@@ -130,6 +128,5 @@ def register_magics(ip):
     ip.register_magics(CsMagics)
     patch = ("IPython.config.cell_magic_highlight['csmagic'] = "
              "{'reg':[/^%%CS/]};")
-    js = display.Javascript(data=patch,
-                            lib=["https://github.com/codemirror/CodeMirror/blob/master/mode/clike/clike.js"])
-    
+    Javascript(data=patch, lib=[
+               "https://github.com/codemirror/CodeMirror/blob/master/mode/clike/clike.js"])

@@ -33,7 +33,17 @@ class TestCodeStyle(ExtTestCase):
         thi = os.path.abspath(os.path.dirname(__file__))
         src_ = os.path.normpath(os.path.join(thi, "..", "..", "src"))
         check_pep8(src_, fLOG=fLOG,
-                   skip=["myexampleb.py:61: C0123", "myexampleb.py:59: C0123"])
+                   pylint_ignore=('C0103', 'C1801', 'R0201', 'R1705', 'W0108', 'W0613',
+                                  'C011111'),
+                   skip=["Unable to import 'CSharPyExtension'",
+                         "Unable to import 'System'",
+                         "Module 'clr' has no 'AddReference' member",
+                         "Unable to import 'System.Collections.Generic'",
+                         "Unable to import 'DynamicCS'",
+                         "No name 'AddReference' in module 'clr'",
+                         "csmagics.py:113: W0703",
+                         "add_reference.py:14: W0703",
+                         ])
 
     def test_style_test(self):
         thi = os.path.abspath(os.path.dirname(__file__))
@@ -47,6 +57,12 @@ class TestCodeStyle(ExtTestCase):
                          "skip___' imported but unused",
                          "Unused variable 'skip_'",
                          "imported as skip_",
+                         "Unused import src",
+                         "Unused import clr",
+                         "Unable to import 'CSharPyExtension'",
+                         "Unable to import 'System'",
+                         "Module 'clr' has no 'AddReference' member",
+                         "Unable to import 'System.Collections.Generic'",
                          ])
 
 

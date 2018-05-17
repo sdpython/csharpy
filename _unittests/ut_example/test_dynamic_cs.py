@@ -7,7 +7,6 @@ will sort all test files by increasing time and run them.
 import sys
 import os
 import unittest
-import warnings
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import numpy
@@ -69,12 +68,12 @@ class TestDynamicCS(ExtTestCase):
         #     Marshal.Copy(ar, ar2, 0, len(ar2))
         # except TypeError as e:
         #     warnings.warn(str(e))
-            
+
     def test_create_cs_function(self):
         code = "public static double SquareX(double x) {return x*x ; }"
         f = create_cs_function("SquareX", code)
         r = f(2.0)
-        self.assertEqual(r, 4)     
+        self.assertEqual(r, 4)
 
     def test_magic_cs(self):
         cm = CsMagics()
@@ -115,8 +114,8 @@ class TestDynamicCS(ExtTestCase):
         lis = ";".join(str(i) for i in li)
         x = f(lis)
         self.assertNotEqual(x, 4)
-        self.assertTrue(x is not None)        
-        
+        self.assertTrue(x is not None)
+
         f = cm.CS("cs_qsort -i System.Collections -i System.Linq",
                   "-i System -d System.Core\n" + code)
         if f is None:
@@ -125,8 +124,8 @@ class TestDynamicCS(ExtTestCase):
         lis = ";".join(str(i) for i in li)
         x = f(lis)
         self.assertNotEqual(x, 4)
-        self.assertTrue(x is not None)        
-        
+        self.assertTrue(x is not None)
+
         out = StringIO()
         err = StringIO()
         with redirect_stdout(out):
@@ -138,7 +137,7 @@ class TestDynamicCS(ExtTestCase):
         self.assertEqual(res, exp)
         err = err.getvalue().split('\n')[0]
         self.assertEqual(res, exp)
-        
+
 
 if __name__ == "__main__":
     unittest.main()

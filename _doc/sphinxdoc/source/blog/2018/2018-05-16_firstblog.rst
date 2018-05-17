@@ -6,4 +6,3 @@
     :categories: intention
 
     Speed up :epkg:`Python` with C#.
-    

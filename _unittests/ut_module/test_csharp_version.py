@@ -7,8 +7,6 @@ will sort all test files by increasing time and run them.
 import sys
 import os
 import unittest
-import warnings
-import numpy
 import clr
 from pyquickhelper.pycode import ExtTestCase
 
@@ -25,7 +23,6 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from src.csharpy.runtime import create_cs_function
 from src.csharpy.binaries import add_csharp_extension
 from src.csharpy import __version__
 
@@ -38,7 +35,7 @@ class TestCSharpVersion(ExtTestCase):
         from CSharPyExtension import Constants
         vers = Constants.Version()
         self.assertEqual(__version__, vers)
-        
+
 
 if __name__ == "__main__":
     unittest.main()

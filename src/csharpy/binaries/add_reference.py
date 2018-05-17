@@ -1,8 +1,9 @@
 """
 @file
-@brief 
+@brief
 """
 from clr import AddReference as ClrAddReference
+
 
 def AddReference(name):
     """
@@ -33,28 +34,27 @@ def AddReference(name):
 def add_csharp_extension():
     """
     Imports *CSharpExtension* into global context.
-        
+
     This binary has a version. On :epkg:`Windows`,
     the system might decide to skip the replacement
     of an assembly because it is in use. You can
     check the version of this by using the following code.
-    
+
     .. exref::
         :title: Imports the C# extension into :pekg:`Python`
-        
+
         .. runpython::
             :showcode:
 
             from csharpy.binaries import add_csharp_extension
             from csharpy import __version__
-            
+
             add_csharp_extension()
-            
+
             # This line needs to be after the previous one.
             from CSharPyExtension import Constants
-            
+
             vers = Constants.Version()
-            print(__version__, vers)            
+            print(__version__, vers)
     """
     AddReference("CSharPyExtension")
-    

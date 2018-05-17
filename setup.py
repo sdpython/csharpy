@@ -139,7 +139,7 @@ if not r:
         process_standard_options_for_setup_help(sys.argv)
     from pyquickhelper.pycode import clean_readme
     long_description = clean_readme(long_description)
-    
+
     if "build_ext" in sys.argv:
         # We build a dotnet application.
         if '--inplace' not in sys.argv:
@@ -147,14 +147,16 @@ if not r:
         from pyquickhelper.loghelper import run_cmd
         env = os.environ.get('DOTNET_CLI_TELEMETRY_OPTOUT', None)
         if env != '1':
-            raise ValueError("Environment variable 'DOTNET_CLI_TELEMETRY_OPTOUT' should be set to 1.")
+            raise ValueError(
+                "Environment variable 'DOTNET_CLI_TELEMETRY_OPTOUT' should be set to 1.")
         cmds = ['dotnet restore', 'dotnet build -c Release']
         folder = os.path.abspath("cscode")
         for cmd in cmds:
             _, err = run_cmd(cmd, fLOG=print, wait=True, change_path=folder)
             if len(err) > 0:
-                raise RuntimeError("Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}".format(cmd, err))
-        
+                raise RuntimeError(
+                    "Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}".format(cmd, err))
+
         # Copy files.
         from pyquickhelper.filehelper import explore_folder_iterfile
         dest = os.path.join('src', 'csharpy', 'binaries')
