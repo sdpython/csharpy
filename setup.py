@@ -2,7 +2,7 @@
 import sys
 import os
 import shutil
-from distutils.core import setup
+from setuptools import setup, Extension
 from setuptools import find_packages
 
 #########
@@ -113,9 +113,15 @@ if "--verbose" in sys.argv:
     verbose()
 
 if is_local():
-    from pyquickhelper import get_fLOG
+    from pyquickhelper import get_fLOG, get_insetup_functions
     logging_function = get_fLOG()
     logging_function(OutputPrint=True)
+    must_build, run_build_ext = get_insetup_functions()
+
+    if must_build():
+        out = run_build_ext(__file__)
+        print(out)
+
     from pyquickhelper.pycode import process_standard_options_for_setup
     r = process_standard_options_for_setup(
         sys.argv, __file__, project_var_name,
@@ -142,6 +148,7 @@ if not r:
         process_standard_options_for_setup_help(sys.argv)
     from pyquickhelper.pycode import clean_readme
     long_description = clean_readme(long_description)
+    root = os.path.abspath(os.path.dirname(__file__))
 
     if "build_ext" in sys.argv:
         # We build a dotnet application.
@@ -174,9 +181,22 @@ if not r:
         if copied == 0:
             raise RuntimeError("No found binaries in '{0}'".format(folder))
 
+    if sys.platform.startswith("win"):
+        extra_compile_args = None
+    else:
+        extra_compile_args = ['-std=c++11']
+
+    # C parts
+    ext_cparts = Extension('src.csharpy.cparts.cmodule',
+                           [os.path.join(root, 'src/csharpy/cparts/version.cpp'),
+                               os.path.join(root, 'src/csharpy/cparts/cmodule.cpp')],
+                           extra_compile_args=extra_compile_args,
+                           include_dirs=[os.path.join(root, 'src/csharpy/cparts')])
+
     # Regular setup.
     setup(
         name=project_var_name,
+        ext_modules=[ext_cparts],
         version='%s%s' % (sversion, subversion),
         author='Xavier Dupré',
         author_email='xavier.dupre@gmail.com',

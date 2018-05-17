@@ -20,6 +20,8 @@ install:
   - "%PYTHON%\\Scripts\\pip install pymyinstall"
   - "%PYTHON%\\Scripts\\pymy_install3 --set=pyquickhelper"
   - "%PYTHON%\\Scripts\\pip install pyquickhelper jyquickhelper"
+  - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
+  - "set PATH=%PATH%;C:\\projects\\jyquickhelper\\build\\update_modules\\Graphviz\\bin"
 
 build: off
 
@@ -29,10 +31,9 @@ before_build:
   # Display minimal restore text
   - cmd: dotnet restore ./src/src.csproj --verbosity m
 
-build_script:
-  # cmd: dotnet publish ./src/src.csproj
+before_test:
   - "%PYTHON%\\python -u setup.py build_ext --inplace"
-
+  
 test_script:
   - "%PYTHON%\\python -u setup.py unittests"
 

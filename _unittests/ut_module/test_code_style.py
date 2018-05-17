@@ -43,6 +43,7 @@ class TestCodeStyle(ExtTestCase):
                          "No name 'AddReference' in module 'clr'",
                          "csmagics.py:113: W0703",
                          "add_reference.py:14: W0703",
+                         "No name 'version_c' in module 'src.csharpy.cparts.cmodule'",
                          ])
 
     def test_style_test(self):
