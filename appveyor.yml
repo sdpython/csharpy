@@ -22,6 +22,7 @@ install:
   - "%PYTHON%\\Scripts\\pip install pyquickhelper jyquickhelper"
   - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
   - "set PATH=%PATH%;C:\\projects\\jyquickhelper\\build\\update_modules\\Graphviz\\bin"
+  - set DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 build: off
 
