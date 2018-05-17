@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.5
+      - image: microsoft/dotnet:2-sdk
     
     working_directory: ~/repo
     
@@ -15,14 +15,14 @@ jobs:
           - v1-dependencies-
 
       - run:
-          name: Install mono
+          name: Install python
           command: |
                     sudo apt-get update
-                    sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
-                    sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
+                    sudo apt install build-essential checkinstall
+                    sudo apt install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+                    sudo add-apt-repository ppa:deadsnakes/ppa
                     sudo apt-get update
-                    sudo apt-get install dotnet-dev
-                    dotnet restore
+                    sudo apt-get install python3.6
 
       - run:
           name: Install pandoc

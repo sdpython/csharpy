@@ -22,7 +22,7 @@ addons:
       - dotnet-sdk
     
 install:
-    - sudo mono tools/nuget/nuget.exe update -self
+    - sudo mono tools/nuget/nuget.exe update -self 
     - pip install -r requirements.txt
 before:
     - python setup.py build_ext --inplace
