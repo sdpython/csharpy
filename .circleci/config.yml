@@ -15,12 +15,16 @@ jobs:
           - v1-dependencies-
 
       - run:
-          name: Install python
+          name: Install python (1)
           command: |
                     sudo apt-get update
                     sudo apt-get install build-essential checkinstall
                     sudo apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
                     sudo apt-get install python3-software-properties
+
+      - run:
+          name: Install python (2)
+          command: |
                     sudo add-apt-repository ppa:deadsnakes/ppa
                     sudo apt-get update
                     sudo apt-get install python3.6

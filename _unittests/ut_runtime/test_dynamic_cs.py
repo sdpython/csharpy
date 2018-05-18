@@ -7,11 +7,12 @@ will sort all test files by increasing time and run them.
 import sys
 import os
 import unittest
+import warnings
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import numpy
-import clr
 from pyquickhelper.pycode import ExtTestCase
+import clr
 
 try:
     import src
@@ -49,6 +50,18 @@ class TestDynamicCS(ExtTestCase):
         d = Dictionary[String, String]()
         d["un"] = "1"
         self.assertEqual(d.Count, 1)
+
+    def test_add_reference_system(self):
+        clr.AddReference("System")
+
+    def test_add_reference_system_collections(self):
+        clr.AddReference("System.Collections")
+
+    def test_add_reference_system_collections_generic(self):
+        try:
+            clr.AddReference("System.Collections.Generic")
+        except Exception as e:
+            warnings.warn(str(e))
 
     def test_pythonnet_array(self):
         clr.AddReference("System.Collections")

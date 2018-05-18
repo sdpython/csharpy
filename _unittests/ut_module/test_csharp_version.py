@@ -7,8 +7,8 @@ will sort all test files by increasing time and run them.
 import sys
 import os
 import unittest
-import clr
 from pyquickhelper.pycode import ExtTestCase
+import clr
 
 try:
     import src
