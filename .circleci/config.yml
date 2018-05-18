@@ -68,7 +68,6 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip3 install -r requirements.txt            
-            pip3 install git+https://github.com/sdpython/sphinxcontrib-images.git --upgrade --no-deps
             pip3 install scipy scikit-learn
             
       - run:
@@ -76,7 +75,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip3 install git+https://github.com/pythonnet/pythonnet
+            pip3 install git+https://github.com/pythonnet/pythonnet.git
 
       - save_cache:
           paths:
