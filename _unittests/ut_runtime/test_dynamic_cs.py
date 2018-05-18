@@ -1,8 +1,5 @@
 """
-@brief      test log(time=1s)
-
-You should indicate a time in seconds. The program ``run_unittests.py``
-will sort all test files by increasing time and run them.
+@brief      test log(time=2s)
 """
 import sys
 import os
@@ -40,7 +37,6 @@ class TestDynamicCS(ExtTestCase):
 
     def test_pythonnet(self):
         clr.AddReference("System")
-        clr.AddReference("System.Collections")
         from System import String
         s = String("example")
         x = s.Replace("e", "j")
@@ -54,17 +50,8 @@ class TestDynamicCS(ExtTestCase):
     def test_add_reference_system(self):
         clr.AddReference("System")
 
-    def test_add_reference_system_collections(self):
-        clr.AddReference("System.Collections")
-
-    def test_add_reference_system_collections_generic(self):
-        try:
-            clr.AddReference("System.Collections.Generic")
-        except Exception as e:
-            warnings.warn(str(e))
-
     def test_pythonnet_array(self):
-        clr.AddReference("System.Collections")
+        clr.AddReference("System")
         from System import IntPtr, Array, Double, Int64
         self.assertTrue(Double is not None)
         self.assertTrue(Array is not None)
@@ -119,7 +106,7 @@ class TestDynamicCS(ExtTestCase):
                     return cs_qsortl(lis.Split(';').Select(c=>int.Parse(c)).ToArray()) ;
                 }
                 """
-        f = cm.CS("cs_qsort -i System -i System.Collections -i System.Linq -d System.Core",
+        f = cm.CS("cs_qsort -i System -i System.Linq -d System.Core",
                   code)
         if f is None:
             raise Exception(code)
@@ -129,7 +116,7 @@ class TestDynamicCS(ExtTestCase):
         self.assertNotEqual(x, 4)
         self.assertTrue(x is not None)
 
-        f = cm.CS("cs_qsort -i System.Collections -i System.Linq",
+        f = cm.CS("cs_qsort -i System.Linq",
                   "-i System -d System.Core\n" + code)
         if f is None:
             raise Exception(code)
