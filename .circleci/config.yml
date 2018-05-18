@@ -15,17 +15,14 @@ jobs:
           - v1-dependencies-
 
       - run:
-          name: Install dotnet
+          name: Install packages
           command: |
+                    sudo apt-get update
                     sudo apt-get install apt-transport-https
 
       - run:
           name: Install dotnet
           command: |
-                    wget -q packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/14.04/packages-microsoft-prod.deb
-                    sudo dpkg -i packages-microsoft-prod.deb
-                    sudo apt-get install apt-transport-https
-                    sudo apt-get update
                     sudo apt-get install dotnet-sdk-2.1.200
 
       - run:
