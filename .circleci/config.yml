@@ -25,7 +25,6 @@ jobs:
       - run:
           name: Install python (2)
           command: |
-                    add-apt-repository ppa:deadsnakes/ppa
                     apt-get -y update
                     apt-get install -y python3.6
                     
