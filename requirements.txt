@@ -2,5 +2,4 @@ coverage
 jyquickhelper
 pylint
 pyquickhelper>=1.8
-pythonnet
 wheel

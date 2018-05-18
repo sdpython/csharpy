@@ -33,6 +33,7 @@ before_install:
   
 install:
   - pip install -r requirements.txt
+  - pip install git+https://github.com/pythonnet/pythonnet
 
 before_script:
   - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
