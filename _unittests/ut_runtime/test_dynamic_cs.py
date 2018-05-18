@@ -4,7 +4,6 @@
 import sys
 import os
 import unittest
-import warnings
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import numpy

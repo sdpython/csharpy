@@ -37,7 +37,7 @@ def create_cs_function(name, code, usings=None, dependencies=None):
         @see me CS.
     """
     AddReference("System")
-    AddReference("System.Collections")
+    # AddReference("System.Collections")
     AddReference("DynamicCS")
     from DynamicCS import DynamicFunction
     from System import String
