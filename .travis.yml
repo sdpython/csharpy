@@ -29,12 +29,11 @@ before_install:
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 90
   - PY_LIBDIR=$(python -c 'import sysconfig; print(sysconfig.get_config_var("LIBDIR"))')
   - export LD_LIBRARY_PATH=$PY_LIBDIR:$LD_LIBRARY_PATH
-  - pip install -U setuptools
-  - pip install -U wheel
+  - pip install -U setuptools wheel
   
 install:
   - pip install -r requirements.txt
-  - pip install git+https://github.com/pythonnet/pythonnet.git
+  - pip install git+https://github.com/pythonnet/pythonnet --xplat
 
 before_script:
   - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
