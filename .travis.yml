@@ -33,11 +33,10 @@ before_install:
   - pip install -U setuptools wheel
   
 install:
-  - export MONO_SKIP_UPDATE_SELF=1
   - pip install -r requirements.txt
   - git clone https://github.com/sdpython/pythonnet.git
   - cd pythonnet
-  - python setup.py install
+  - python setup.py install --xplat
   - cd ..
 
 before_script:
