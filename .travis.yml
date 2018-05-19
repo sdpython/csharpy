@@ -29,7 +29,7 @@ before_install:
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 90
   - PY_LIBDIR=$(python -c 'import sysconfig; print(sysconfig.get_config_var("LIBDIR"))')
   - export LD_LIBRARY_PATH=$PY_LIBDIR:$LD_LIBRARY_PATH
-  - python install -m pip install -U pip
+  - python -m pip install -U pip
   - pip install -U setuptools wheel
   
 install:
