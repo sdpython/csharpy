@@ -76,7 +76,10 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip3 install -U setuptools wheel
-            pip3 install git+https://github.com/pythonnet/pythonnet --xplat
+            git clone https://github.com/pythonnet/pythonnet.git
+            cd pythonnet
+            python3 setup.py install --xplat
+            cd ..
 
       - save_cache:
           paths:
