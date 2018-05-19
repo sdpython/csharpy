@@ -34,6 +34,7 @@ before_install:
   
 install:
   - pip install -r requirements.txt
+  - dotnet --help
   - git clone https://github.com/sdpython/pythonnet.git
   - cd pythonnet
   - python setup.py install --xplat
