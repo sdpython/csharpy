@@ -1,5 +1,5 @@
 
-through documentation
+Through documentation
 =====================
 
 .. only:: not latex

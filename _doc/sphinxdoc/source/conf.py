@@ -33,3 +33,7 @@ def custom_latex_processing(latex):
     # this weird modification is only needed when jenkins run a unit test in
     # pyquickhelper (pycode)
     return latex
+
+epkg_dictionary.update({
+    'C#': 'https://en.wikipedia.org/wiki/C_Sharp_(programming_language)',
+    })

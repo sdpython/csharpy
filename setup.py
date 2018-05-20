@@ -168,7 +168,9 @@ if not r:
                 raise RuntimeError(
                     "Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}".format(cmd, err))
             elif len(out) > 0:
-                if "0 Error(s)" not in out:
+                error_messages = ['0 Error(s)', '0 Erreur(s)']
+                found = any(m in out for m in error_messages)
+                if not found and 'build' in cmd:
                     raise RuntimeError(
                         "Unable to compile C# code.\nCMD: {0}\n--OUT--\n{1}".format(cmd, out))
                 else:

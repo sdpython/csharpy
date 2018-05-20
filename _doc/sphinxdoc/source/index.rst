@@ -1,6 +1,6 @@
 
-python3_module_template
-=======================
+csharpy
+=======
 
 .. only:: html
 
@@ -51,9 +51,10 @@ python3_module_template
 What is it?
 -----------
 
-Helpers to play with C# and Python.
-It can easily compile and wrap a C# function
-into Python:
+*csharpy* implements an easy way to play
+with :epkg:`C#` and :epkg:`Python`.
+It can easily compile and wrap a :epkg:`C#` function
+into :epkg:`Python`:
 
 ::
 
@@ -62,7 +63,8 @@ into Python:
     SquareX = create_cs_function("SquareX", code)
     print(SquareX(4))
 
-The module relies in `pythonnet <https://github.com/pythonnet/pythonnet>`_.
+The module relies in `pythonnet <https://github.com/pythonnet/pythonnet>`_
+and adds continuous integration other projects could leverage.
 
 Documentation
 -------------
