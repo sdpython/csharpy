@@ -20,4 +20,5 @@
     * `Failed building wheel <https://github.com/pythonnet/pythonnet/issues/562>`_
     * `Prérequis pour .NET Core sur Linux <https://docs.microsoft.com/fr-fr/dotnet/core/linux-prerequisites?tabs=netcore2x>`_
     * `Install .NET Core SDK 2.1.300-preview1 on Linux Ubuntu 14.04 <https://www.microsoft.com/net/download/linux-package-manager/ubuntu14-04/sdk-2.1.300-preview1>`_
-    
+    * `Install clang <https://github.com/travis-ci/apt-source-whitelist/issues/372>`_
+    * `Mono Download for Debian <https://www.mono-project.com/download/stable/#download-lin-debian>`_

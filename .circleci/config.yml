@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: microsoft/dotnet:2-sdk
+      - image: circleci/python:3.6.4
     
     working_directory: ~/repo
     
@@ -11,41 +11,47 @@ jobs:
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          - v1-dependencies-
+          - v2-dependencies-{{ checksum "requirements.txt" }}
+          - v2-dependencies-
 
       - run:
-          name: info
+          name: install prerequis
           command: |
-                    dotnet --help
-                    clang --help
-                    mono --help
+            sudo apt-get update
+            sudo apt-get install apt-transport-https lsb-release
 
       - run:
-          name: Install clang
+          name: linux version
           command: |
-                    apt-get update
-                    apt-get install clang-6.0 lldb-6.0
+            lsb_release --help
+            lsb_release -d
+            
+      - run:
+          name: install mono
+          command: |
+            sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+            sudo apt install apt-transport-https
+            echo "deb https://download.mono-project.com/repo/debian stable-jessie main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+            sudo apt-get update
+            sudo apt-get install mono-devel ca-certificates-mono
 
       - run:
-          name: Install python (0)
+          name: install dotnet
           command: |
-                    apt-get update
-                    apt-get install -y build-essential checkinstall
-                    apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
-                    apt-get install -y python3-software-properties
-                    apt-get install -y software-properties-common
-                    python3 -V
+            curl -sSL "https://packages.microsoft.com/keys/microsoft.asc" | sudo -E apt-key add -
+            echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-trusty-prod trusty main" | sudo tee -a /etc/apt/sources.list > /dev/null
+            echo "Done (1)"
+            sudo apt-get update
+            echo "Done (2)"
+            sudo -E apt-get -yq update &>> ~/apt-get-update.log
+            echo "Done (3)"
+            sudo -E apt-get -yqf --no-install-suggests --no-install-recommends --force-yes install dotnet-sdk-2.1.200
+            echo "Done (4)"
 
       - run:
-          name: Install python (1)
+          name: install clang
           command: |
-                    apt-get install -y python3-venv python3-pip
-
-      - run:
-          name: Install pip env
-          command: |
-                    python3 -m pip install pipenv
+            sudo apt-get install clang
 
       - run:
           name: Install pandoc
@@ -85,6 +91,8 @@ jobs:
             
       - run:
           name: install pythonnet
+          env:
+            DOTNET_CLI_TELEMETRY_OPTOUT:1
           command: |
             python3 -m venv venv
             . venv/bin/activate
@@ -99,7 +107,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+          key: v2-dependencies-{{ checksum "requirements.txt" }}
         
       - run:
           name: build extension
