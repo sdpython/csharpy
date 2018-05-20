@@ -22,20 +22,18 @@ matrix:
             #- dotnet-hostfxr-2.1.200
             #- dotnet-runtime-2.1.200
             - dotnet-sdk-2.1.200
-    - python: 3.6
-      env: *xplat-env
-      addons: *xplat-addons
 
     # --------------------- Classic builds ------------------------
     - python: 3.6
-      env: *classic-env
+      env: &classic-env
+        - BUILD_OPTS=
+        - NUNIT_PATH=./packages/NUnit.*/tools/nunit3-console.exe
 
 env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
     - SEGFAULT_SIGNALS=all
     - PYTHONUNBUFFERED=True
-    - CODECOV_ENV=TRAVIS_PYTHON_VERSION
     - DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 addons:
@@ -57,19 +55,21 @@ before_install:
   - sudo apt-get install -qq g++-5 --allow-unauthenticated
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 90
-  - PY_LIBDIR=$(python -c 'import sysconfig; print(sysconfig.get_config_var("LIBDIR"))')
-  - export LD_LIBRARY_PATH=$PY_LIBDIR:$LD_LIBRARY_PATH
   - python -m pip install -U pip
   - pip install -U setuptools wheel
   
 install:
-  - pip install --upgrade setuptools # TEMP - due to setuptools 36.2.0 bug
-  - pip install --upgrade -r requirements.txt
+  - pip install -r requirements.txt
   # Install pythonnet
   - git clone https://github.com/sdpython/pythonnet.git
   - cd pythonnet
   - python setup.py install --xplat
   - cd ..
+
+before_script:
+  - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
+  - gcc --version
+  - python setup.py build_ext --inplace
 
 script:
     - python setup.py unittests
