@@ -60,4 +60,5 @@ into Python:
     SquareX = create_cs_function("SquareX", code)
     print(SquareX(4))
 
-The module relies in `pythonnet <https://github.com/pythonnet/pythonnet>`_.
+The module relies on `pythonnet <https://github.com/pythonnet/pythonnet>`_.
+
