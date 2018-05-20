@@ -1,5 +1,6 @@
 coverage
 jyquickhelper
+Pillow
 pycparser
 pylint
 pyquickhelper>=1.8
