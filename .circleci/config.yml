@@ -15,6 +15,19 @@ jobs:
           - v1-dependencies-
 
       - run:
+          name: info
+          command: |
+                    dotnet --help
+                    clang --help
+                    mono --help
+
+      - run:
+          name: Install clang
+          command: |
+                    apt-get update
+                    apt-get install clang-6.0 lldb-6.0
+
+      - run:
           name: Install python (0)
           command: |
                     apt-get update
