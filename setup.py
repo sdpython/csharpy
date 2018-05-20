@@ -157,9 +157,9 @@ if not r:
             raise Exception("Option --inplace must be set up.")
         from pyquickhelper.loghelper import run_cmd
         env = os.environ.get('DOTNET_CLI_TELEMETRY_OPTOUT', None)
-        if env not in ('1', 1):
-            warnings.warn(
-                "Environment variable 'DOTNET_CLI_TELEMETRY_OPTOUT' should be set to 1 not '{0}'.".format(env))
+        if env is None:
+            os.environ['DOTNET_CLI_TELEMETRY_OPTOUT'] = '1'
+        print('[csharpy.env] DOTNET_CLI_TELEMETRY_OPTOUT={0}'.format(os.environ['DOTNET_CLI_TELEMETRY_OPTOUT']))
         cmds = ['dotnet restore', 'dotnet build -c Release']
         folder = os.path.abspath("cscode")
         for cmd in cmds:
@@ -168,8 +168,12 @@ if not r:
                 raise RuntimeError(
                     "Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}".format(cmd, err))
             elif len(out) > 0:
-                print('[dotnet]')
-                print(out)
+                if "0 Error(s)" not in out:
+                    raise RuntimeError(
+                        "Unable to compile C# code.\nCMD: {0}\n--OUT--\n{1}".format(cmd, out))
+                else:
+                    print('[csharpy.dotnet]')
+                    print(out)
 
         # Copy files.
         from pyquickhelper.filehelper import explore_folder_iterfile
@@ -179,10 +183,10 @@ if not r:
             full = os.path.join(folder, name)
             if 'Release' in full:
                 copied += 1
-                print("[copy] '{0}'".format(name))
+                print("[csharpy.copy] '{0}'".format(name))
                 shutil.copy(name, dest)
             else:
-                print("[skip] '{0}'".format(name))
+                print("[csharpy.skip] '{0}'".format(name))
         if copied == 0:
             raise RuntimeError("No found binaries in '{0}'".format(folder))
 

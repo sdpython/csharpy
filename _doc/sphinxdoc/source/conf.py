@@ -1,8 +1,10 @@
+import sys
+import os
 import sphinx_gallery
 import sphinx_rtd_theme
 from pyquickhelper.helpgen.default_conf import set_sphinx_variables, get_default_stylesheet
-from csharpy import __file__
-print(__file__)
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.split(__file__)[0])))
 
 set_sphinx_variables(__file__, "csharpy", "sdpython", 2018,
                      "sphinx_rtd_theme", [
