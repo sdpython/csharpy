@@ -159,14 +159,17 @@ if not r:
         env = os.environ.get('DOTNET_CLI_TELEMETRY_OPTOUT', None)
         if env is None:
             os.environ['DOTNET_CLI_TELEMETRY_OPTOUT'] = '1'
-        print('[csharpy.env] DOTNET_CLI_TELEMETRY_OPTOUT={0}'.format(os.environ['DOTNET_CLI_TELEMETRY_OPTOUT']))
+        print('[csharpy.env] DOTNET_CLI_TELEMETRY_OPTOUT={0}'.format(
+            os.environ['DOTNET_CLI_TELEMETRY_OPTOUT']))
         cmds = ['dotnet restore CSharPyExtension_netcore.sln',
                 'dotnet restore CSharPyExtension_netframework.sln',
                 'dotnet build -c Release CSharPyExtension_netcore.sln']
         if sys.platform.startswith('win'):
-            cmds.append('dotnet msbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
+            cmds.append(
+                'dotnet msbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
         else:
-            cmds.append('xbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
+            cmds.append(
+                'xbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
         folder = os.path.abspath("cscode")
         outs = []
         for cmd in cmds:
@@ -182,7 +185,7 @@ if not r:
         # Copy files.
         from pyquickhelper.filehelper import explore_folder_iterfile
         dest = os.path.join('src', 'csharpy', 'binaries')
-        must_copy = {'DynamicCS':0, 'CSharPyExtension':0}
+        must_copy = {'DynamicCS': 0, 'CSharPyExtension': 0}
         copied = 0
         for name in explore_folder_iterfile(folder, pattern='.*[.]((dll)|(so))$'):
             full = os.path.join(folder, name)

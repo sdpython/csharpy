@@ -34,6 +34,7 @@ def custom_latex_processing(latex):
     # pyquickhelper (pycode)
     return latex
 
+
 epkg_dictionary.update({
     'C#': 'https://en.wikipedia.org/wiki/C_Sharp_(programming_language)',
-    })
+})

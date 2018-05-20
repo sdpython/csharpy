@@ -9,7 +9,7 @@
     with :epkg:`C#`. That's what :epkg:`pythonnet` already does.
     The objective is also to add custom :epkg:`C#` assemblies
     as part of the build and to import them from ::epkg:`Python`.
-    The first step of this project was to prepare a 
+    The first step of this project was to prepare a
     continuous build which works on Windows and Linux.
     It was not that so obvious to install :epgk:`dotnet`,
     :epkg:`Python` and :epkg:`pythonnet` on the same
