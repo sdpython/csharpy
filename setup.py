@@ -160,12 +160,10 @@ if not r:
         if env is None:
             os.environ['DOTNET_CLI_TELEMETRY_OPTOUT'] = '1'
         print('[csharpy.env] DOTNET_CLI_TELEMETRY_OPTOUT={0}'.format(os.environ['DOTNET_CLI_TELEMETRY_OPTOUT']))
-        cmds = ['dotnet restore',
+        cmds = ['dotnet restore CSharPyExtension_netcore.sln',
+                'dotnet restore CSharPyExtension_netframework.sln',
                 'dotnet build -c Release CSharPyExtension_netcore.sln']
-        if sys.platform.startswith('win'):
-            cmds.append('dotnet msbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
-        else:
-            cmds.append('xbuild CSharPyExtension_netframework.sln')
+        cmds.append('dotnet msbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
         folder = os.path.abspath("cscode")
         outs = []
         for cmd in cmds:
@@ -175,7 +173,7 @@ if not r:
                     "Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}".format(cmd, err))
             elif len(out) > 0:
                 outs.append(out)
-                print('[csharpy.dotnet]')
+                print('[csharpy.dotnet] OUT')
                 print(out)
 
         # Copy files.
