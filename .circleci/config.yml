@@ -91,8 +91,6 @@ jobs:
             
       - run:
           name: install pythonnet
-          env:
-            DOTNET_CLI_TELEMETRY_OPTOUT:1
           command: |
             python3 -m venv venv
             . venv/bin/activate
@@ -111,10 +109,9 @@ jobs:
         
       - run:
           name: build extension
-          env:
-            DOTNET_CLI_TELEMETRY_OPTOUT:1
           command: |
             . venv/bin/activate
+            export DOTNET_CLI_TELEMETRY_OPTOUT=1
             python3 setup.py build_ext --inplace
 
       - run:

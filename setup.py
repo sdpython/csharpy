@@ -163,22 +163,26 @@ if not r:
         cmds = ['dotnet restore', 'dotnet build -c Release']
         folder = os.path.abspath("cscode")
         for cmd in cmds:
-            _, err = run_cmd(cmd, fLOG=print, wait=True, change_path=folder)
+            out, err = run_cmd(cmd, fLOG=print, wait=True, change_path=folder)
             if len(err) > 0:
                 raise RuntimeError(
                     "Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}".format(cmd, err))
+            elif len(out) > 0:
+                print('[dotnet]')
+                print(out)
 
         # Copy files.
         from pyquickhelper.filehelper import explore_folder_iterfile
         dest = os.path.join('src', 'csharpy', 'binaries')
         copied = 0
-        for name in explore_folder_iterfile(folder, pattern='.*[.]dll$'):
+        for name in explore_folder_iterfile(folder, pattern='.*[.]((dll)|(so))$'):
             full = os.path.join(folder, name)
-            if 'Release' not in full:
-                continue
-            copied += 1
-            print("[copy] '{0}'".format(name))
-            shutil.copy(name, dest)
+            if 'Release' in full:
+                copied += 1
+                print("[copy] '{0}'".format(name))
+                shutil.copy(name, dest)
+            else:
+                print("[skip] '{0}'".format(name))
         if copied == 0:
             raise RuntimeError("No found binaries in '{0}'".format(folder))
 
