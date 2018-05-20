@@ -163,7 +163,10 @@ if not r:
         cmds = ['dotnet restore CSharPyExtension_netcore.sln',
                 'dotnet restore CSharPyExtension_netframework.sln',
                 'dotnet build -c Release CSharPyExtension_netcore.sln']
-        cmds.append('dotnet msbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
+        if sys.platform.startswith('win'):
+            cmds.append('dotnet msbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
+        else:
+            cmds.append('xbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
         folder = os.path.abspath("cscode")
         outs = []
         for cmd in cmds:
