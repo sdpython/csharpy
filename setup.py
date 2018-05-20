@@ -156,9 +156,9 @@ if not r:
             raise Exception("Option --inplace must be set up.")
         from pyquickhelper.loghelper import run_cmd
         env = os.environ.get('DOTNET_CLI_TELEMETRY_OPTOUT', None)
-        if env != '1':
+        if env not in ('1', 1):
             raise ValueError(
-                "Environment variable 'DOTNET_CLI_TELEMETRY_OPTOUT' should be set to 1.")
+                "Environment variable 'DOTNET_CLI_TELEMETRY_OPTOUT' should be set to 1 not '{0}'.".format(env))
         cmds = ['dotnet restore', 'dotnet build -c Release']
         folder = os.path.abspath("cscode")
         for cmd in cmds:

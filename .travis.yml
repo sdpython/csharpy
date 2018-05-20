@@ -63,7 +63,7 @@ install:
   # Install pythonnet
   - git clone https://github.com/sdpython/pythonnet.git
   - cd pythonnet
-  - python setup.py install --xplat
+  - python setup.py install $BUILD_OPTS
   - cd ..
 
 before_script:
