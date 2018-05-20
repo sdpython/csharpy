@@ -23,12 +23,6 @@ matrix:
             #- dotnet-runtime-2.1.200
             - dotnet-sdk-2.1.200
 
-    # --------------------- Classic builds ------------------------
-    - python: 3.6
-      env: &classic-env
-        - BUILD_OPTS=
-        - NUNIT_PATH=./packages/NUnit.*/tools/nunit3-console.exe
-
 env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
