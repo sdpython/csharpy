@@ -160,37 +160,43 @@ if not r:
         if env is None:
             os.environ['DOTNET_CLI_TELEMETRY_OPTOUT'] = '1'
         print('[csharpy.env] DOTNET_CLI_TELEMETRY_OPTOUT={0}'.format(os.environ['DOTNET_CLI_TELEMETRY_OPTOUT']))
-        cmds = ['dotnet restore', 'dotnet build -c Release']
+        cmds = ['dotnet restore',
+                'dotnet build -c Release CSharPyExtension_netcore.sln']
+        if sys.platform.startswith('win'):
+            cmds.append('dotnet msbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
+        else:
+            cmds.append('xbuild CSharPyExtension_netframework.sln')
         folder = os.path.abspath("cscode")
+        outs = []
         for cmd in cmds:
             out, err = run_cmd(cmd, fLOG=print, wait=True, change_path=folder)
             if len(err) > 0:
                 raise RuntimeError(
                     "Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}".format(cmd, err))
             elif len(out) > 0:
-                error_messages = ['0 Error(s)', '0 Erreur(s)']
-                found = any(m in out for m in error_messages)
-                if not found and 'build' in cmd:
-                    raise RuntimeError(
-                        "Unable to compile C# code.\nCMD: {0}\n--OUT--\n{1}".format(cmd, out))
-                else:
-                    print('[csharpy.dotnet]')
-                    print(out)
+                outs.append(out)
+                print('[csharpy.dotnet]')
+                print(out)
 
         # Copy files.
         from pyquickhelper.filehelper import explore_folder_iterfile
         dest = os.path.join('src', 'csharpy', 'binaries')
+        must_copy = {'DynamicCS':0, 'CSharPyExtension':0}
         copied = 0
         for name in explore_folder_iterfile(folder, pattern='.*[.]((dll)|(so))$'):
             full = os.path.join(folder, name)
             if 'Release' in full:
+                short_name = os.path.split(os.path.splitext(name)[0])[-1]
+                if short_name in must_copy:
+                    must_copy[short_name] += 1
                 copied += 1
                 print("[csharpy.copy] '{0}'".format(name))
                 shutil.copy(name, dest)
             else:
                 print("[csharpy.skip] '{0}'".format(name))
-        if copied == 0:
-            raise RuntimeError("No found binaries in '{0}'".format(folder))
+        min_must_copy = min(must_copy.values())
+        if copied == 0 or min_must_copy == 0:
+            raise RuntimeError("Missing binaries in '{0}'".format(folder))
 
     if sys.platform.startswith("win"):
         extra_compile_args = None
