@@ -1,6 +1,7 @@
 #include "version.hpp"
 #include <stdio.h>
 #include <vector>
+#include <stdexcept>
 #include "Python.h"
 
 struct module_state {
