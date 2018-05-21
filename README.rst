@@ -61,4 +61,3 @@ into Python:
     print(SquareX(4))
 
 The module relies on `pythonnet <https://github.com/pythonnet/pythonnet>`_.
-
