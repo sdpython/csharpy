@@ -15,17 +15,11 @@ jobs:
           - v2-dependencies-
 
       - run:
-          name: install prerequis
+          name: install apt-transport-https
           command: |
             sudo apt-get update
-            sudo apt-get install apt-transport-https lsb-release
+            sudo apt-get install apt-transport-https
 
-      - run:
-          name: linux version
-          command: |
-            lsb_release --help
-            lsb_release -d
-            
       - run:
           name: install mono
           command: |

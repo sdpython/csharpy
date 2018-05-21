@@ -61,3 +61,17 @@ into Python:
     print(SquareX(4))
 
 The module relies on `pythonnet <https://github.com/pythonnet/pythonnet>`_.
+
+Installation
+------------
+
+*Windows*
+
+::
+
+    pip install csharpy
+    
+*Linux*
+
+Follow the instructions described in
+`config.yml <https://github.com/sdpython/csharpy/blob/master/.circleci/config.yml>`_.

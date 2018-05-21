@@ -20,8 +20,8 @@ __blog__ = """
         <outline text="csharpy"
             title="csharpy"
             type="rss"
-            xmlUrl="http://www.xavierdupre.fr/app/pyquickhelper/csharpy/_downloads/rss.xml"
-            htmlUrl="http://www.xavierdupre.fr/app/pyquickhelper/csharpy/blog/main_0000.html" />
+            xmlUrl="http://www.xavierdupre.fr/app/csharpy/helpsphinx/_downloads/rss.xml"
+            htmlUrl="http://www.xavierdupre.fr/app/csharpy/helpsphinx/blog/main_0000.html" />
     </body>
 </opml>
 """
