@@ -43,9 +43,7 @@ csharpy
 **Links:** `github <https://github.com/sdpython/csharpy/>`_,
 `documentation <http://www.xavierdupre.fr/app/csharpy/helpsphinx2/index.html>`_
 :ref:`l-README`,
-:ref:`blog <ap-main-0>`,
-:ref:`l-issues-todolist`,
-:ref:`l-completed-todolist`
+:ref:`blog <ap-main-0>`
 
 What is it?
 -----------
