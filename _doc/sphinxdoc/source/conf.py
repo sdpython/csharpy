@@ -15,7 +15,7 @@ set_sphinx_variables(__file__, "csharpy", "sdpython", 2018,
 blog_root = "http://www.xavierdupre.fr/app/csharpy/helpsphinx/"
 
 html_context = {
-    'css_files': get_default_stylesheet(),
+    'css_files': get_default_stylesheet() + ['_static/my-styles.css', '_static/gallery.css'],
 }
 
 nblinks = {'slideshowrst': 'http://www.xavierdupre.fr/'}
@@ -37,4 +37,6 @@ def custom_latex_processing(latex):
 
 epkg_dictionary.update({
     'C#': 'https://en.wikipedia.org/wiki/C_Sharp_(programming_language)',
+    'csharpy': 'http://www.xavierdupre.fr/app/csharpy/helpsphinx/index.html',
+    'pythonnet': 'https://github.com/pythonnet/pythonnet',
 })
