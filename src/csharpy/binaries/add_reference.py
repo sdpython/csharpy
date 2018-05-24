@@ -41,7 +41,7 @@ def add_csharp_extension():
     check the version of this by using the following code.
 
     .. exref::
-        :title: Imports the C# extension into :pekg:`Python`
+        :title: Imports the C# extension into :epkg:`Python`
 
         .. runpython::
             :showcode:
