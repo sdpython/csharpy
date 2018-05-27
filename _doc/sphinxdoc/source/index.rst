@@ -54,7 +54,7 @@ The module also relies on
 .. runpython::
     :showcode:
 
-    from csharpyml.runtime import create_cs_function
+    from csharpy.runtime import create_cs_function
     code = "public static double SquareX(double x) {return x*x ; }"
     SquareX = create_cs_function("SquareX", code)
     print(SquareX(4))
