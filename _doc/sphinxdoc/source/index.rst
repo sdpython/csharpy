@@ -51,6 +51,14 @@ Helpers to play with C#, Python and ML.net.
 The module also relies on
 :epkg:`pythonnet` and :epkg:`csharpy`.
 
+.. runpython::
+    :showcode:
+
+    from csharpyml.runtime import create_cs_function
+    code = "public static double SquareX(double x) {return x*x ; }"
+    SquareX = create_cs_function("SquareX", code)
+    print(SquareX(4))
+
 Documentation
 -------------
 
