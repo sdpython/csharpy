@@ -2,7 +2,7 @@
 @file
 @brief Dynamically compile a C# function.
 """
-import sys
+import warnings
 from ..binaries import AddReference
 
 
@@ -37,16 +37,21 @@ def create_cs_function(name, code, usings=None, dependencies=None):
         @see me CS.
     """
     AddReference("System")
-    AddReference("System.Collections")
+    try:
+        AddReference("System.Collections")
+    except Exception:
+        # Fails on some system, warnings from pythonnet.
+        pass
     AddReference("DynamicCS")
     from DynamicCS import DynamicFunction
     from System import String
-    from System.Collections.Generic import List
-    if sys.platform.startswith("win"):
-        ext = ".dll"
-    else:
-        ext = ".so"
 
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        from System.Collections.Generic import List
+
+    # dotnet extension is dll even on linux.
+    ext = ".dll"
     myarray = List[String]()
     if dependencies:
         for d in dependencies:

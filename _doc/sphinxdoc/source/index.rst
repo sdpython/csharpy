@@ -76,7 +76,6 @@ Galleries
     all_notebooks
     blog/blogindex
 
-
 Installation
 ------------
 
@@ -85,11 +84,21 @@ Installation
 ::
 
     pip install csharpy
-    
+
 *Linux*
 
 Follow the instructions described in
 `config.yml <https://github.com/sdpython/csharpy/blob/master/.circleci/config.yml>`_.
+
+Build
+-----
+
+The package contains :epkg:`C#` and :epkg:`C++` extensions
+which can be built with the following instruction:
+
+::
+
+    python setup.py build_ext --inplace
 
 Navigation
 ----------
@@ -110,5 +119,5 @@ Navigation
 +----------------------+---------------------+---------------------+--------------------+------------------------+------------------------------------------------+
 | :ref:`modindex`      |  :ref:`l-EX2`       | :ref:`search`       | :ref:`l-license`   | :ref:`l-changes`       | :ref:`l-README`                                |
 +----------------------+---------------------+---------------------+--------------------+------------------------+------------------------------------------------+
-| :ref:`genindex`      |  :ref:`l-FAQ2`      | :ref:`l-notebooks`  | :ref:`ext-tohelp`  | :ref:`l-statcode`      | `Unit Test Coverage <coverage/index.html>`_    |
+| :ref:`genindex`      |  :ref:`l-FAQ2`      | :ref:`l-notebooks`  |                    | :ref:`l-statcode`      | `Unit Test Coverage <coverage/index.html>`_    |
 +----------------------+---------------------+---------------------+--------------------+------------------------+------------------------------------------------+

@@ -67,7 +67,7 @@ Installation
 ::
 
     pip install csharpy
-    
+
 *Linux*
 
 Follow the instructions described in
