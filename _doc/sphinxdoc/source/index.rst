@@ -47,7 +47,7 @@ csharpy
 
 What is it?
 -----------
-Helpers to play with C#, Python and ML.net.
+Helpers to play with :epkg:`C#`, :epkg:`Python` and :epkg:`ML.net`.
 The module also relies on
 :epkg:`pythonnet` and :epkg:`csharpy`.
 
