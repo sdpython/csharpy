@@ -26,9 +26,6 @@ README
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
-.. image:: https://coveralls.io/repos/sdpython/csharpy/badge.svg?branch=master&service=github
-    :target: https://coveralls.io/github/sdpython/csharpy?branch=master
-
 .. image:: https://requires.io/github/sdpython/csharpy/requirements.svg?branch=master
      :target: https://requires.io/github/sdpython/csharpy/requirements/?branch=master
      :alt: Requirements Status
