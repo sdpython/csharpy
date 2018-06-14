@@ -151,6 +151,20 @@ if not r:
     long_description = clean_readme(long_description)
     root = os.path.abspath(os.path.dirname(__file__))
 
+    # version
+    version = None
+    if "debug" in sys.argv:
+        version = "Debug"
+    elif "Debug" in sys.argv:
+        version = "Debug"
+    elif "release" in sys.argv:
+        version = "Release"
+    elif "Release" in sys.argv:
+        version = "Release"
+    sys.argv = [_ for _ in sys.argv if _ not in (
+        "debug", "Debug", "release", "Release")]
+    version2 = version if version else "Release"
+
     if "build_ext" in sys.argv:
         # We build a dotnet application.
         if '--inplace' not in sys.argv:
@@ -163,13 +177,13 @@ if not r:
             os.environ['DOTNET_CLI_TELEMETRY_OPTOUT']))
         cmds = ['dotnet restore CSharPyExtension_netcore.sln',
                 'dotnet restore CSharPyExtension_netframework.sln',
-                'dotnet build -c Release CSharPyExtension_netcore.sln']
+                'dotnet build -c %s CSharPyExtension_netcore.sln' % version2]
         if sys.platform.startswith('win'):
             cmds.append(
-                'dotnet msbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
+                'dotnet msbuild /p:Configuration=%s CSharPyExtension_netframework.sln' % version2)
         else:
             cmds.append(
-                'xbuild /p:Configuration=Release CSharPyExtension_netframework.sln')
+                'xbuild /p:Configuration=%s CSharPyExtension_netframework.sln' % version2)
         folder = os.path.abspath("cscode")
         outs = []
         for cmd in cmds:
@@ -184,7 +198,13 @@ if not r:
 
         # Copy files.
         from pyquickhelper.filehelper import explore_folder_iterfile
-        dest = os.path.join('src', 'csharpy', 'binaries')
+        dest = os.path.join('src', 'csharpy', 'binaries', version2)
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+        init = os.path.join(dest, "__init__.py")
+        if not os.path.exists(init):
+            with open(init, 'w') as f:
+                pass
         must_copy = {'DynamicCS': 0, 'CSharPyExtension': 0}
         copied = 0
         for name in explore_folder_iterfile(folder, pattern='.*[.]((dll)|(so))$'):
