@@ -70,7 +70,5 @@ script:
   - cd cscode
   - dotnet test -c Release TestCSharpyCore
   - dotnet test -c Debug TestCSharpyCore
-  - dotnet test -c Release TestCSharpyFramework
-  - dotnet test -c Debug TestCSharpyFramework
   - cd ..
   - python setup.py unittests

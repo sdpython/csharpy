@@ -132,26 +132,6 @@ jobs:
             cd ..
 
       - run:
-          name: run C# tests framework debug
-          env:
-            DOTNET_CLI_TELEMETRY_OPTOUT:1
-          command: |
-            . venv/bin/activate
-            cd cscode
-            dotnet test -c Debug TestCSharpyFramework
-            cd ..
-
-      - run:
-          name: run C# tests framework release
-          env:
-            DOTNET_CLI_TELEMETRY_OPTOUT:1
-          command: |
-            . venv/bin/activate
-            cd cscode
-            dotnet test -c Release TestCSharpyFramework
-            cd ..
-
-      - run:
           name: run python tests                  
           env:
             DOTNET_CLI_TELEMETRY_OPTOUT:1
