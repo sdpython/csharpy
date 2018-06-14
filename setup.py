@@ -209,7 +209,7 @@ if not r:
         copied = 0
         for name in explore_folder_iterfile(folder, pattern='.*[.]((dll)|(so))$'):
             full = os.path.join(folder, name)
-            if 'Release' in full:
+            if version2 in full:
                 short_name = os.path.split(os.path.splitext(name)[0])[-1]
                 if short_name in must_copy:
                     must_copy[short_name] += 1
