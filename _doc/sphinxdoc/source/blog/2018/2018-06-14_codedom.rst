@@ -1,0 +1,14 @@
+
+.. blogpost::
+    :title: Issue with System.CodeDom
+    :keywords: CodeCom, dynamic compilation
+    :date: 2018-06-14
+    :categories: dotnet
+
+    I faced that issue what I tried to dynamically compile C#
+    code with the netstandard version of
+    `System.CodeDom <https://www.nuget.org/packages/System.CodeDom/>`_:
+    `Cannot compile simple dynamic code after migration on .netstandard 2.0 (CodeDom throws System.PlatformNotSupportedException) <https://stackoverflow.com/questions/49655478/cannot-compile-simple-dynamic-code-after-migration-on-netstandard-2-0-codedom>`_.
+    I tried som easy solution but it did not seem
+    I could make it to work without making too
+    many changes. I'll give up for the time being.
