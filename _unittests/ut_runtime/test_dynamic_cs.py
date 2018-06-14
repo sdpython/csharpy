@@ -35,6 +35,7 @@ class TestDynamicCS(ExtTestCase):
         self.assertFalse(src is None)
 
     def test_pythonnet(self):
+        print("test_pythonnet")
         clr.AddReference("System")
         from System import String
         s = String("example")
@@ -45,11 +46,14 @@ class TestDynamicCS(ExtTestCase):
         d = Dictionary[String, String]()
         d["un"] = "1"
         self.assertEqual(d.Count, 1)
+        print("test_pythonnet")
 
     def test_add_reference_system(self):
+        print("test_add_reference_system")
         clr.AddReference("System")
 
     def test_pythonnet_array(self):
+        print("test_pythonnet_array")
         clr.AddReference("System")
         from System import IntPtr, Array, Double, Int64
         self.assertTrue(Double is not None)
@@ -67,14 +71,18 @@ class TestDynamicCS(ExtTestCase):
         #     Marshal.Copy(ar, ar2, 0, len(ar2))
         # except TypeError as e:
         #     warnings.warn(str(e))
+        print("test_pythonnet_array")
 
     def test_create_cs_function(self):
+        print("test_create_cs_function")
         code = "public static double SquareX(double x) {return x*x ; }"
         f = create_cs_function("SquareX", code)
         r = f(2.0)
         self.assertEqual(r, 4)
+        print("test_create_cs_function")
 
     def test_magic_cs(self):
+        print("test_magic_cs")
         cm = CsMagics()
         code = "public static double SquareX(double x) {return x*x ; }"
         code = """
@@ -136,6 +144,7 @@ class TestDynamicCS(ExtTestCase):
         self.assertEqual(res, exp)
         err = err.getvalue().split('\n')[0]
         self.assertEqual(res, exp)
+        print("test_magic_cs")
 
 
 if __name__ == "__main__":
