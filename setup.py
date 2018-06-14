@@ -220,7 +220,7 @@ if not r:
                 print("[csharpy.skip] '{0}'".format(name))
         min_must_copy = min(must_copy.values())
         if copied == 0 or min_must_copy == 0:
-            raise RuntimeError("Missing binaries in '{0}'".format(folder))
+            raise RuntimeError("Missing binaries in '{0}' for version='{1}'".format(folder, version2))
 
     if sys.platform.startswith("win"):
         extra_compile_args = None
