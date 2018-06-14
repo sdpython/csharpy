@@ -138,7 +138,7 @@ jobs:
           command: |
             . venv/bin/activate
             cd cscode
-            dotnet test -c Debug TestCSharpyCoreFramework
+            dotnet test -c Debug TestCSharpyFramework
             cd ..
 
       - run:
@@ -148,7 +148,7 @@ jobs:
           command: |
             . venv/bin/activate
             cd cscode
-            dotnet test -c Release TestCSharpyCoreFramework
+            dotnet test -c Release TestCSharpyFramework
             cd ..
 
       - run:
