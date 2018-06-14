@@ -63,7 +63,14 @@ install:
 before_script:
   - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
   - gcc --version
-  - python setup.py build_ext --inplace
+  - python setup.py build_ext --inplace Debug
+  - python setup.py build_ext --inplace Release
 
 script:
-    - python setup.py unittests
+  - cd cscode
+  - dotnet test -c Release TestCSharpyCore
+  - dotnet test -c Debug TestCSharpyCore
+  - dotnet test -c Release TestCSharpyCoreFramework
+  - dotnet test -c Debug TestCSharpyCoreFramework
+  - cd ..
+  - python setup.py unittests

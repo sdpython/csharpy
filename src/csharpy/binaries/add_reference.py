@@ -17,11 +17,11 @@ def AddReference(name):
             import os
             this = os.path.abspath(os.path.dirname(__file__))
             rel = os.path.join(this, "Release")
-            if os .path.exists(rel):
+            if os.path.exists(os.path.join(rel, '__init__.py')):
                 this = rel
             else:
                 rel = os.path.join(this, "Debug")
-                if not os.path.exists(rel):
+                if not os.path.exists(os.path.join(rel, '__init__.py')):
                     raise FileNotFoundError(
                         "Unable to find folders 'Release' or 'Debug' in '{0}'".format(this))
                 this = rel
