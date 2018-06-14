@@ -6,8 +6,8 @@
 import sys
 import os
 import unittest
+from pyquickhelper.pycode import ExtTestCase, get_temp_folder
 from pyquickhelper.loghelper import fLOG
-from pyquickhelper.pycode import get_temp_folder, ExtTestCase
 from pyquickhelper.ipythonhelper import execute_notebook_list, execute_notebook_list_finalize_ut
 
 
@@ -24,6 +24,8 @@ except ImportError:
         sys.path.append(path)
     import src
 
+import src.csharpy
+
 
 class TestRunNotebooks(ExtTestCase):
     """Runs notebooks in the documentation."""
@@ -36,7 +38,7 @@ class TestRunNotebooks(ExtTestCase):
         fLOG(
             __file__,
             self._testMethodName,
-            OutputPrint=__name__ == "__main__")
+            OutputPrint=True)  # __name__ == "__main__")
         temp = get_temp_folder(__file__, "temp_run_notebooks")
 
         # selection of notebooks

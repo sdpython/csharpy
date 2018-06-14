@@ -1,5 +1,5 @@
 """
-@brief      test tree node (time=50s)
+@brief      test tree node (time=30s)
 """
 
 import sys

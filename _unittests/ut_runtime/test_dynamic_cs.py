@@ -7,7 +7,7 @@ import unittest
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import numpy
-from pyquickhelper.pycode import ExtTestCase, skipif_travis
+from pyquickhelper.pycode import ExtTestCase
 import clr
 
 try:
@@ -74,7 +74,6 @@ class TestDynamicCS(ExtTestCase):
         r = f(2.0)
         self.assertEqual(r, 4)
 
-    @skipif_travis('No output has been received in the last 10m0s')
     def test_magic_cs(self):
         cm = CsMagics()
         code = "public static double SquareX(double x) {return x*x ; }"
