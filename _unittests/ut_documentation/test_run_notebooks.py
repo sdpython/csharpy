@@ -6,8 +6,8 @@
 import sys
 import os
 import unittest
-from pyquickhelper.pycode import ExtTestCase, get_temp_folder
-from pyquickhelper.loghelper import fLOG
+from pyquickhelper.pycode import ExtTestCase, get_temp_folder, is_travis_or_appveyor
+from pyquickhelper.loghelper import fLOG, nofLOG
 from pyquickhelper.ipythonhelper import execute_notebook_list, execute_notebook_list_finalize_ut
 
 
@@ -38,7 +38,10 @@ class TestRunNotebooks(ExtTestCase):
         fLOG(
             __file__,
             self._testMethodName,
-            OutputPrint=True)  # __name__ == "__main__")
+            OutputPrint=__name__ == "__main__" or is_travis_or_appveyor() == "travis")
+
+        # More displays fixes a unit test which remains stuck otherwise
+        # but only on travis, not on appveyor or circleci.
         temp = get_temp_folder(__file__, "temp_run_notebooks")
 
         # selection of notebooks
@@ -61,7 +64,8 @@ class TestRunNotebooks(ExtTestCase):
 
         # run the notebooks
         res = execute_notebook_list(
-            temp, keepnote, fLOG=fLOG, valid=valid, additional_path=addpaths, deepfLOG=fLOG)
+            temp, keepnote, fLOG=fLOG, valid=valid, additional_path=addpaths,
+            deepfLOG=fLOG if is_travis_or_appveyor() == "travis" else nofLOG)
         execute_notebook_list_finalize_ut(
             res, fLOG=fLOG, dump=src.csharpy)
 
