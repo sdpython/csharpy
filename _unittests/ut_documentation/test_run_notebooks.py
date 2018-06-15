@@ -61,7 +61,7 @@ class TestRunNotebooks(ExtTestCase):
 
         # run the notebooks
         res = execute_notebook_list(
-            temp, keepnote, fLOG=fLOG, valid=valid, additional_path=addpaths)
+            temp, keepnote, fLOG=fLOG, valid=valid, additional_path=addpaths, deepfLOG=fLOG)
         execute_notebook_list_finalize_ut(
             res, fLOG=fLOG, dump=src.csharpy)
 
