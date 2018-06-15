@@ -7,7 +7,7 @@ import sys
 import os
 import unittest
 from pyquickhelper.pycode import ExtTestCase, get_temp_folder, is_travis_or_appveyor
-from pyquickhelper.loghelper import fLOG, nofLOG
+from pyquickhelper.loghelper import fLOG, noLOG
 from pyquickhelper.ipythonhelper import execute_notebook_list, execute_notebook_list_finalize_ut
 
 
@@ -65,7 +65,7 @@ class TestRunNotebooks(ExtTestCase):
         # run the notebooks
         res = execute_notebook_list(
             temp, keepnote, fLOG=fLOG, valid=valid, additional_path=addpaths,
-            deepfLOG=fLOG if is_travis_or_appveyor() == "travis" else nofLOG)
+            deepfLOG=fLOG if is_travis_or_appveyor() == "travis" else noLOG)
         execute_notebook_list_finalize_ut(
             res, fLOG=fLOG, dump=src.csharpy)
 
