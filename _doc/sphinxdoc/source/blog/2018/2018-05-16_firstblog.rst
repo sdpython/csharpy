@@ -11,7 +11,7 @@
     as part of the build and to import them from ::epkg:`Python`.
     The first step of this project was to prepare a
     continuous build which works on Windows and Linux.
-    It was not that so obvious to install :epgk:`dotnet`,
+    It was not that so obvious to install :epkg:`dotnet`,
     :epkg:`Python` and :epkg:`pythonnet` on the same
     build for :epkg:`travis` and :epkg:`circleci`.
     Some links to help:
