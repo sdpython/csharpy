@@ -37,6 +37,7 @@ def custom_latex_processing(latex):
 
 epkg_dictionary.update({
     'C#': 'https://en.wikipedia.org/wiki/C_Sharp_(programming_language)',
+    'C++': 'https://en.wikipedia.org/wiki/C%2B%2B',
     'csharpy': 'http://www.xavierdupre.fr/app/csharpy/helpsphinx/index.html',
     'pythonnet': 'https://github.com/pythonnet/pythonnet',
 })
