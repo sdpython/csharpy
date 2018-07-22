@@ -131,7 +131,7 @@ if is_local():
         coverage_options=dict(omit=["*exclude*.py"]),
         github_owner=project_owner,
         fLOG=logging_function, covtoken=(
-            "80f56646-c804-4fb7-8476-2211bb9108d1", "'_UT_36_std' in outfile"),
+            "80f56646-c804-4fb7-8476-2211bb9108d1", "'_UT_37_std' in outfile"),
         requirements=["pyquickhelper", "jyquickhelper"],
         additional_notebook_path=["pyquickhelper", "jyquickhelper"],
         additional_local_path=["pyquickhelper", "jyquickhelper"],
