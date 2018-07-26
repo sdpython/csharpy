@@ -72,14 +72,6 @@ jobs:
                     sudo apt-get install -y graphviz
           
       - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            python3 -m pip install -r requirements.txt            
-            python3 -m pip install scipy scikit-learn
-            
-      - run:
           name: install pythonnet
           command: |
             python3 -m venv venv
@@ -92,6 +84,14 @@ jobs:
             python3 setup.py install --xplat
             cd ..
 
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            python3 -m pip install -r requirements.txt            
+            python3 -m pip install scipy scikit-learn
+            
       - save_cache:
           paths:
             - ./venv
