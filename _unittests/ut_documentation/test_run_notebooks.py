@@ -38,7 +38,7 @@ class TestRunNotebooks(ExtTestCase):
         fLOG(
             __file__,
             self._testMethodName,
-            OutputPrint=__name__ == "__main__" or is_travis_or_appveyor() == "travis")
+            OutputPrint=__name__ == "__main__")
 
         # More displays fixes a unit test which remains stuck otherwise
         # but only on travis, not on appveyor or circleci.
