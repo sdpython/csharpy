@@ -1,10 +1,11 @@
 dist: trusty
-sudo: false
+sudo: true
 language: python
+git:
+  submodules: true
   
 matrix:
   include:
-# --------------------- XPLAT builds ------------------------
     - python: 3.6
       env: &xplat-env
         - BUILD_OPTS=--xplat
@@ -19,8 +20,6 @@ matrix:
           packages:
             - mono-devel
             - ca-certificates-mono 
-            #- dotnet-hostfxr-2.1.200
-            #- dotnet-runtime-2.1.200
             - dotnet-sdk-2.1.200
 
 env:
@@ -38,11 +37,25 @@ addons:
     packages:
       - mono-devel
       - ca-certificates-mono
+      - clang
+      - cmake
+      - libunwind8
+      - curl
+      # ubuntu https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x#ubuntu
+      - libunwind8
+      - liblttng-ust0
+      - libcurl3
+      - libssl1.0.0
+      - libuuid1
+      - libkrb5-3
+      - zlib1g
+      - libicu52
 
 before_install:
   # Set-up dll path for embedded tests
   - PY_LIBDIR=$(python -c 'import sysconfig; print(sysconfig.get_config_var("LIBDIR"))')
   - export LD_LIBRARY_PATH=$PY_LIBDIR:$LD_LIBRARY_PATH
+  - export DOTNET_CLI_TELEMETRY_OPTOUT=1
   # Addition to pythonnet build
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update -qq
@@ -53,13 +66,12 @@ before_install:
   - pip install -U setuptools wheel
 
 install:
+  - pip install -r requirements.txt
   # Install pythonnet
-  - pip install pycparser
   - git clone https://github.com/pythonnet/pythonnet.git
   - cd pythonnet
   - python setup.py install $BUILD_OPTS
   - cd ..
-  - pip install -r requirements.txt
 
 before_script:
   - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
@@ -68,8 +80,8 @@ before_script:
   - python setup.py build_ext --inplace Release
 
 script:
-  - cd cscode
+    - cd cscode
   - dotnet test -c Release TestCSharpyCore
   - dotnet test -c Debug TestCSharpyCore
-  - cd ..
-  - python setup.py unittests
+    - cd ..
+    - python setup.py unittests
