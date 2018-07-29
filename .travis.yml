@@ -62,6 +62,7 @@ before_install:
   - sudo apt-get install -qq g++-5 --allow-unauthenticated
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 90
+  # For python
   - python -m pip install -U pip
   - pip install -U setuptools wheel
 
@@ -74,14 +75,17 @@ install:
   - cd ..
 
 before_script:
+  # Build the package
   - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
   - gcc --version
   - python setup.py build_ext --inplace Debug
   - python setup.py build_ext --inplace Release
 
 script:
-    - cd cscode
+  # Copy the compiled binaries.
+  - cd cscode
   - dotnet test -c Release TestCSharpyCore
   - dotnet test -c Debug TestCSharpyCore
-    - cd ..
-    - python setup.py unittests
+  - cd ..
+  # Runs the tests.
+  - python setup.py unittests
