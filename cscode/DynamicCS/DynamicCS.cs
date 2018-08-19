@@ -28,15 +28,15 @@ namespace DynamicCS
             var parameters = new CompilerParameters();
 
             if (dependencies != null)
-            {
                 foreach (var d in dependencies)
                     parameters.ReferencedAssemblies.Add(d);
-            }
 
             parameters.GenerateInMemory = true;
             parameters.GenerateExecutable = false;
 
-            var str_usings = usings == null ? string.Empty : string.Join("\n", usings.Select(u => string.Format("using {0};", u)));
+            var str_usings = usings == null
+                                ? string.Empty
+                                : string.Join("\n", usings.Select(u => string.Format("using {0};", u)));
 
             code = string.Format(embedCode, "{", "}", functionName, code, str_usings);
 
@@ -45,9 +45,9 @@ namespace DynamicCS
             {
                 StringBuilder sb = new StringBuilder();
                 foreach (CompilerError error in results.Errors)
-                {
                     sb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
-                }
+                sb.AppendLine("---------------");
+                sb.AppendLine(code);
                 throw new InvalidOperationException(sb.ToString());
             }
             Type binaryFunction = results.CompiledAssembly.GetType(string.Format("DynamicCS.DynamicCSFunctions_{0}", functionName));

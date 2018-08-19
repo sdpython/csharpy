@@ -12,12 +12,10 @@ namespace DynamicCS
     /// </summary>
     public class StdCapture: IDisposable
     {
-        StringBuilder sbout;
-        StringBuilder sberr;
-        StringWriter sout;
-        StringWriter serr;
-        TextWriter cur_out;
-        TextWriter cur_err;
+        readonly StringBuilder sbout;
+        readonly StringBuilder sberr;
+        readonly TextWriter cur_out;
+        readonly TextWriter cur_err;
 
         public string StdOut => sbout.ToString();
         public string StdErr => sberr.ToString();
@@ -29,8 +27,8 @@ namespace DynamicCS
         {
             sbout = new StringBuilder();
             sberr = new StringBuilder();
-            sout = new StringWriter(sbout);
-            serr = new StringWriter(sberr);
+            var sout = new StringWriter(sbout);
+            var serr = new StringWriter(sberr);
             cur_out = Console.Out;
             cur_err = Console.Error;
             Console.SetOut(sout);

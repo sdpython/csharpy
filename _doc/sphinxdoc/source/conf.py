@@ -10,6 +10,8 @@ set_sphinx_variables(__file__, "csharpy", "sdpython", 2018,
                      "sphinx_rtd_theme", [
                          sphinx_rtd_theme.get_html_theme_path()],
                      locals(), book=True,
+                     add_extensions=[
+                         "csharpy.sphinxext.sphinx_runcsharp_extension"],
                      extlinks=dict(issue=('https://github.com/sdpython/csharpy/issues/%s', 'issue')))
 
 blog_root = "http://www.xavierdupre.fr/app/csharpy/helpsphinx/"
@@ -40,4 +42,5 @@ epkg_dictionary.update({
     'C++': 'https://en.wikipedia.org/wiki/C%2B%2B',
     'csharpy': 'http://www.xavierdupre.fr/app/csharpy/helpsphinx/index.html',
     'pythonnet': 'https://github.com/pythonnet/pythonnet',
+    'runpython': 'http://www.xavierdupre.fr/app/pyquickhelper/helpsphinx/pyquickhelper/sphinxext/sphinx_runpython_extension.html#pyquickhelper.sphinxext.sphinx_runpython_extension.RunPythonDirective',
 })
