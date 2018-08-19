@@ -6,7 +6,7 @@ import warnings
 from ..binaries import AddReference
 
 
-def create_cs_function(name, code, usings=None, dependencies=None):
+def create_cs_function(name, code, usings=None, dependencies=None, redirect=False):
     """
     Compiles a :epkg:`C#` function.
     Relies on @see fn run_cs_function.
@@ -15,10 +15,13 @@ def create_cs_function(name, code, usings=None, dependencies=None):
     @param      code            :epkg:`C#` code
     @param      usings          *using* to add, such as *System*, *System.Linq*, ...
     @param      dependencies    dependencies, can be absolute path file
+    @param      redirect        redirect standard output and error
     @return                     :epkg:`Python` wrapper on the compiled :epkg:`C#`
 
     Assemblies are expected to be filename with extension.
     If this one is missing, it will be automatically added.
+    If *redirect* is True, the results is a tuple
+    ``(return of :epkg:`C#` function, standard output, standard error)``.
 
     .. faqref::
         :title: Linq is missing
@@ -61,16 +64,20 @@ def create_cs_function(name, code, usings=None, dependencies=None):
                 myarray.Add(d + ".dll")
     myarray = myarray.ToArray()
     obj = DynamicFunction.CreateFunction(name, code, usings, myarray)
-    return lambda *params: run_cs_function(obj, params)
+    return lambda *params: run_cs_function(obj, params, redirect=redirect)
 
 
-def run_cs_function(func, params):
+def run_cs_function(func, params, redirect=False):
     """
     Runs a :epkg:`C#` function.
 
     @param      func            :epkg:`C#` in memory object
     @param      params          parameters
+    @param      redirect        redirect standard output and error
     @return                     results of the :epkg:`C#` function
+
+    If *redirect* is True, the results is a tuple
+    ``(return of :epkg:`C#` function, standard output, standard error)``.
     """
     AddReference("DynamicCS")
     from DynamicCS import DynamicFunction
@@ -80,4 +87,8 @@ def run_cs_function(func, params):
     par = List[Object]()
     for p in params:
         par.Add(p)
-    return DynamicFunction.RunFunction(func, par.ToArray())
+    if redirect:
+        res = DynamicFunction.RunFunctionRedirectOutput(func, par.ToArray())
+        return (res.Item1, str(res.Item2).replace("\r", ""), str(res.Item3))
+    else:
+        return DynamicFunction.RunFunction(func, par.ToArray())

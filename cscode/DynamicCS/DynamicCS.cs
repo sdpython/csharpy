@@ -36,7 +36,7 @@ namespace DynamicCS
             parameters.GenerateInMemory = true;
             parameters.GenerateExecutable = false;
 
-            var str_usings = usings == null ? string.Empty : string.Join("\n", usings.Select(u =>string.Format("using {0};", u)));
+            var str_usings = usings == null ? string.Empty : string.Join("\n", usings.Select(u => string.Format("using {0};", u)));
 
             code = string.Format(embedCode, "{", "}", functionName, code, str_usings);
 
@@ -57,6 +57,15 @@ namespace DynamicCS
         public static object RunFunction(MethodInfo function, object[] parameters)
         {
             return function.Invoke(null, parameters);
+        }
+
+        public static Tuple<object, string, string> RunFunctionRedirectOutput(MethodInfo function, object[] parameters)
+        {
+            using (var std = new StdCapture())
+            {
+                var res = RunFunction(function, parameters);
+                return new Tuple<object, string, string>(res, std.StdOut, std.StdErr);
+            }
         }
     }
 }

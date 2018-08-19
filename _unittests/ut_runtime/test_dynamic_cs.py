@@ -69,10 +69,19 @@ class TestDynamicCS(ExtTestCase):
         #     warnings.warn(str(e))
 
     def test_create_cs_function(self):
-        code = "public static double SquareX(double x) {return x*x ; }"
+        code = "public static double SquareX(double x) { return x*x; }"
         f = create_cs_function("SquareX", code)
         r = f(2.0)
         self.assertEqual(r, 4)
+
+    def test_create_cs_function_output(self):
+        code = 'public static double SquareX(double x) { Console.WriteLine("check output"); return x*x ; }'
+        f = create_cs_function(
+            "SquareX", code, redirect=True, usings=["System"])
+        r, out, err = f(2.0)
+        self.assertEqual(r, 4)
+        self.assertEqual(out, "check output\n")
+        self.assertEqual(err, "")
 
     def test_magic_cs(self):
         cm = CsMagics()

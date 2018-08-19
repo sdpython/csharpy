@@ -48,7 +48,7 @@ class TestCodeStyle(ExtTestCase):
                          "csmagics.py:113: W0703",
                          "add_reference.py:14: W0703",
                          "No name 'version_c' in module 'src.csharpy.cparts.cmodule'",
-                         "compile.py:42: W0703",
+                         "compile.py:45: W0703",
                          ])
 
     def test_style_test(self):
