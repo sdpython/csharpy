@@ -5,7 +5,7 @@ pycparser
 pyensae
 pylint
 pymyinstall
-pyquickhelper>=1.8
+pyquickhelper>=1.8.2732
 pythonnet
 sphinx_rtd_theme
 wheel
