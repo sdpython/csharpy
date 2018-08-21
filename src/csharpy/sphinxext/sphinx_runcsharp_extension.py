@@ -12,6 +12,7 @@ def _make_options():
         'dependency': directives.unchanged,
         'entrypoint': directives.unchanged,
         'using': directives.unchanged,
+        'prefix_unittest': directives.unchanged,
     })
     return option_spec
 
@@ -121,8 +122,11 @@ class RunCSharpDirective(RunPythonDirective):
             script = "public static void {0}()\n{{\n{1}\n}}\n".format(
                 entrypoint, script)
 
+        prefix = self.options.get('prefix_unittest', '')
+
         script = ["from textwrap import dedent",
-                  "from csharpy.runtime import create_cs_function",
+                  "from {0}csharpy.runtime import create_cs_function".format(
+                      prefix),
                   "content = dedent('''",
                   script,
                   "''')"

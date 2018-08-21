@@ -1,5 +1,5 @@
 """
-@brief      test log(time=2s)
+@brief      test log(time=4s)
 """
 import sys
 import os
@@ -34,6 +34,7 @@ class TestRunCSharp(ExtTestCase):
         content = """
                     .. runcsharpthis::
                         :showcode:
+                        :prefix_unittest: src.
 
                         Console.WriteLine("{0}", 3*3);
                     """.replace("                    ", "")
@@ -50,6 +51,7 @@ class TestRunCSharp(ExtTestCase):
                     .. runcsharpthis::
                         :showcode:
                         :entrypoint: main
+                        :prefix_unittest: src.
 
                         public static double Square(double x) { return x*x; }
 
@@ -68,6 +70,7 @@ class TestRunCSharp(ExtTestCase):
                     .. runcsharpthis::
                         :showcode:
                         :entrypoint: main
+                        :prefix_unittest: src.
 
                         public static class Zoo {
                         public static double Square(double x) { return x*x; }
@@ -89,6 +92,7 @@ class TestRunCSharp(ExtTestCase):
                         :showcode:
                         :dependency: System.Core
                         :using: System.Linq, System.Text, System.Collections.Generic
+                        :prefix_unittest: src.
 
                         var li = new [] {"a", "b"};
                         var mes = string.Join(",", li.Select(c => c.ToUpper()));
