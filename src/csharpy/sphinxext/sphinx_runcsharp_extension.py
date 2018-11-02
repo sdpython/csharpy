@@ -1,6 +1,8 @@
 """
-Extends Sphinx to easily write documentation.
+@file
+@brief Extends Sphinx to easily write documentation.
 """
+import os
 import sphinx
 from docutils.parsers.rst import directives
 from pyquickhelper.sphinxext.sphinx_runpython_extension import RunPythonDirective
@@ -79,6 +81,7 @@ class RunCSharpDirective(RunPythonDirective):
         .. runcsharp::
             :showcode:
             :dependency: System.Core
+            :language: csharp
             :using: System.Linq, System.Text, System.Collections.Generic
 
             var li = new [] {"a", "b"};
@@ -90,6 +93,7 @@ class RunCSharpDirective(RunPythonDirective):
     .. runcsharp::
         :showcode:
         :dependency: System.Core
+        :language: csharp
         :using: System.Linq, System.Text, System.Collections.Generic
 
         var li = new [] {"a", "b"};
@@ -106,9 +110,16 @@ class RunCSharpDirective(RunPythonDirective):
         """
         usings = self.options.get('using', '')
         dependencies = self.options.get('dependency', '')
-        usings = [n.strip() for n in usings.strip().split(',')]
-        dependencies = [n.strip().replace("\\", "\\\\")
-                        for n in dependencies.strip().split(',')]
+        return self._modify_script_before_running(script, usings, dependencies)
+
+    def _modify_script_before_running(self, script, usings, dependencies):
+        if 'language' not in self.options:
+            self.options['language'] = 'csharp'
+        if isinstance(usings, str):
+            usings = [n.strip() for n in usings.strip().split(',')]
+        if isinstance(dependencies, str):
+            dependencies = [n.strip().replace("\\", "\\\\")
+                            for n in dependencies.strip().split(',')]
         usings = [_ for _ in usings if _]
         dependencies = [_ for _ in dependencies if _]
         if "System" not in usings:
@@ -116,11 +127,18 @@ class RunCSharpDirective(RunPythonDirective):
         usings.sort()
         dependencies.sort()
 
+        local_path = os.path.abspath(os.path.dirname(
+            self.state.document.current_source))
+
         entrypoint = self.options.get('entrypoint', '').strip()
+        const = 'const string RELPATH = @"{0}";'.format(
+            local_path.replace("\\", "\\\\"))
         if len(entrypoint) == 0:
             entrypoint = "main_{0}".format(id(self))
-            script = "public static void {0}()\n{{\n{1}\n}}\n".format(
-                entrypoint, script)
+            script = "public static void {0}()\n{{\n{1}\n\n{2}\n}}\n".format(
+                entrypoint, const, script)
+        else:
+            script = "\n{0}\n\n{1}".format(const, script)
 
         prefix = self.options.get('prefix_unittest', '')
 
