@@ -20,9 +20,9 @@ matrix:
           packages:
             - mono-devel
             - ca-certificates-mono
-            # - dotnet-hostfxr-2.1.200
-            # - dotnet-runtime-2.1.200
-            - dotnet-sdk-2.1
+            - dotnet-hostfxr-2.1.200
+            - dotnet-runtime-2.1.200
+            - dotnet-sdk-2.1.200
 
 env:
   global:
