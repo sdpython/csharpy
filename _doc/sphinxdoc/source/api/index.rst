@@ -20,4 +20,4 @@ runtime
 sphinx extensions
 +++++++++++++++++
 
-.. autosignature:: csharpy.sphinxext.compile.sphinx_runcsharp_extension.RunCSharpDirective
+.. autosignature:: csharpy.sphinxext.sphinx_runcsharp_extension.RunCSharpDirective

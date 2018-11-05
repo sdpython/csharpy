@@ -31,6 +31,36 @@ class CsMagics(MagicClassWithHelpers):
                             help='catch exception')
         return parser
 
+    @staticmethod
+    def _linearise_args(ll):
+        "Makes the list of lists into a list."
+        if ll is None:
+            return None
+        res = []
+        for el in ll:
+            if isinstance(el, list):
+                res.extend(el)
+            else:
+                res.append(el)
+        return res
+
+    @staticmethod
+    def _preprocess_line_cell_maml(line, cell):
+        "Preprocess the argument for method @see me CS."
+        cell_lines = cell.split('\n')
+        last = 0
+        for i, li in enumerate(cell_lines):
+            if not li.strip():
+                continue
+            if not li.startswith('-'):
+                last = i
+                break
+
+        if last > 0:
+            line += ' ' + ' '.join(cell_lines[:last])
+            cell = "\n".join(cell_lines[last:])
+        return line, cell
+
     @cell_magic
     def CS(self, line, cell):
         """
@@ -74,43 +104,20 @@ class CsMagics(MagicClassWithHelpers):
                     return System.Math.Pow(x,y) ;
                 }
         """
-        cell_lines = cell.split('\n')
-        last = 0
-        for i, li in enumerate(cell_lines):
-            if not li.strip():
-                continue
-            if not li.startswith('-'):
-                last = i
-                break
-
-        if last > 0:
-            line += ' ' + ' '.join(cell_lines[:last])
-            cell = "\n".join(cell_lines[last:])
+        line, cell = CsMagics._preprocess_line_cell_maml(line, cell)
 
         parser = self.get_parser(CsMagics.CS_parser, "CS")
         args = self.get_args(line, parser)
 
-        def linearise(ll):
-            "list of lists into list"
-            if ll is None:
-                return None
-            res = []
-            for el in ll:
-                if isinstance(el, list):
-                    res.extend(el)
-                else:
-                    res.append(el)
-            return res
-
         if args is not None:
             name = args.name
-            dep = linearise(args.dep)
-            idep = linearise(args.idep)
+            dep = CsMagics._linearise_args(args.dep)
+            idep = CsMagics._linearise_args(args.idep)
 
             if args.catch:
                 try:
                     f = create_cs_function(name, cell, idep, dep)
-                except Exception as e:
+                except Exception as e:  # pylint: disable=W0703
                     print(str(e).replace('\r', ''))
                     return None
             else:

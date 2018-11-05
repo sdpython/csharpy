@@ -44,7 +44,7 @@ class TestRunCSharp(ExtTestCase):
         res = rst2html(content, layout='sphinx',
                        writer="rst",
                        directives=tives)
-        self.assertIn('Console.WriteLine("{0}", 3*3)', res)
+        self.assertIn('Console.WriteLine("{0}", 3 * 3)', res)
 
     def test_runcsharp_fct(self):
         content = """

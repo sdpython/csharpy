@@ -270,3 +270,6 @@ _doc/sphinxdoc/source/gallery1/*
 _doc/sphinxdoc/source/gallery2/*
 _doc/sphinxdoc/source/HISTORY.rst
 cscode/packages/MSTest*
+.eggs
+_doc/sphinxdoc/source/nbcov*.png
+*.err
