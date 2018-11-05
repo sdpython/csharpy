@@ -36,7 +36,7 @@ class TestRunCSharp(ExtTestCase):
                         :showcode:
                         :prefix_unittest: src.
 
-                        Console.WriteLine("{0}", 3*3);
+                        Console.WriteLine("{0}", 3 * 3);
                     """.replace("                    ", "")
 
         tives = [("runcsharpthis", RunCSharpDirective)]
