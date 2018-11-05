@@ -40,7 +40,9 @@ CLASSIFIERS = [
 
 packages = find_packages('src', exclude='src')
 package_dir = {k: "src/" + k.replace(".", "/") for k in packages}
-package_data = {project_var_name + ".binaries": ["*.dll", "*.so"]}
+package_data = {project_var_name + ".binaries": ["*.dll", "*.so"],
+                project_var_name + ".binaries.Debug": ["*.dll", "*.so"],
+                project_var_name + ".binaries.Release": ["*.dll", "*.so"]}
 
 ############
 # functions
