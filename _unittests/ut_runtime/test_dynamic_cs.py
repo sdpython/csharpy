@@ -147,6 +147,5 @@ class TestDynamicCS(ExtTestCase):
         self.assertEqual(res, exp)
 
 
-
 if __name__ == "__main__":
     unittest.main()
