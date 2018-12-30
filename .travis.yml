@@ -18,7 +18,7 @@ matrix:
           packages:
             #- mono-devel
             #- ca-certificates-mono 
-            - dotnet-sdk-2.2
+            - dotnet-sdk-2.1.200
 
 env:
   global:
