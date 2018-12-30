@@ -8,19 +8,17 @@ matrix:
   include:
     - python: 3.6
       env: &xplat-env
-        - BUILD_OPTS=--xplat
-        - NUNIT_PATH=~/.nuget/packages/nunit.consolerunner/3.*/tools/nunit3-console.exe
       addons: &xplat-addons
         apt:
           sources:
           - sourceline: deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-trusty-prod trusty main
             key_url: https://packages.microsoft.com/keys/microsoft.asc
-          - sourceline: deb http://download.mono-project.com/repo/ubuntu trusty main
-            key_url: http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA6A19B38D3D831EF
+          #- sourceline: deb http://download.mono-project.com/repo/ubuntu trusty main
+           # key_url: http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA6A19B38D3D831EF
           packages:
             #- mono-devel
             #- ca-certificates-mono 
-            - dotnet-sdk-2.1.200
+            - dotnet-sdk-2.2
 
 env:
   global:
@@ -29,27 +27,27 @@ env:
     - PYTHONUNBUFFERED=True
     - DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-addons:
-  apt:
-    sources:
-      - sourceline: deb http://download.mono-project.com/repo/ubuntu trusty main
-        key_url: http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA6A19B38D3D831EF
-    packages:
+#addons:
+#  apt:
+#    sources:
+#      - sourceline: deb http://download.mono-project.com/repo/ubuntu trusty main
+#        key_url: http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA6A19B38D3D831EF
+#    packages:
       #- mono-devel
       #- ca-certificates-mono
-      - clang
-      - cmake
-      - libunwind8
-      - curl
+#      - clang
+#      - cmake
+#      - libunwind8
+#      - curl
       # ubuntu https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x#ubuntu
-      - libunwind8
-      - liblttng-ust0
-      - libcurl3
-      - libssl1.0.0
-      - libuuid1
-      - libkrb5-3
-      - zlib1g
-      - libicu52
+#      - libunwind8
+#      - liblttng-ust0
+#      - libcurl3
+#      - libssl1.0.0
+#      - libuuid1
+#      - libkrb5-3
+#      - zlib1g
+#      - libicu52
 
 before_install:
   # Set-up dll path for embedded tests
@@ -71,7 +69,7 @@ install:
   - pip install pycparser
   - git clone https://github.com/pythonnet/pythonnet.git
   - cd pythonnet
-  - python setup.py install $BUILD_OPTS
+  - python setup.py install --xplat
   - cd ..
   - pip install -r requirements.txt
 
