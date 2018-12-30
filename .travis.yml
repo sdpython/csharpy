@@ -18,8 +18,8 @@ matrix:
           - sourceline: deb http://download.mono-project.com/repo/ubuntu trusty main
             key_url: http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA6A19B38D3D831EF
           packages:
-            - mono-devel
-            - ca-certificates-mono 
+            #- mono-devel
+            #- ca-certificates-mono 
             - dotnet-sdk-2.1.200
 
 env:
@@ -35,8 +35,8 @@ addons:
       - sourceline: deb http://download.mono-project.com/repo/ubuntu trusty main
         key_url: http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA6A19B38D3D831EF
     packages:
-      - mono-devel
-      - ca-certificates-mono
+      #- mono-devel
+      #- ca-certificates-mono
       - clang
       - cmake
       - libunwind8

@@ -178,14 +178,16 @@ if not r:
         print('[csharpy.env] DOTNET_CLI_TELEMETRY_OPTOUT={0}'.format(
             os.environ['DOTNET_CLI_TELEMETRY_OPTOUT']))
         cmds = ['dotnet restore CSharPyExtension_netcore.sln',
-                'dotnet restore CSharPyExtension_netframework.sln',
+                #'dotnet restore CSharPyExtension_netframework.sln',
                 'dotnet build -c %s CSharPyExtension_netcore.sln' % version2]
-        if sys.platform.startswith('win'):
-            cmds.append(
-                'dotnet msbuild /p:Configuration=%s CSharPyExtension_netframework.sln' % version2)
-        else:
-            cmds.append(
-                'xbuild /p:Configuration=%s CSharPyExtension_netframework.sln' % version2)
+        if False:
+            if sys.platform.startswith('win'):
+                cmds.append(
+                    'dotnet msbuild /p:Configuration=%s CSharPyExtension_netframework.sln' % version2)
+            else:
+                cmds.append(
+                    'xbuild /p:Configuration=%s CSharPyExtension_netframework.sln' % version2)
+
         folder = os.path.abspath("cscode")
         outs = []
         for cmd in cmds:
