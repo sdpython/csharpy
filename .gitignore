@@ -273,3 +273,6 @@ cscode/packages/MSTest*
 .eggs
 _doc/sphinxdoc/source/nbcov*.png
 *.err
+cscode/packages
+
+cscode/csdependencies.txt

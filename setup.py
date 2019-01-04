@@ -227,6 +227,15 @@ if not r:
             raise RuntimeError(
                 "Missing binaries in '{0}' for version='{1}'".format(folder, version2))
 
+        # additional copies (dependencies)
+        cscode = os.path.join(root, "cscode")
+        deps = os.path.join(cscode, "csdependencies.txt")
+        with open(deps, "r") as f:
+            lines = [_.strip("\n\r ") for _ in f.readlines()]
+        lines = [_ for _ in lines if _]
+        for name in lines:
+            shutil.copy(name, dest)
+
     if sys.platform.startswith("win"):
         extra_compile_args = None
     else:
