@@ -5,7 +5,7 @@ import sys
 import os
 import unittest
 from pyquickhelper.pycode import ExtTestCase
-import clr
+import clr  # pylint: disable=E0401
 
 try:
     import src

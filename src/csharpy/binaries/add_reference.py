@@ -2,7 +2,7 @@
 @file
 @brief
 """
-from clr import AddReference as ClrAddReference
+from clr import AddReference as ClrAddReference  # pylint: disable=E0401
 
 
 def AddReference(name):

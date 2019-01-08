@@ -5,7 +5,7 @@
 History
 =======
 
-current - 2018-11-05 - 0.00Mb
+current - 2019-01-08 - 0.00Mb
 =============================
 
 * `9`: implements sphinx extension runcsharp (2018-08-19)
@@ -13,7 +13,7 @@ current - 2018-11-05 - 0.00Mb
 * `5`: run unit tests for C# (2018-06-16)
 * `6`: add Debug and Release folder in assemblies (2018-06-14)
 
-0.1.53 - 2018-05-20 - 0.03Mb
+0.1.53 - 2018-05-20 - 0.02Mb
 ============================
 
 * `2`: fix CI (2018-05-20)

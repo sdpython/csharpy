@@ -8,7 +8,7 @@ from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import numpy
 from pyquickhelper.pycode import ExtTestCase
-import clr
+import clr  # pylint: disable=E0401
 
 try:
     import src
