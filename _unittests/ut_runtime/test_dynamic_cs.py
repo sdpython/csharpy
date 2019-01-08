@@ -29,6 +29,10 @@ from src.csharpy.notebook.csmagics import CsMagics
 
 class TestDynamicCS(ExtTestCase):
     """Test dynamic compilation."""
+    """
+    System.Security.Permissions
+    System.Private.CoreLib
+    """
 
     def test_src(self):
         "skip pylint"
@@ -148,4 +152,5 @@ class TestDynamicCS(ExtTestCase):
 
 
 if __name__ == "__main__":
+    TestDynamicCS().test_create_cs_function()
     unittest.main()

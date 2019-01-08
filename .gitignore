@@ -274,5 +274,5 @@ cscode/packages/MSTest*
 _doc/sphinxdoc/source/nbcov*.png
 *.err
 cscode/packages
-
 cscode/csdependencies.txt
+_unittests/ut_runtime/*.dll

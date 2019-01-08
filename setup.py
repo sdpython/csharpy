@@ -99,6 +99,24 @@ if "upload" in sys.argv and not subversion and not ask_help():
     raise Exception(
         "Git version is empty, cannot upload, is_local()={0}".format(is_local()))
 
+
+class get_pybind_include(object):
+    """
+    Helper class to determine the pybind11 include path
+    The purpose of this class is to postpone importing pybind11
+    until it is actually installed, so that the ``get_include()``
+    method can be invoked.
+    `Source <https://github.com/pybind/python_example/blob/master/setup.py>`_.
+    """
+
+    def __init__(self, user=False):
+        self.user = user
+
+    def __str__(self):
+        import pybind11
+        return pybind11.get_include(self.user)
+
+
 ##############
 # common part
 ##############
@@ -230,22 +248,43 @@ if not r:
         for name in lines:
             shutil.copy(name, dest)
 
+    libraries_native = None
     if sys.platform.startswith("win"):
+        # libraries_native = ['kernel32']
         extra_compile_args = None
-    else:
+        extra_compile_args_native = ['/EHsc', '-std=c++11']
+    elif sys.platform.startswith("darwin"):
         extra_compile_args = ['-std=c++11']
+        extra_compile_args_native = [
+            '-stdlib=libc++', '-mmacosx-version-min=10.7']
+    else:
+        extra_compile_args_thread = ['-lpthread', '-std=c++11']
+        extra_compile_args_native = ['-std=c++11']
 
-    # C parts
+    # C and C++ parts
+
     ext_cparts = Extension('src.csharpy.cparts.cmodule',
                            [os.path.join(root, 'src/csharpy/cparts/version.cpp'),
                                os.path.join(root, 'src/csharpy/cparts/cmodule.cpp')],
                            extra_compile_args=extra_compile_args,
                            include_dirs=[os.path.join(root, 'src/csharpy/cparts')])
 
+    ext_native = Extension('src.csharpy.csnative.csnative',
+                            [os.path.join(root, 'src/csharpy/csnative/cmain.cpp')],
+                            extra_compile_args=extra_compile_args_native,
+                            include_dirs=[
+                                # Path to pybind11 headers
+                                get_pybind_include(),
+                                get_pybind_include(user=True),
+                                os.path.join(
+                                    root, 'src/csharpy/csnative')
+                            ],
+                            language='c++', libraries=libraries_native)                           
+
     # Regular setup.
     setup(
         name=project_var_name,
-        ext_modules=[ext_cparts],
+        ext_modules=[ext_cparts, ext_native],
         version='%s%s' % (sversion, subversion),
         author='Xavier Dupré',
         author_email='xavier.dupre@gmail.com',
@@ -260,5 +299,5 @@ if not r:
         package_dir=package_dir,
         package_data=package_data,
         setup_requires=["pyquickhelper"],
-        install_requires=['pythonnet', 'pyquickhelper'],
+        install_requires=['pyquickhelper'],
     )
