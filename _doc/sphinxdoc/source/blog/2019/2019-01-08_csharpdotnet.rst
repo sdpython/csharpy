@@ -14,4 +14,3 @@
     but that might or might not happen soon.
     Which means that :epkg:`mono` cannot be completely removed
     from :epkg:`pythonnet` on :epkg:`linux`.
-    

@@ -1,0 +1,35 @@
+
+.. blogpost::
+    :title: Write better C#
+    :keywords: compilation
+    :date: 2019-01-16
+    :categories: C#
+
+    This is a very interesting article talking about how to write
+    faster C# programs:
+    `Performance Tuning for .NET Core <https://reubenbond.github.io/posts/dotnet-perf-tuning>`_.
+    A few steps to make your code faster by letting the JIT rewrite more of your code:
+    `JIT: devirtualization next steps <https://github.com/dotnet/coreclr/issues/9908>`_.
+
+    Something common in C++ but missing in C#:
+    `All About Span: Exploring a New .NET Mainstay <https://msdn.microsoft.com/en-us/magazine/mt814808.aspx>`_.
+
+    Reflection is slow. One reason is the code which uses it
+    cannot be compiled with the :epkg:`JIT`. To speed it up:
+    `Fast access to .net fields/properties <https://github.com/mgravell/fast-member>`_.
+
+    Benchmark for serialization:
+    `Data Serialization Comparison <http://labs.criteo.com/2017/05/serialization/>`_.
+    There exists a python version of the library `thrift <https://thrift.apache.org/>`_:
+    `thriftrw-python <https://github.com/thriftrw/thriftrw-python>`_.
+    The concepts of *thrift* is similar to
+    `protobuf <https://developers.google.com/protocol-buffers/>`_.
+
+    About threads:
+    `.NET Threadpool starvation, and how queuing makes it worse <http://labs.criteo.com/2018/10/net-threadpool-starvation-and-how-queuing-makes-it-worse/>`_.
+
+    About Garbage collector:
+    `Learning How Garbage Collectors Work - Part 1 <https://mattwarren.org/2016/02/04/learning-how-garbage-collectors-work-part-1/>`_.
+
+    About IO:
+    `System.IO.Pipelines: High performance IO in .NET <https://blogs.msdn.microsoft.com/dotnet/2018/07/09/system-io-pipelines-high-performance-io-in-net/>`_.
