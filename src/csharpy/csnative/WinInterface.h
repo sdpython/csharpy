@@ -2,9 +2,8 @@
 // Licensed under the MIT license.
 
 #include <string>
-
 #include <cstdlib>
-#include ".\inc\mscoree.h"
+#include "inc/mscoree.h"
 
 std::wstring Utf8ToUtf16le(const char* utf8Str)
 {
@@ -49,10 +48,9 @@ void ConvertToWinPath(std::wstring & dir)
 class WinNetInterface
 {
 private:
-    FNGETTER _getter;
-
+    std::string _coreclrpath;
 public:
-    WinNetInterface() : _getter(nullptr), _host(nullptr), _hmodCore(nullptr)
+    WinNetInterface(const char *coreclrpath) : _coreclrpath(coreclrpath), _host(nullptr), _hmodCore(nullptr)
     {
     }
 
@@ -145,8 +143,13 @@ private:
         std::wstring wildPath(path);
         wildPath.append(W("*.dll"));
 
+        #ifdef _MSC_VER
+        WIN32_FIND_DATAW data;
+        HANDLE findHandle = FindFirstFileW(wildPath.c_str(), &data);
+        #else
         WIN32_FIND_DATA data;
         HANDLE findHandle = FindFirstFile(wildPath.c_str(), &data);
+        #endif
         if (findHandle == INVALID_HANDLE_VALUE)
         {
             // REVIEW: Report failure somehow.
@@ -157,11 +160,17 @@ private:
         {
             if ((data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
                 list.append(path).append(data.cFileName).append(W(";"));
-        } while (0 != FindNextFile(findHandle, &data));
+        } while (0 != 
+            #ifdef _MSC_VER
+            FindNextFileW(findHandle, &data)
+            #else        
+            FindNextFile(findHandle, &data)
+            #endif
+                );
         FindClose(findHandle);
     }
 
-    ICLRRuntimeHost2* EnsureClrHost(const wchar_t * libsRoot, const wchar_t * coreclrDirRoot)
+    ICLRRuntimeHost2* EnsureClrHost(const wchar_t * libsRoot, const wchar_t * coreclrDirRoot, const LPCWSTR dll_cs_name)
     {
         if (_host != nullptr)
             return _host;
@@ -234,7 +243,7 @@ private:
         };
 
         hr = host->CreateAppDomainWithManager(
-            W("NativeBridge"),  // The friendly name of the AppDomain
+            dll_cs_name,  // The friendly name of the AppDomain
             // Flags:
             // APPDOMAIN_ENABLE_PLATFORM_SPECIFIC_APPS
             // - By default CoreCLR only allows platform neutral assembly to be run. To allow
@@ -267,18 +276,18 @@ private:
     }
 
 public:
-    FNGETTER EnsureGetter(const char *nimbuslibspath, const char *coreclrpath)
+    void* CreateDeledate(const char *dll_lib_path,
+                         const LPCWSTR dll_cs_name,
+                         const LPCWSTR class_name,
+                         const LPCWSTR function_name)
     {
-        if (_getter != nullptr)
-            return _getter;
-
-        std::wstring libsdir = Utf8ToUtf16le(nimbuslibspath);
+        std::wstring libsdir = Utf8ToUtf16le(dll_lib_path);
         ConvertToWinPath(libsdir);
 
         std::wstring coreclrdir;
-        if (strlen(coreclrpath) != 0)
+        if (strlen(_coreclrpath.c_str()) != 0)
         {
-            coreclrdir = Utf8ToUtf16le(coreclrpath);
+            coreclrdir = Utf8ToUtf16le(_coreclrpath.c_str());
             ConvertToWinPath(coreclrdir);
         }
         else
@@ -286,26 +295,27 @@ public:
             coreclrdir = libsdir;
         }
 
-        ICLRRuntimeHost2* host = EnsureClrHost(libsdir.c_str(), coreclrdir.c_str());
-        if (host == nullptr)
-            return nullptr;
+        ICLRRuntimeHost2* host = EnsureClrHost(libsdir.c_str(), coreclrdir.c_str(), dll_cs_name);
+        if (host == NULL)
+            throw std::runtime_error("Host is NULL.");
 
         // CoreCLR currently requires using environment variables to set most CLR flags.
         // cf. https://github.com/dotnet/coreclr/blob/master/Documentation/project-docs/clr-configuration-knobs.md
         if (_wputenv(W("COMPlus_gcAllowVeryLargeObjects=1")) == -1)
-            return nullptr;
+            throw std::runtime_error("Issue with COMPlus_gcAllowVeryLargeObjects.");
+        std::cout << "OKOKOK\n";
 
-        INT_PTR getter;
+        void* getter = NULL;
         HRESULT hr = host->CreateDelegate(
             _domainId,
-            W("DotNetBridge"),
-            W("Microsoft.MachineLearning.DotNetBridge.Bridge"),
-            W("GetFn"),
-            &getter);
+            dll_cs_name,
+            class_name,
+            function_name,
+            (INT_PTR*)&getter);
         if (FAILED(hr))
-            return nullptr;
-
-        _getter = (FNGETTER)getter;
-        return _getter;
+            throw std::runtime_error("Unable to retrieve a function.");
+        if (getter == NULL)
+            throw std::runtime_error("Unable to retrieve a function due to NULL pointer.");
+        return getter;
     }
 };

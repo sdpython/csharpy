@@ -12,21 +12,16 @@
 #include <unistd.h>
 #include <vector>
 
-#define NATIVE_BRIDGE_LIB "/pybridge.so"
+#define NATIVE_BRIDGE_LIB "/csnative.so"
 #ifdef __APPLE__
-#define CORECLR_LIB "/libcoreclr.dylib"
+#define CORECLR_LIB "/csnative.dylib"
 #else
-#define CORECLR_LIB "/libcoreclr.so"
+#define CORECLR_LIB "/csnative.so"
 #endif
 
 #define CORECLR_INIT "coreclr_initialize"
 #define CORECLR_DELEGATE "coreclr_create_delegate"
 #define CORECLR_SHUTDOWN "coreclr_shutdown"
-
-#define DOTNETBRIDGE "DotNetBridge"
-#define DOTNETBRIDGE_FQDN "Microsoft.MachineLearning.DotNetBridge.Bridge"
-
-#define GET_FN "GetFn"
 
 // Define some common Windows types for Linux.
 typedef void* HMODULE;
@@ -34,7 +29,7 @@ typedef unsigned int DWORD;
 typedef int HRESULT;
 typedef void* INT_PTR;
 
-// Prototype of the coreclr_initialize function from the libcoreclr.so.
+// Prototype of the coreclr_initialize function from the csnative.so.
 typedef int(*FnInitializeCoreCLR)(
     const char* exePath,
     const char* appDomainFriendlyName,
@@ -44,12 +39,12 @@ typedef int(*FnInitializeCoreCLR)(
     HMODULE* hostHandle,
     DWORD* domainId);
 
-// Prototype of the coreclr_shutdown function from the libcoreclr.so.
+// Prototype of the coreclr_shutdown function from the csnative.so.
 typedef int(*FnShutdownCoreCLR)(
     HMODULE hostHandle,
     DWORD domainId);
 
-// Prototype of the coreclr_create_delegate function from the libcoreclr.so.
+// Prototype of the coreclr_create_delegate function from the csnative.so.
 typedef int(*FnCreateDelegate)(
     HMODULE hostHandle,
     DWORD domainId,
@@ -97,11 +92,13 @@ public:
         return shutdownCoreCLR(hostHandle, domainId);
     }
 
-    HRESULT CreateDelegate(DWORD domainId, const char* assemblyName, const char* className, const char* methodName, INT_PTR* fnPtr)
+    HRESULT CreateDelegate(DWORD domainId, const char* assemblyName, const char* className,
+                           const char* methodName, INT_PTR* fnPtr)
     {
         if (createDelegate == nullptr || hostHandle == nullptr)
             return -1;
-        return createDelegate(hostHandle, domainId, assemblyName, className, methodName, fnPtr);
+        return createDelegate(hostHandle, domainId, assemblyName,
+                              className, methodName, fnPtr);
     }
 
     HRESULT CreateAppDomainWithManager(
@@ -130,29 +127,27 @@ public:
 class UnixNetInterface
 {
 private:
-    FNGETTER _getter;
-
-private:
     // The coreclr.dll module.
     HMODULE _hmodCore;
     // The runtime host and app domain.
     ICLRRuntimeHost2 *_host;
     DWORD _domainId;
+    std::string _coreclrpath;
 
 public:
-    UnixNetInterface() : _getter(nullptr), _hmodCore(nullptr), _host(nullptr)
+    UnixNetInterface(const char *coreclrpath) : _coreclrpath(coreclrpath), _hmodCore(nullptr), _host(nullptr)
     {
     }
 
-    FNGETTER EnsureGetter(const char *nimbuslibspath, const char *coreclrpath)
+    INT_PTR CreateDeledate(const char *dll_lib_path,
+                           const LPCWSTR dll_cs_name,
+                           const LPCWSTR class_name,
+                           const LPCWSTR function_name)
     {
-        if (_getter != nullptr)
-            return _getter;
+        std::string libsroot(dll_lib_path);
+        std::string coreclrdir(_coreclrpath);
 
-        std::string libsroot(nimbuslibspath);
-        std::string coreclrdir(coreclrpath);
-
-        ICLRRuntimeHost2* host = EnsureClrHost(libsroot.c_str(), coreclrdir.c_str());
+        ICLRRuntimeHost2* host = EnsureClrHost(libsroot.c_str(), coreclrdir.c_str(), dll_cs_name);
         if (host == nullptr)
             return nullptr;
 
@@ -163,15 +158,14 @@ public:
         INT_PTR getter;
         HRESULT hr = host->CreateDelegate(
             _domainId,
-            W(DOTNETBRIDGE),
-            W(DOTNETBRIDGE_FQDN),
-            W(GET_FN),
+            dll_cs_name,
+            class_name,
+            function_name,
             &getter);
         if (FAILED(hr))
             return nullptr;
 
-        _getter = (FNGETTER)getter;
-        return _getter;
+        return getter;
     }
 
 private:
@@ -246,7 +240,7 @@ private:
         closedir(dir);
     }
 
-    ICLRRuntimeHost2* EnsureClrHost(const char * libsRoot, const char * coreclrDirRoot)
+    ICLRRuntimeHost2* EnsureClrHost(const char * libsRoot, const char * coreclrDirRoot, const LPCWSTR dll_cs_name)
     {
         if (_host != nullptr)
             return _host;
@@ -290,7 +284,7 @@ private:
         };
 
         hr = host->CreateAppDomainWithManager(
-            W("NativeBridge"),  // The friendly name of the AppDomain
+            dll_cs_name,  // The friendly name of the AppDomain
             // Flags:
             // APPDOMAIN_ENABLE_PLATFORM_SPECIFIC_APPS
             // - By default CoreCLR only allows platform neutral assembly to be run. To allow

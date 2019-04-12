@@ -2,13 +2,13 @@
 @file
 @brief
 """
-from clr import AddReference as ClrAddReference
 
 
 def AddReference(name):
     """
     Imports a :epkg:`C#` dll.
     """
+    from clr import AddReference as ClrAddReference
     try:
         return ClrAddReference(name)
     except Exception as e:

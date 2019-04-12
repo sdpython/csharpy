@@ -251,16 +251,16 @@ if not r:
 
     libraries_native = None
     if sys.platform.startswith("win"):
-        # libraries_native = ['kernel32']
+        libraries_native = ['kernel32']
         extra_compile_args = None
-        extra_compile_args_native = ['/EHsc', '-std=c++11']
+        extra_compile_args_native = ['/EHsc', '-std=c++11', '-DNOMINMAX']
     elif sys.platform.startswith("darwin"):
         extra_compile_args = ['-std=c++11']
         extra_compile_args_native = [
-            '-stdlib=libc++', '-mmacosx-version-min=10.7']
+            '-stdlib=libc++', '-mmacosx-version-min=10.7', '-DNOMINMAX']
     else:
         extra_compile_args_thread = ['-lpthread', '-std=c++11']
-        extra_compile_args_native = ['-std=c++11']
+        extra_compile_args_native = ['-std=c++11', '-DNOMINMAX']
 
     # C and C++ parts
 
@@ -271,7 +271,7 @@ if not r:
                            include_dirs=[os.path.join(root, 'src/csharpy/cparts')])
 
     ext_native = Extension('csharpy.csnative.csmain',
-                           [os.path.join(root, 'src/csharpy/csnative/cmain.cpp'),
+                           [os.path.join(root, 'src/csharpy/csnative/csmain.cpp'),
                             os.path.join(root, 'src/csharpy/csnative/stdafx.cpp')],
                            extra_compile_args=extra_compile_args_native,
                            include_dirs=[
