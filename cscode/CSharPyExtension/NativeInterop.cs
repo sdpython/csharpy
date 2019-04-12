@@ -89,7 +89,6 @@ namespace CSharPyExtension
             if (cch == 0)
                 return null;
 #if CORECLR
-
             return Encoding.UTF8.GetString((byte*)psz, cch);
 #else
             if (cch <= 0)

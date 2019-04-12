@@ -233,7 +233,8 @@ if not r:
                 print("[csharpy.copy] '{0}'".format(name))
                 shutil.copy(name, dest)
             else:
-                print("[csharpy.skip] '{0}'".format(name))
+                # print("[csharpy.skip] '{0}'".format(name))
+                pass
         min_must_copy = min(must_copy.values())
         if copied == 0 or min_must_copy == 0:
             raise RuntimeError(
@@ -263,23 +264,24 @@ if not r:
 
     # C and C++ parts
 
-    ext_cparts = Extension('src.csharpy.cparts.cmodule',
+    ext_cparts = Extension('csharpy.cparts.cmodule',
                            [os.path.join(root, 'src/csharpy/cparts/version.cpp'),
                                os.path.join(root, 'src/csharpy/cparts/cmodule.cpp')],
                            extra_compile_args=extra_compile_args,
                            include_dirs=[os.path.join(root, 'src/csharpy/cparts')])
 
-    ext_native = Extension('src.csharpy.csnative.csnative',
-                            [os.path.join(root, 'src/csharpy/csnative/cmain.cpp')],
-                            extra_compile_args=extra_compile_args_native,
-                            include_dirs=[
-                                # Path to pybind11 headers
-                                get_pybind_include(),
-                                get_pybind_include(user=True),
-                                os.path.join(
-                                    root, 'src/csharpy/csnative')
-                            ],
-                            language='c++', libraries=libraries_native)                           
+    ext_native = Extension('csharpy.csnative.csmain',
+                           [os.path.join(root, 'src/csharpy/csnative/cmain.cpp'),
+                            os.path.join(root, 'src/csharpy/csnative/stdafx.cpp')],
+                           extra_compile_args=extra_compile_args_native,
+                           include_dirs=[
+                               # Path to pybind11 headers
+                               get_pybind_include(),
+                               get_pybind_include(user=True),
+                               os.path.join(
+                                   root, 'src/csharpy/csnative')
+                           ],
+                           language='c++', libraries=libraries_native)
 
     # Regular setup.
     setup(

@@ -28,8 +28,7 @@ from src.csharpy.notebook.csmagics import CsMagics
 
 
 class TestDynamicCS(ExtTestCase):
-    """Test dynamic compilation."""
-    """
+    """Test dynamic compilation.
     System.Security.Permissions
     System.Private.CoreLib
     """
