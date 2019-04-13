@@ -8,18 +8,10 @@
 #include <iostream>
 #include <filesystem>
 
-#if _MSC_VER
 #if __cplusplus < 201402L
 namespace fs = std::experimental::filesystem;
 #else
 namespace fs = std::filesystem;
-#endif
-#else
-#if __GNUC__ >= 8
-namespace fs = std::filesystem;
-#else
-namespace fs = std::experimental::filesystem;
-#endif
 #endif
 
 #if _MSC_VER
@@ -117,6 +109,8 @@ typedef double (STDCALL * TypeSquareNumber)(double);
 
 double SquareNumber(double x)
 {
+    // Exception do not work well.
+    // They should be handled in C# as it makes python crash.
     static TypeSquareNumber fct = (TypeSquareNumber)GetSquareNumberFunction();
     double r = fct(x);
     return r;

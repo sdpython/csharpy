@@ -35,6 +35,14 @@ class TestCsNative(ExtTestCase):
         y = SquareNumber(4.)
         self.assertEqual(y, 16)
 
+    def test_cs_square_number_exception(self):
+        from csharpy.csnative.csmain import SquareNumber  # pylint: disable=E0611
+        try:
+            SquareNumber(9.)  # replace by a negative value
+            raise Exception("Not implemented yet")
+        except Exception:
+            pass
+
 
 if __name__ == "__main__":
     unittest.main()
