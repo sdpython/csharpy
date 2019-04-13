@@ -2,6 +2,7 @@ coverage
 dotnetcore2
 jyquickhelper
 Pillow
+pybind11
 pycparser
 pyensae
 pylint
