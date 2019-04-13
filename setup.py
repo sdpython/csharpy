@@ -256,11 +256,11 @@ if not r:
         extra_compile_args = None
         extra_compile_args_native = ['/EHsc', '-std=c++11', '-DNOMINMAX']
     elif sys.platform.startswith("darwin"):
-        extra_compile_args = ['-std=c++11']
+        extra_compile_args = ['-std=c++11', '-lstdc++fs']
         extra_compile_args_native = [
             '-stdlib=libc++', '-mmacosx-version-min=10.7', '-DNOMINMAX']
     else:
-        extra_compile_args = ['-lpthread', '-std=c++11']
+        extra_compile_args = ['-lpthread', '-std=c++11', '-lstdc++fs']
         extra_compile_args_native = ['-std=c++11', '-DNOMINMAX']
 
     # C and C++ parts
