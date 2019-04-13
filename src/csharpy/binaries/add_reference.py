@@ -8,7 +8,7 @@ def AddReference(name):
     """
     Imports a :epkg:`C#` dll.
     """
-    from clr import AddReference as ClrAddReference
+    from clr import AddReference as ClrAddReference  # pylint: disable=E0401
     try:
         return ClrAddReference(name)
     except Exception as e:

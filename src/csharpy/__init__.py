@@ -4,7 +4,7 @@
 :epkg:`Python`, :epkg:`C#`.
 """
 
-__version__ = "0.1"
+__version__ = "0.2"
 __author__ = "sdpython"
 __github__ = "https://github.com/sdpython/csharpy"
 __url__ = "http://www.xavierdupre.fr/app/csharpy/helpsphinx/index.html"

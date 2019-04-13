@@ -70,4 +70,3 @@ Follow the instructions described in
 * `GitHub/csharpy <https://github.com/sdpython/csharpy/>`_
 * `documentation <http://www.xavierdupre.fr/app/csharpy/helpsphinx2/index.html>`_
 * `Blog <http://www.xavierdupre.fr/app/csharpy/helpsphinx/blog/main_0000.html#ap-main-0>`_
-

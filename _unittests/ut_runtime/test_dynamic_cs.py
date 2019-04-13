@@ -1,30 +1,13 @@
 """
 @brief      test log(time=2s)
 """
-import sys
-import os
 import unittest
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 import numpy
 from pyquickhelper.pycode import ExtTestCase
-import clr
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.csharpy.runtime import create_cs_function
-from src.csharpy.notebook.csmagics import CsMagics
+from csharpy.runtime import create_cs_function
+from csharpy.notebook.csmagics import CsMagics
 
 
 class TestDynamicCS(ExtTestCase):
@@ -33,11 +16,8 @@ class TestDynamicCS(ExtTestCase):
     System.Private.CoreLib
     """
 
-    def test_src(self):
-        "skip pylint"
-        self.assertFalse(src is None)
-
     def test_pythonnet(self):
+        import clr  # pylint: disable=E0401
         clr.AddReference("System")
         from System import String
         s = String("example")
@@ -50,9 +30,11 @@ class TestDynamicCS(ExtTestCase):
         self.assertEqual(d.Count, 1)
 
     def test_add_reference_system(self):
+        import clr  # pylint: disable=E0401
         clr.AddReference("System")
 
     def test_pythonnet_array(self):
+        import clr  # pylint: disable=E0401
         clr.AddReference("System")
         from System import IntPtr, Array, Double, Int64
         self.assertTrue(Double is not None)
@@ -151,5 +133,4 @@ class TestDynamicCS(ExtTestCase):
 
 
 if __name__ == "__main__":
-    TestDynamicCS().test_create_cs_function()
     unittest.main()

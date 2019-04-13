@@ -6,7 +6,7 @@ namespace CSharPyExtension
     {
         public static string Version()
         {
-            return "0.1";
+            return "0.2";
         }
 
         public static string GetFullName()
