@@ -260,7 +260,7 @@ if not r:
         extra_compile_args_native = [
             '-stdlib=libc++', '-mmacosx-version-min=10.7', '-DNOMINMAX']
     else:
-        extra_compile_args_thread = ['-lpthread', '-std=c++11']
+        extra_compile_args = ['-lpthread', '-std=c++11']
         extra_compile_args_native = ['-std=c++11', '-DNOMINMAX']
 
     # C and C++ parts
