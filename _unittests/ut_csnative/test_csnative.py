@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 @brief      test log(time=2s)
 """
@@ -34,6 +35,11 @@ class TestCsNative(ExtTestCase):
         self.assertEqual(y, 81)
         y = SquareNumber(4.)
         self.assertEqual(y, 16)
+
+    def test_cs_random_string(self):
+        from csharpy.csnative.csmain import RandomString  # pylint: disable=E0611
+        y = RandomString()
+        self.assertEqual(y, "Français")
 
     def test_cs_square_number_exception(self):
         from csharpy.csnative.csmain import SquareNumber  # pylint: disable=E0611

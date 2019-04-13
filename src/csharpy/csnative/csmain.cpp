@@ -106,7 +106,6 @@ void* GetSquareNumberFunction()
 
 typedef double (STDCALL * TypeSquareNumber)(double);
 
-
 double SquareNumber(double x)
 {
     // Exception do not work well.
@@ -114,6 +113,38 @@ double SquareNumber(double x)
     static TypeSquareNumber fct = (TypeSquareNumber)GetSquareNumberFunction();
     double r = fct(x);
     return r;
+}
+
+
+typedef void (STDCALL * TypeRandomString)(std::string &);
+
+void* GetRandomStringFunction()
+{
+    static void* _fct = NULL;
+    if (_fct == NULL) {
+        NetInterface * dll = GetNetInterface(_coreclrpath.c_str());
+        if (dll == NULL)
+            throw CsNativeExecutionError("Cannot get a pointer to NetInterface.");
+        void* fct = dll->CreateDeledate(
+            _CSharpyPyExtension.c_str(),
+            W("CSharPyExtension"),
+            W("CSharPyExtension.CsBridge"),
+            W("RandomString"));
+        if (fct == NULL)
+            throw CsNativeExecutionError("Cannot retrieve function RandomString.");
+        _fct = fct;
+    }
+    return _fct;
+}
+
+std::string RandomString()
+{
+    // Exception do not work well.
+    // They should be handled in C# as it makes python crash.
+    static TypeRandomString fct = (TypeRandomString)GetRandomStringFunction();
+    std::string dst;
+    fct(dst);
+    return dst;
 }
 
 
@@ -180,4 +211,7 @@ PYBIND11_MODULE(csmain, m) {
 
     m.def("SquareNumber", &SquareNumber,
         "Returns the square of a number as an example for C#.");
+
+    m.def("RandomString", &RandomString,
+        "Returns a string with a non English character.");
 }

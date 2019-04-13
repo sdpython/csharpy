@@ -9,5 +9,10 @@ namespace CSharPyExtension
                 throw new System.Exception("Fails if x < 0.");
             return x * x;
         }
+
+        public static unsafe void RandomString(ref string dst)
+        {
+            dst = "Français";
+        }
     }
 }
