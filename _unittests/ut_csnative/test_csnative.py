@@ -21,9 +21,9 @@ class TestCsNative(ExtTestCase):
     def test_cs_square_number(self):
         from csharpy.csnative.csmain import SquareNumber
         y = SquareNumber(9.)
-        self.assertEqual(y, 3)
+        self.assertEqual(y, 81)
         y = SquareNumber(4.)
-        self.assertEqual(y, 2)
+        self.assertEqual(y, 16)
 
 if __name__ == "__main__":
     unittest.main()

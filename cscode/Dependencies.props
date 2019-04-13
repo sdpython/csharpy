@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <MicrosoftCodeAnalysisCSharpVersion>2.11.0-beta1-final</MicrosoftCodeAnalysisCSharpVersion>
-    <SystemCollectionsImmutableVersion>1.2.0</SystemCollectionsImmutableVersion>
+    <MicrosoftCodeAnalysisCSharpVersion>2.9.0</MicrosoftCodeAnalysisCSharpVersion>
+    <SystemCollectionsImmutableVersion>1.5.0</SystemCollectionsImmutableVersion>
   </PropertyGroup>
 </Project>

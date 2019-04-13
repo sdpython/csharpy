@@ -59,8 +59,8 @@ void* GetSquareNumberFunction()
             throw CsNativeExecutionError("Cannot get a pointer to NetInterface.");
         void* fct = dll->CreateDeledate(
             _CSharpyPyExtension.c_str(),
-            W("CSharPyExtension, Version=0.1.0, Culture=neutral"),
-            W("CSharPyExtension.StaticExample"),
+            W("CSharPyExtension"),
+            W("CSharPyExtension.CsBridge"),
             W("SquareNumber"));
         if (fct == NULL)
             throw CsNativeExecutionError("Cannot retrieve function SquareNumber.");
@@ -76,9 +76,7 @@ typedef double (STDCALL * TypeSquareNumber)(double);
 double SquareNumber(double x)
 {
     static TypeSquareNumber fct = (TypeSquareNumber)GetSquareNumberFunction();
-    std::cout << "x = " << x << " fct is NULL " << (fct == NULL) << "\n";
-    double r = (*fct)(x);
-    std::cout << "r = " << r << "\n";
+    double r = fct(x);
     return r;
 }
 

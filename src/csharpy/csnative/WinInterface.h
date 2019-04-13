@@ -1,9 +1,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+
 #include <string>
 #include <cstdlib>
 #include "inc/mscoree.h"
+
 
 std::wstring Utf8ToUtf16le(const char* utf8Str)
 {
@@ -34,6 +36,7 @@ std::wstring Utf8ToUtf16le(const char* utf8Str)
     return result;
 }
 
+
 void ConvertToWinPath(std::wstring & dir)
 {
     for (int ich = 0; ich < dir.size(); ich++)
@@ -44,6 +47,7 @@ void ConvertToWinPath(std::wstring & dir)
     if (dir[dir.size() - 1] != '\\')
         dir.append(W("\\"));
 }
+
 
 class WinNetInterface
 {
@@ -71,14 +75,12 @@ private:
             if (FAILED(hr))
             {
                 // REVIEW: Handle failure.
-                //log << W("Failed to unload the AppDomain. ERRORCODE: ") << hr << Logger::endl;
                 //return false;
             }
 
             hr = _host->Stop();
             if (FAILED(hr)) {
                 // REVIEW: Handle failure.
-                //log << W("Failed to stop the host. ERRORCODE: ") << hr << Logger::endl;
                 //return false;
             }
 
@@ -128,7 +130,6 @@ private:
             if (!::GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_PIN, pathCore.c_str(), &hmodTmp))
             {
                 // REVIEW: Log failure somehow.
-                // *m_log << W("Failed to pin: ") << pathCore << Logger::endl;
                 return nullptr;
             }
 
@@ -199,7 +200,6 @@ private:
                 STARTUP_FLAGS::STARTUP_SINGLE_APPDOMAIN));
         if (FAILED(hr))
         {
-            // log << W("Failed to set startup flags. ERRORCODE: ") << hr << Logger::endl;
             host->Release();
             return nullptr;
         }
@@ -207,7 +207,6 @@ private:
         hr = host->Start();
         if (FAILED(hr))
         {
-            // log << W("Failed to start CoreCLR. ERRORCODE: ") << hr << Logger::endl;
             host->Release();
             return nullptr;
         }
@@ -266,7 +265,6 @@ private:
             &_domainId);
         if (FAILED(hr))
         {
-            // log << W("Failed call to CreateAppDomainWithManager. ERRORCODE: ") << hr << Logger::endl;
             host->Release();
             return nullptr;
         }
@@ -301,9 +299,8 @@ public:
 
         // CoreCLR currently requires using environment variables to set most CLR flags.
         // cf. https://github.com/dotnet/coreclr/blob/master/Documentation/project-docs/clr-configuration-knobs.md
-        if (_wputenv(W("COMPlus_gcAllowVeryLargeObjects=1")) == -1)
-            throw std::runtime_error("Issue with COMPlus_gcAllowVeryLargeObjects.");
-        std::cout << "OKOKOK\n";
+        // if (_wputenv(W("COMPlus_gcAllowVeryLargeObjects=1")) == -1)
+        //    throw std::runtime_error("Issue with COMPlus_gcAllowVeryLargeObjects.");
 
         void* getter = NULL;
         HRESULT hr = host->CreateDelegate(

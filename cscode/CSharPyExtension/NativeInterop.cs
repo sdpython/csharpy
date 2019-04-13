@@ -33,25 +33,11 @@ namespace CSharPyExtension
         }
 
         /// <summary>
-        /// Pointers created in CSharp can be moved and cannot be used from C++ if
-        /// C++ is calling a CSharp function. A getter keeps this point stale
-        /// where the C++ is calling it.
-        /// </summary>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private unsafe delegate void GetterFloatPointer(DataStructure* pv, long index, out float dst);
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private unsafe delegate void GetterText(DataStructure* pv, out char* pch, out int size);
-
-        /// <summary>
         /// Converts UTF8 bytes with known length to ROM<char>. Negative length unsupported.
         /// </summary>
         public static void BytesToText(sbyte* prgch, ulong bch, ref string dst)
         {
-            if (bch > 0)
-                dst = BytesToString(prgch, bch);
-            else
-                dst = string.Empty;
+            dst = (bch > 0) ? BytesToString(prgch, bch) : string.Empty;
         }
 
         /// <summary>
@@ -59,10 +45,7 @@ namespace CSharPyExtension
         /// </summary>
         public static void BytesToText(sbyte* psz, ref string dst)
         {
-            if (psz != null)
-                dst = BytesToString(psz);
-            else
-                dst = string.Empty;
+            dst = (psz != null) ? BytesToString(psz) : string.Empty;
         }
 
         /// <summary>

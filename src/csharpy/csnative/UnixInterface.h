@@ -23,11 +23,13 @@
 #define CORECLR_DELEGATE "coreclr_create_delegate"
 #define CORECLR_SHUTDOWN "coreclr_shutdown"
 
+
 // Define some common Windows types for Linux.
 typedef void* HMODULE;
 typedef unsigned int DWORD;
 typedef int HRESULT;
 typedef void* INT_PTR;
+
 
 // Prototype of the coreclr_initialize function from the csnative.so.
 typedef int(*FnInitializeCoreCLR)(
@@ -39,10 +41,12 @@ typedef int(*FnInitializeCoreCLR)(
     HMODULE* hostHandle,
     DWORD* domainId);
 
+
 // Prototype of the coreclr_shutdown function from the csnative.so.
 typedef int(*FnShutdownCoreCLR)(
     HMODULE hostHandle,
     DWORD domainId);
+
 
 // Prototype of the coreclr_create_delegate function from the csnative.so.
 typedef int(*FnCreateDelegate)(
@@ -52,6 +56,7 @@ typedef int(*FnCreateDelegate)(
     const char* entryPointTypeName,
     const char* entryPointMethodName,
     void** delegate);
+
 
 // A handmade ICLRRuntimeHost2 for Linux to reduce the code disparity between Linux and Windows.
 class ICLRRuntimeHost2
@@ -124,6 +129,7 @@ public:
     }
 };
 
+
 class UnixNetInterface
 {
 private:
@@ -139,7 +145,7 @@ public:
     {
     }
 
-    INT_PTR CreateDeledate(const char *dll_lib_path,
+    void* CreateDeledate(const char *dll_lib_path,
                            const LPCWSTR dll_cs_name,
                            const LPCWSTR class_name,
                            const LPCWSTR function_name)
@@ -149,22 +155,23 @@ public:
 
         ICLRRuntimeHost2* host = EnsureClrHost(libsroot.c_str(), coreclrdir.c_str(), dll_cs_name);
         if (host == nullptr)
-            return nullptr;
+            throw std::runtime_error("Host is NULL.");
 
         // CoreCLR currently requires using environment variables to set most CLR flags.
         // cf. https://github.com/dotnet/coreclr/blob/master/Documentation/project-docs/clr-configuration-knobs.md
         // putenv("COMPlus_gcAllowVeryLargeObjects=1");
 
-        INT_PTR getter;
+        void* getter = nullptr;
         HRESULT hr = host->CreateDelegate(
             _domainId,
             dll_cs_name,
             class_name,
             function_name,
-            &getter);
+            (INT_PTR*)&getter);
         if (FAILED(hr))
-            return nullptr;
-
+            throw std::runtime_error("Unable to retrieve a function.");
+        if (getter == nullptr)
+            throw std::runtime_error("Unable to retrieve a function due to NULL pointer.");
         return getter;
     }
 

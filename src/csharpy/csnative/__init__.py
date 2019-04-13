@@ -19,7 +19,7 @@ def start():
     csext = os.path.join(loc, "CSharPyExtension.dll")
     if not os.path.exists(csext):
         raise FileNotFoundError("Unable to find DLL '{}'.".format(csext))
-    return cs_start(get_clr_path(), csext)
+    return cs_start(get_clr_path(), loc)
     
 
 def close():
