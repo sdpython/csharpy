@@ -8,10 +8,18 @@
 #include <iostream>
 #include <filesystem>
 
+#if _MSC_VER
 #if __cplusplus < 201402L
 namespace fs = std::experimental::filesystem;
 #else
 namespace fs = std::filesystem;
+#endif
+#else
+#if __GNUC__ >= 8
+namespace fs = std::filesystem;
+#else
+namespace fs = std::experimental::filesystem;
+#endif
 #endif
 
 #if _MSC_VER
