@@ -43,6 +43,7 @@ epkg_dictionary.update({
     'csharpy': 'http://www.xavierdupre.fr/app/csharpy/helpsphinx/index.html',
     'JIT': 'https://en.wikipedia.org/wiki/Just-in-time_compilation',
     'mono': 'https://www.mono-project.com/',
+    'nimbusml': 'https://github.com/Microsoft/NimbusML',
     'pythonnet': 'https://github.com/pythonnet/pythonnet',
     'runpython': 'http://www.xavierdupre.fr/app/pyquickhelper/helpsphinx/pyquickhelper/sphinxext/sphinx_runpython_extension.html#pyquickhelper.sphinxext.sphinx_runpython_extension.RunPythonDirective',
 })

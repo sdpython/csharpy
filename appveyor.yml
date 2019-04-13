@@ -28,6 +28,7 @@ before_build:
   - cmd: dotnet --version
   # Display minimal restore text
   - cmd: dotnet restore ./src/src.csproj --verbosity m
+  - export PYTHONPATH=src
 
 before_test:
   - "%PYTHON%\\python -u setup.py build_ext --inplace Release"
