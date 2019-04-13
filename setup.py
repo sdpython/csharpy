@@ -302,5 +302,9 @@ if not r:
         package_dir=package_dir,
         package_data=package_data,
         setup_requires=["pyquickhelper"],
-        install_requires=['pyquickhelper'],
+        install_requires=['dotnetcore2', 'pythonnet'],
+        extras_require={
+            'notebook': ['pyquickhelper'],
+            'sphinxext': ['pyquickhelper'],
+        },
     )

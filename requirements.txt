@@ -1,4 +1,5 @@
 coverage
+dotnetcore2
 jyquickhelper
 Pillow
 pycparser

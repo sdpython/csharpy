@@ -10,7 +10,7 @@ namespace TestCSharpyCore
         [TestMethod]
         public void TestTestVersion()
         {
-            Assert.AreEqual(Constants.Version(), "0.1");
+            Assert.AreEqual(Constants.Version(), "0.2");
         }
     }
 }

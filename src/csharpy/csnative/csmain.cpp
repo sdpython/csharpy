@@ -6,7 +6,13 @@
 #include "stdafx.h"
 #include <string>
 #include <iostream>
+#include <filesystem>
 
+#if __cplusplus < 201402L
+namespace fs = std::experimental::filesystem;
+#else
+namespace fs = std::filesystem;
+#endif
 
 #if _MSC_VER
 #include "WinInterface.h"
@@ -26,18 +32,46 @@ private:
     std::string msg_;
 };
 
-std::string _coreclrpath;
-std::string _CSharpyPyExtension;
+static std::string _coreclrpath;
+static std::string _coreclrpath_default;
+static std::string _CSharpyPyExtension;
 static NetInterface * _interface = NULL;
+
+
+void retrieve_dotnetcore_path(std::string &path_clr)
+{
+    // This function assumes dotnetcore2 is installed.
+    //py::scoped_interpreter guard{};
+    pybind11::module dnc = pybind11::module::import("dotnetcore2.runtime");
+    auto fct = dnc.attr("_get_bin_folder");
+    std::string value = fct().cast<std::string>();
+    fs::path path = value;
+    path /= std::string("shared");
+    path /= std::string("Microsoft.NETCore.App");
+    fs::path full_path;
+    fs::path look;
+    std::string dll("Microsoft.CSharp.dll");
+    for (const auto & full_path : fs::directory_iterator(path)) {
+        look = full_path / dll;
+        if (fs::exists(look)) {
+            fs::path fpath = full_path;
+            auto native = fpath.native();
+            path_clr = std::string(native.begin(), native.end());
+            return;
+        }
+    }
+    throw CsNativeExecutionError("Unable to find dotnetcore2.");
+}
 
 
 NetInterface * GetNetInterface(const char *coreclrpath = NULL, bool remove = false)
 {
     if (_interface == NULL) {
         if (coreclrpath == NULL || strlen(coreclrpath) == 0)
-            throw CsNativeExecutionError("coreclrpath is empty or a function is called before calling function cs_start.");
-        _interface = new NetInterface(coreclrpath);
-        _coreclrpath = coreclrpath;
+            retrieve_dotnetcore_path(_coreclrpath);
+        else
+            _coreclrpath = coreclrpath;
+        _interface = new NetInterface(_coreclrpath.c_str());
         if (_interface == NULL)
             throw CsNativeExecutionError("Cannot not load CoreClr.");
     }
@@ -101,8 +135,16 @@ const char * _core_clr_path()
 }
 
 
+const char * _core_clr_path_default()
+{
+    return _coreclrpath_default.c_str();
+}
+
+
 PYBIND11_MODULE(csmain, m) {
     Py_Initialize();
+    
+    retrieve_dotnetcore_path(_coreclrpath_default);
 
     m.doc() = "Calls C# functions from C++.";
 
@@ -126,6 +168,9 @@ PYBIND11_MODULE(csmain, m) {
     :param CSharpyPyExtension: absolute location of DLL CSharpyPyExtension)pbdoc");
     
     m.def("_core_clr_path", &_core_clr_path,
+          "Returns path to dot net used to load this assemblies.");
+
+    m.def("_core_clr_path_default", &_core_clr_path_default,
           "Returns path to dot net used to load this assemblies.");
 
     m.def("cs_end", &cs_end,

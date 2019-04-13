@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCSharpyCore", "TestCSha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicCS", "DynamicCScore\DynamicCS.csproj", "{8E98337D-932C-4456-A9C6-650FF6F28881}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "debug", "debug\debug.vcxproj", "{4B632AF0-52D7-40AF-8CF6-FF2AC6AE109A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +29,10 @@ Global
 		{8E98337D-932C-4456-A9C6-650FF6F28881}.Debug|x64.Build.0 = Debug|x64
 		{8E98337D-932C-4456-A9C6-650FF6F28881}.Release|x64.ActiveCfg = Release|x64
 		{8E98337D-932C-4456-A9C6-650FF6F28881}.Release|x64.Build.0 = Release|x64
+		{4B632AF0-52D7-40AF-8CF6-FF2AC6AE109A}.Debug|x64.ActiveCfg = Debug|x64
+		{4B632AF0-52D7-40AF-8CF6-FF2AC6AE109A}.Debug|x64.Build.0 = Debug|x64
+		{4B632AF0-52D7-40AF-8CF6-FF2AC6AE109A}.Release|x64.ActiveCfg = Release|x64
+		{4B632AF0-52D7-40AF-8CF6-FF2AC6AE109A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

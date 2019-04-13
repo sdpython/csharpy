@@ -41,6 +41,8 @@ epkg_dictionary.update({
     'C#': 'https://en.wikipedia.org/wiki/C_Sharp_(programming_language)',
     'C++': 'https://en.wikipedia.org/wiki/C%2B%2B',
     'csharpy': 'http://www.xavierdupre.fr/app/csharpy/helpsphinx/index.html',
+    'dotnetcore': 'https://github.com/dotnet/core',
+    'dotnetcore2': 'https://pypi.org/project/dotnetcore2/',
     'JIT': 'https://en.wikipedia.org/wiki/Just-in-time_compilation',
     'mono': 'https://www.mono-project.com/',
     'nimbusml': 'https://github.com/Microsoft/NimbusML',
