@@ -105,10 +105,6 @@ private:
         if (_hmodCore == nullptr)
         {
             std::wstring pathCore(path);
-            //std::wstring env(path);
-            //env.append(L";").append(_wgetenv(L"PATH"));
-            //_wputenv(env.c_str());
-
             pathCore.append(W("CoreCLR.dll"));
 
             // Load CoreCLR from the indicated directory.
@@ -118,20 +114,14 @@ private:
                 // | LOAD_LIBRARY_SEARCH_SYSTEM32
                 | LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
             );
-            SetDllDirectoryW(nullptr);
             if (!hmodCore)
-            {
-                // REVIEW: Log failure somehow.
-                return nullptr;
-            }
+                throw std::runtime_error("Unable to run load CoreCLR.");
+            SetDllDirectoryW(nullptr);
 
             // Pin the module - CoreCLR.dll does not support being unloaded.
             HMODULE hmodTmp;
             if (!::GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_PIN, pathCore.c_str(), &hmodTmp))
-            {
-                // REVIEW: Log failure somehow.
-                return nullptr;
-            }
+                throw std::runtime_error("Unable to pin CoreCLR.");
 
             _hmodCore = hmodCore;
         }
@@ -144,13 +134,13 @@ private:
         std::wstring wildPath(path);
         wildPath.append(W("*.dll"));
 
-        #ifdef _MSC_VER
+#ifdef _MSC_VER
         WIN32_FIND_DATAW data;
         HANDLE findHandle = FindFirstFileW(wildPath.c_str(), &data);
-        #else
+#else
         WIN32_FIND_DATA data;
         HANDLE findHandle = FindFirstFile(wildPath.c_str(), &data);
-        #endif
+#endif
         if (findHandle == INVALID_HANDLE_VALUE)
         {
             // REVIEW: Report failure somehow.
@@ -161,13 +151,13 @@ private:
         {
             if ((data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
                 list.append(path).append(data.cFileName).append(W(";"));
-        } while (0 != 
-            #ifdef _MSC_VER
+        } while (0 !=
+#ifdef _MSC_VER
             FindNextFileW(findHandle, &data)
-            #else        
+#else        
             FindNextFile(findHandle, &data)
-            #endif
-                );
+#endif
+            );
         FindClose(findHandle);
     }
 
@@ -183,16 +173,18 @@ private:
 
         // Start the CoreCLR.
         HMODULE hmodCore = EnsureCoreClrModule(coreclrDirRoot);
+        if (!hmodCore)
+            throw new std::runtime_error("Unable to run EnsureCoreClrModule.");
 
         FnGetCLRRuntimeHost pfnGetCLRRuntimeHost =
             (FnGetCLRRuntimeHost)::GetProcAddress(hmodCore, "GetCLRRuntimeHost");
         if (!pfnGetCLRRuntimeHost)
-            return nullptr;
+            throw new std::runtime_error("Unable to get GetCLRRuntimeHost.");
 
         ICLRRuntimeHost2 *host;
         HRESULT hr = pfnGetCLRRuntimeHost(IID_ICLRRuntimeHost2, (IUnknown**)&host);
         if (FAILED(hr))
-            return nullptr;
+            throw new std::runtime_error("Unable to get IID_ICLRRuntimeHost2.");
 
         // Default startup flags.
         hr = host->SetStartupFlags((STARTUP_FLAGS)
@@ -201,14 +193,14 @@ private:
         if (FAILED(hr))
         {
             host->Release();
-            return nullptr;
+            throw new std::runtime_error("Unable to set STARTUP_FLAGS.");
         }
 
         hr = host->Start();
         if (FAILED(hr))
         {
             host->Release();
-            return nullptr;
+            throw new std::runtime_error("Unable to start domain.");
         }
 
         DWORD appDomainFlags = APPDOMAIN_ENABLE_PLATFORM_SPECIFIC_APPS |
@@ -266,7 +258,7 @@ private:
         if (FAILED(hr))
         {
             host->Release();
-            return nullptr;
+            throw new std::runtime_error("Unable to create domain.");
         }
 
         _host = host;
@@ -275,9 +267,9 @@ private:
 
 public:
     void* CreateDeledate(const char *dll_lib_path,
-                         const LPCWSTR dll_cs_name,
-                         const LPCWSTR class_name,
-                         const LPCWSTR function_name)
+        const LPCWSTR dll_cs_name,
+        const LPCWSTR class_name,
+        const LPCWSTR function_name)
     {
         std::wstring libsdir = Utf8ToUtf16le(dll_lib_path);
         ConvertToWinPath(libsdir);

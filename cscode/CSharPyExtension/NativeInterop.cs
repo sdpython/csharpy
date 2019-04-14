@@ -10,26 +10,63 @@ namespace CSharPyExtension
         /// Copy of a C++ structure.
         /// </summary>
         [StructLayout(LayoutKind.Explicit)]
-        private struct DataStructure
+        public struct DataStructure
         {
 #pragma warning disable 649 // never assigned
+
+            // Stores an exception. If not NULL, it should a string.
             [FieldOffset(0x00)]
-            public readonly long aLong;
+            public void* exc;
+
+            // Inputs.
             [FieldOffset(0x08)]
-            public readonly double aDouble;
+            public void* inputs;
+
+            // Outputs.
             [FieldOffset(0x10)]
-            public readonly float aFloat;
-            [FieldOffset(0x14)]
-            public readonly byte aByte;
-            [FieldOffset(0x15)]
-            public readonly byte aSecondByte;
-            [FieldOffset(0x17)]
-            public readonly short aShort;
+            public void* outputs;
+
+            // Allocates spaces in C++ world.
             [FieldOffset(0x18)]
-            public readonly float* aFloatPointer;
+            public void* allocate_fct;
+
+            // Allocates spaces in C++ world.
             [FieldOffset(0x20)]
-            public readonly char* aString;
+            public void* printfw_fct;
 #pragma warning restore 649 // never assigned
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public unsafe delegate void NativeAllocation(int size, out void* ptr);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public unsafe delegate void Printf(char* ptr);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public unsafe delegate void Printfw(void* ptr);
+
+        public static TDel MarshalDelegate<TDel>(void* pv)
+        {
+            return Marshal.GetDelegateForFunctionPointer<TDel>((IntPtr)pv);
+        }
+
+        public static void CPrintf(Printf fct, string msg)
+        {
+            var enc = StringToNullTerminatedBytesUTF8(msg);
+            unsafe
+            {
+                fixed (byte* pb = enc)
+                    fct((char*)pb);
+            }
+        }
+
+        public static void CPrintfw(Printfw fct, string msg)
+        {
+            unsafe
+            {
+                fixed (void* pw = msg)
+                    fct(pw);
+            }
         }
 
         /// <summary>
@@ -89,10 +126,19 @@ namespace CSharPyExtension
         /// <summary>
         /// Converts a string to null-terminated UTF8 bytes.
         /// </summary>
-        internal static byte[] StringToNullTerminatedBytes(string str)
+        internal static byte[] StringToNullTerminatedBytesUTF8(string str)
         {
             // Note that it will result in multiple UTF-8 null bytes at the end, which is not ideal but harmless.
             return Encoding.UTF8.GetBytes(str + Char.MinValue);
+        }
+
+        /// <summary>
+        /// Converts a string to null-terminated UTF8 bytes.
+        /// </summary>
+        internal static byte[] StringToNullTerminatedBytesUnicode(string str)
+        {
+            // Note that it will result in multiple UTF-8 null bytes at the end, which is not ideal but harmless.
+            return Encoding.Unicode.GetBytes(str + Char.MinValue);
         }
     }
 }

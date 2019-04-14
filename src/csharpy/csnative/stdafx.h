@@ -38,8 +38,17 @@ typedef unsigned char	BYTE;
 
 #endif //_MSC_VER
 
-#include <pybind11/pybind11.h>
 #include <string>
 #include <exception>
-#include <pybind11/numpy.h>
-#include <sysmodule.h>
+
+typedef struct DataStructure
+{
+public:
+    void* exc;          // Stores an exception. If not NULL, it should a string.    
+    void* inputs;       // Inputs.    
+    void* outputs;      // Outputs.    
+    void* allocate_fct; // Allocates spaces in C++ world: allocate(int size, void** output)
+    void* printfw_fct;  // Printf function: printfw(wchar_t msg)
+} DataStructure;
+
+typedef int type_agnostic_function(DataStructure *);
