@@ -109,7 +109,7 @@ MANAGED_CALLBACK(void) CallBackMalloc(int size, void **ptr)
 MANAGED_CALLBACK(void) CallPrintf(const char * msg)
 {
     if (msg != NULL)
-        printf(msg);
+        std::cout << msg;
 }
 
 MANAGED_CALLBACK(void) CallPrintfw(const wchar_t * msg)
