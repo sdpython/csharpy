@@ -135,7 +135,7 @@ int CallAgnosticFunction(TypeAgnosticFunction * fct, DataStructure * data)
 
 
 void * cs_start(const std::string& coreclrpath,
-    const std::string& CSharpyPyExtension)
+                const std::string& CSharpyPyExtension)
 {
     _CSharpyPyExtension = CSharpyPyExtension;
     return GetNetInterface(coreclrpath.c_str());

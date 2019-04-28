@@ -276,3 +276,4 @@ _doc/sphinxdoc/source/nbcov*.png
 cscode/packages
 cscode/csdependencies.txt
 _unittests/ut_runtime/*.dll
+_unittests/*.out

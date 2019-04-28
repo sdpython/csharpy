@@ -1,13 +1,18 @@
+// See https://github.com/joelmartinez/dotnet-core-roslyn-sample/blob/master/Program.cs.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+
+#if NET4
+#else
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-// see https://github.com/joelmartinez/dotnet-core-roslyn-sample/blob/master/Program.cs
+#endif
 
 
 namespace DynamicCS
