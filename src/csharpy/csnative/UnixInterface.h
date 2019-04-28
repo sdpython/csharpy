@@ -23,10 +23,6 @@
 #define CORECLR_DELEGATE "coreclr_create_delegate"
 #define CORECLR_SHUTDOWN "coreclr_shutdown"
 
-#ifndef LPCWSTR
-#define LPCWSTR const uint16_t *
-#endif
-
 
 // Define some common Windows types for Linux.
 typedef void* HMODULE;
@@ -150,9 +146,9 @@ public:
     }
 
     void* CreateDeledate(const char *dll_lib_path,
-                           const LPCWSTR dll_cs_name,
-                           const LPCWSTR class_name,
-                           const LPCWSTR function_name)
+                           const char* dll_cs_name,
+                           const char* class_name,
+                           const char* function_name)
     {
         std::string libsroot(dll_lib_path);
         std::string coreclrdir(_coreclrpath);
@@ -168,9 +164,9 @@ public:
         void* getter = nullptr;
         HRESULT hr = host->CreateDelegate(
             _domainId,
-            dll_cs_name,
-            class_name,
-            function_name,
+            W(dll_cs_name),
+            W(class_name),
+            W(function_name),
             (INT_PTR*)&getter);
         if (FAILED(hr))
             throw std::runtime_error("Unable to retrieve a function.");
@@ -251,7 +247,7 @@ private:
         closedir(dir);
     }
 
-    ICLRRuntimeHost2* EnsureClrHost(const char * libsRoot, const char * coreclrDirRoot, const LPCWSTR dll_cs_name)
+    ICLRRuntimeHost2* EnsureClrHost(const char * libsRoot, const char * coreclrDirRoot, const char* dll_cs_name)
     {
         if (_host != nullptr)
             return _host;
@@ -295,7 +291,7 @@ private:
         };
 
         hr = host->CreateAppDomainWithManager(
-            dll_cs_name,  // The friendly name of the AppDomain
+            W(dll_cs_name),  // The friendly name of the AppDomain
             // Flags:
             // APPDOMAIN_ENABLE_PLATFORM_SPECIFIC_APPS
             // - By default CoreCLR only allows platform neutral assembly to be run. To allow
