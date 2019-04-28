@@ -4,11 +4,12 @@
 #include "stdafx.h"
 #include <string>
 #include <iostream>
-#include <filesystem>
 
-#if __cplusplus < 201402L
+#if __cplusplus <= 201402L
+#include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 #else
+#include <filesystem>
 namespace fs = std::filesystem;
 #endif
 
