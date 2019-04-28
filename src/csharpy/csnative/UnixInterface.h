@@ -23,6 +23,10 @@
 #define CORECLR_DELEGATE "coreclr_create_delegate"
 #define CORECLR_SHUTDOWN "coreclr_shutdown"
 
+#ifndef LPCWSTR
+#define LPCWSTR const uint16_t *
+#endif
+
 
 // Define some common Windows types for Linux.
 typedef void* HMODULE;

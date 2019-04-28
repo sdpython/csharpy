@@ -4,14 +4,7 @@
 #include "stdafx.h"
 #include <string>
 #include <iostream>
-
-#if __cplusplus <= 201402L
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#else
-#include <filesystem>
-namespace fs = std::filesystem;
-#endif
+#include "_filesystem.h"
 
 #if _MSC_VER
 #include "WinInterface.h"
