@@ -61,7 +61,7 @@ TypeSquareNumber* GetSquareNumberFunction()
         NetInterface * dll = GetNetInterface(_coreclrpath.c_str());
         if (dll == NULL)
             throw CsNativeExecutionError("Cannot get a pointer to NetInterface.");
-        void* fct = dll->CreateDeledate(
+        void* fct = dll->CreateDelegate(
             _CSharpyPyExtension.c_str(),
             W("CSharPyExtension"),
             W("CSharPyExtension.CsBridge"),
@@ -91,7 +91,7 @@ TypeAgnosticFunction* GetAgnosticFunction(const wchar_t * function_name)
     NetInterface * dll = GetNetInterface(_coreclrpath.c_str());
     if (dll == NULL)
         throw CsNativeExecutionError("Cannot get a pointer to NetInterface.");
-    void* fct = dll->CreateDeledate(
+    void* fct = dll->CreateDelegate(
         _CSharpyPyExtension.c_str(),
         W("CSharPyExtension"),
         W("CSharPyExtension.CsBridge"),

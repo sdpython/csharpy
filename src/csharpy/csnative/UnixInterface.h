@@ -145,10 +145,10 @@ public:
     {
     }
 
-    void* CreateDeledate(const char *dll_lib_path,
-                           const char* dll_cs_name,
-                           const char* class_name,
-                           const char* function_name)
+    void* CreateDelegate(const char *dll_lib_path,
+                         const char* dll_cs_name,
+                         const char* class_name,
+                         const char* function_name)
     {
         std::string libsroot(dll_lib_path);
         std::string coreclrdir(_coreclrpath);

@@ -266,7 +266,7 @@ private:
     }
 
 public:
-    void* CreateDeledate(const char *dll_lib_path,
+    void* CreateDelegate(const char *dll_lib_path,
         const LPCWSTR dll_cs_name,
         const LPCWSTR class_name,
         const LPCWSTR function_name)
