@@ -22,6 +22,7 @@ typedef unsigned char		BYTE;
 // Windows Header Files:
 //
 #include <windows.h>
+#declare FUNCTION_NAME_TYPE wchar_t*
 
 #else // Linux/Mac
 // For Unix, ignore __stdcall.
@@ -31,6 +32,7 @@ typedef unsigned char		BYTE;
 #define MANAGED_CALLBACK(ret) ret
 #define MANAGED_CALLBACK_PTR(ret, name) ret ( *name)
 #define CLASS_ALIGN __attribute__((aligned(8)))
+#declare FUNCTION_NAME_TYPE char*
 
 typedef long long	CxInt64;
 typedef unsigned long long	CxUInt64;

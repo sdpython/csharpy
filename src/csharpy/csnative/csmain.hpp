@@ -86,7 +86,7 @@ double SquareNumber(double x)
 
 typedef int (STDCALL TypeAgnosticFunction)(DataStructure * data);
 
-TypeAgnosticFunction* GetAgnosticFunction(const wchar_t * function_name)
+TypeAgnosticFunction* GetAgnosticFunction(const FUNCTION_NAME_TYPE function_name)
 {
     NetInterface * dll = GetNetInterface(_coreclrpath.c_str());
     if (dll == NULL)
