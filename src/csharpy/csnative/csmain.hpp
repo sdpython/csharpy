@@ -24,11 +24,11 @@ private:
     std::string msg_;
 };
 
+
 static std::string _coreclrpath;
 static std::string _coreclrpath_default;
 static std::string _CSharpyPyExtension;
 static NetInterface * _interface = NULL;
-
 
 
 NetInterface * GetNetInterface(const char *coreclrpath = NULL, bool remove = false)
@@ -86,6 +86,7 @@ double SquareNumber(double x)
 
 typedef int (STDCALL TypeAgnosticFunction)(DataStructure * data);
 
+
 TypeAgnosticFunction* GetAgnosticFunction(const FUNCTION_NAME_TYPE function_name)
 {
     NetInterface * dll = GetNetInterface(_coreclrpath.c_str());
@@ -101,10 +102,12 @@ TypeAgnosticFunction* GetAgnosticFunction(const FUNCTION_NAME_TYPE function_name
     return (TypeAgnosticFunction*)fct;
 }
 
+
 MANAGED_CALLBACK(void) CallBackMalloc(int size, void **ptr)
 {
     *ptr = malloc(size);
 }
+
 
 MANAGED_CALLBACK(void) CallPrintf(const char * msg)
 {

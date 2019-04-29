@@ -51,6 +51,19 @@ std::string RandomString()
 }
 
 
+DECLARE_FCT_NAME(CsUpper)
+
+std::string CsUpper(const std::string &text)
+{
+    DataStructure data;
+    data.inputs = (void*) text.c_str();
+    cs_CsUpper(&data);
+    std::string res = std::string((char*)data.outputs);
+    delete data.outputs;
+    return res;
+}
+
+
 PYBIND11_MODULE(csmain, m) {
     Py_Initialize();
     
@@ -91,4 +104,12 @@ PYBIND11_MODULE(csmain, m) {
 
     m.def("RandomString", &RandomString,
         "Returns a string with a non English character.");
+
+    m.def("CsUpper", &CsUpper,
+        R"pbdoc(
+    Converts a string into upper case using a C# function.
+    Shows a way to expose a function taking a string and returning
+    another string.
+
+    :param text: any string)pbdoc");
 }

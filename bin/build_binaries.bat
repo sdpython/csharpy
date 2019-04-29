@@ -24,7 +24,6 @@ exit /b 1
 :current_is_setup:
 @echo ~SET current=%current%
 
-
 set PYTHONPATH=%PYTHONPATH%;%current%\..\pyquickhelper\src;%current%\..\jyquickhelper\src
 %pythonexe% -u %current%setup.py build_ext --inplace
 if %errorlevel% neq 0 exit /b %errorlevel%

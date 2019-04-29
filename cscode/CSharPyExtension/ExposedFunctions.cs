@@ -23,5 +23,17 @@ namespace CSharPyExtension
             Marshal.Copy(raw, 0, (IntPtr)data->outputs, raw.Length);
             return 0;
         }
+
+        public static unsafe int CsUpper(DataStructure* data)
+        {
+            string text = BytesToString((sbyte*)data->inputs);
+            text = text.ToUpper();
+            var raw = StringToNullTerminatedBytesUTF8(text);
+            NativeAllocation allocate = MarshalDelegate<NativeAllocation>(data->allocate_fct);
+            allocate(raw.Length, out data->outputs);
+            data->exc = null;
+            Marshal.Copy(raw, 0, (IntPtr)data->outputs, raw.Length);
+            return 0;
+        }
     }
 }

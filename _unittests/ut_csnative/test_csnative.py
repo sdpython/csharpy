@@ -49,6 +49,16 @@ class TestCsNative(ExtTestCase):
         except Exception:
             pass
 
+    def test_cs_upper(self):
+        from csharpy.csnative.csmain import CsUpper  # pylint: disable=E0611
+        texts = ['UP', 'Up', 'ùp']
+        for text in texts:
+            up = CsUpper(text)
+            uppy = text.upper()
+            if up != uppy:
+                raise ValueError(
+                    "Mismatch for '{}' -> '{}' != '{}'.".format(text, up, uppy))
+
 
 if __name__ == "__main__":
     unittest.main()
