@@ -5,6 +5,19 @@ API
 .. contents::
     :local:
 
+C#
+++
+
+.. autosignature:: csharpy.csnative.cs_end
+
+.. autosignature:: csharpy.csnative.cs_start
+
+.. autosignature:: csharpy.csnative.CsUpper
+
+.. autosignature:: csharpy.csnative.RandomString
+
+.. autosignature:: csharpy.csnative.SquareNumber
+
 reference
 +++++++++
 
