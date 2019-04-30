@@ -2,6 +2,7 @@
 @file
 @brief
 """
+import sys
 
 
 def AddReference(name):
@@ -11,33 +12,39 @@ def AddReference(name):
     from clr import AddReference as ClrAddReference  # pylint: disable=E0401
     try:
         return ClrAddReference(name)
-    except Exception as e:
-        if "Unable to find assembly" in str(e):
-            import sys
-            import os
-            this = os.path.abspath(os.path.dirname(__file__))
-            rel = os.path.join(this, "Release")
-            if os.path.exists(os.path.join(rel, '__init__.py')):
-                this = rel
-            else:
-                rel = os.path.join(this, "Debug")
-                if not os.path.exists(os.path.join(rel, '__init__.py')):
-                    raise FileNotFoundError(
-                        "Unable to find folders 'Release' or 'Debug' in '{0}'".format(this))
-                this = rel
-            if this and os.path.exists(this):
-                sys.path.append(this)
-                try:
-                    res = ClrAddReference(name)
-                except Exception:
+    except Exception as _:
+        try:
+            from ..csnative.dotnetcore_helper import get_clr_path
+            clr_path = get_clr_path()
+            if clr_path not in sys.path:
+                sys.path.append(clr_path)
+            return ClrAddReference(name)
+        except Exception as e:
+            if "Unable to find assembly" in str(e):
+                import os
+                this = os.path.abspath(os.path.dirname(__file__))
+                rel = os.path.join(this, "Release")
+                if os.path.exists(os.path.join(rel, '__init__.py')):
+                    this = rel
+                else:
+                    rel = os.path.join(this, "Debug")
+                    if not os.path.exists(os.path.join(rel, '__init__.py')):
+                        raise FileNotFoundError(
+                            "Unable to find folders 'Release' or 'Debug' in '{0}'".format(this))
+                    this = rel
+                if this and os.path.exists(this):
+                    sys.path.append(this)
+                    try:
+                        res = ClrAddReference(name)
+                    except Exception:
+                        del sys.path[-1]
+                        raise
                     del sys.path[-1]
+                    return res
+                else:
                     raise
-                del sys.path[-1]
-                return res
             else:
                 raise
-        else:
-            raise
 
 
 def add_csharp_extension():

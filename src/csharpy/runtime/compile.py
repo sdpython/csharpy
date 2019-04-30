@@ -45,6 +45,7 @@ def create_cs_function(name, code, usings=None, dependencies=None, redirect=Fals
     except Exception:
         # Fails on some system, warnings from pythonnet.
         pass
+    AddReference("System.Collections.Immutable")
     AddReference("DynamicCS")
     from DynamicCS import DynamicFunction
     from System import String

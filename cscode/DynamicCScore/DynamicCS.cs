@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Collections.Immutable;
 
 #if NET4
 #else
@@ -19,6 +20,12 @@ namespace DynamicCS
 {
     public static class DynamicFunction
     {
+        internal static Assembly MissingAssemblies()
+        {
+            var r = new ImmutableArray<float>();
+            return r.GetType().Assembly;
+        }
+
         private const string embedCode = @"
 {4}
 namespace DynamicCS

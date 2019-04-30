@@ -41,7 +41,7 @@ before_install:
 install:
   # Install pythonnet
   - pip install pycparser
-  - git clone https://github.com/pythonnet/pythonnet.git
+  - git clone https://github.com/djoyce82/pythonnet
   - cd pythonnet
   - python setup.py install --xplat
   - cd ..

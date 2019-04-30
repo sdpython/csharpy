@@ -112,4 +112,10 @@ PYBIND11_MODULE(csmain, m) {
     another string.
 
     :param text: any string)pbdoc");
+
+    m.def("dotnetcore_path", []() -> std::string {
+        std::string path_clr;
+        retrieve_dotnetcore_path(path_clr);
+        return path_clr;
+    }, "Returns the path for dotnetcore binaries.");
 }

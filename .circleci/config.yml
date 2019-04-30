@@ -71,7 +71,7 @@ jobs:
             python3 -m pip install -U pip
             python3 -m pip install -U setuptools wheel pycparser
             dotnet --help
-            git clone https://github.com/pythonnet/pythonnet.git
+            git clone https://github.com/djoyce82/pythonnet
             cd pythonnet
             python3 setup.py install --xplat
             cd ..
