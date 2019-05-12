@@ -48,7 +48,6 @@ into *Python*:
     SquareX = create_cs_function("SquareX", code)
     print(SquareX(4))
 
-The module relies on `pythonnet <https://github.com/pythonnet/pythonnet>`_.
 It also implements *sphinx* extension to dynamically run *C#* when
 the documentation is built.
 

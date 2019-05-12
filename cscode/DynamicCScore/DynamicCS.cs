@@ -128,5 +128,12 @@ namespace DynamicCS
                 return new Tuple<object, string, string>(res, std.StdOut, std.StdErr);
             }
         }
+
+        public static string MethodSignature(MethodInfo mi)
+        {
+            var param = mi.GetParameters().Select(p => p.ParameterType.Name).ToArray();
+            string signature = string.Format("{1}->{0}", mi.ReturnType.Name, string.Join(",", param));
+            return signature;
+        }
     }
 }

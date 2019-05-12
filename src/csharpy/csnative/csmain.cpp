@@ -64,6 +64,51 @@ std::string CsUpper(const std::string &text)
 }
 
 
+DECLARE_FCT_NAME(CsCreateFunction)
+
+typedef struct CsCreateFunctionInput
+{
+public:
+    char * name;
+    char * code;
+    char ** usings;
+    char ** dependencies;
+} CsCreateFunctionInput;
+
+std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName,
+                                                 const std::string& functionCode,
+                                                 const std::vector<std::string>& usings,
+                                                 const std::vector<std::string>& dependencies)
+{
+    DataStructure data;
+    CsCreateFunctionInput input;
+    input.name = (char*)functionName.c_str();
+    input.code = (char*)functionCode.c_str();
+    
+    char ** c_usings = new char* [usings.size()+1];
+    for(int i = 0; i < usings.size(); ++i)
+        c_usings[i] = (char*)usings[i].c_str();
+    c_usings[usings.size()] = NULL;
+    input.usings = c_usings;    
+    
+    char ** c_dependencies = new char* [dependencies.size()+1];
+    for(int i = 0; i < dependencies.size(); ++i)
+        c_dependencies[i] = (char*)dependencies[i].c_str();
+    c_dependencies[dependencies.size()] = NULL;
+    input.dependencies = c_dependencies;    
+
+    __int64 oid;
+    data.inputs = &input;
+    data.outputs = &oid;
+    cs_CsCreateFunction(&data);
+    std::string res = std::string((char*)data.exc);
+    delete data.exc;
+    delete input.usings;
+    delete input.dependencies;
+    return std::pair<__int64, std::string>(oid, res);
+}
+
+
 PYBIND11_MODULE(csmain, m) {
     Py_Initialize();
     
@@ -98,6 +143,18 @@ PYBIND11_MODULE(csmain, m) {
 
     m.def("cs_end", &cs_end,
           "Unload the DLL.");    
+
+    m.def("CsCreateFunction", &CsCreateFunction,
+        R"pbdoc(
+    Compiles a C# function and returns an identifier which refers to the
+    created method.
+    :param name: method name in the given code
+    :param code: function code
+    :param usings: list of references the code is usings
+    :param dependencies: list of dependencies the code needs
+    :return: *(__int64, str)* idendifier, the method is stored as a static
+        object in the Bridge, the string contains either an exception message
+        or the signature of the compiled function.)pbdoc");    
 
     m.def("SquareNumber", &SquareNumber,
         "Returns the square of a number as an example for C#.");

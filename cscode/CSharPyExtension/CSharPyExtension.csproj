@@ -21,4 +21,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DynamicCScore\DynamicCS.csproj" />
+  </ItemGroup>
+
 </Project>

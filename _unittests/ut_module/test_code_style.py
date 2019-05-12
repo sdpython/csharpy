@@ -22,10 +22,8 @@ class TestCodeStyle(ExtTestCase):
                                   'C011111'),
                    skip=["Unable to import 'CSharPyExtension'",
                          "Unable to import 'System'",
-                         "Module 'clr' has no 'AddReference' member",
                          "Unable to import 'System.Collections.Generic'",
                          "Unable to import 'DynamicCS'",
-                         "No name 'AddReference' in module 'clr'",
                          "csmagics.py:113: W0703",
                          "add_reference.py:14: W0703",
                          "No name 'version_c' in module 'src.csharpy.cparts.cmodule'",
@@ -42,10 +40,8 @@ class TestCodeStyle(ExtTestCase):
         check_pep8(test, fLOG=fLOG, neg_pattern="temp_.*",
                    pylint_ignore=('C0103', 'C1801', 'R0201', 'R1705', 'W0108', 'W0613',
                                   'C0111', 'W0703'),
-                   skip=["Unused import clr",
-                         "Unable to import 'CSharPyExtension'",
+                   skip=["Unable to import 'CSharPyExtension'",
                          "Unable to import 'System'",
-                         "Module 'clr' has no 'AddReference' member",
                          "Unable to import 'System.Collections.Generic'",
                          ])
 

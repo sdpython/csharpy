@@ -64,19 +64,6 @@ jobs:
                     sudo apt-get install -y graphviz
           
       - run:
-          name: install pythonnet
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            python3 -m pip install -U pip
-            python3 -m pip install -U setuptools wheel pycparser
-            dotnet --help
-            git clone https://github.com/djoyce82/pythonnet
-            cd pythonnet
-            python3 setup.py install --xplat
-            cd ..
-
-      - run:
           name: install dependencies
           command: |
             python3 -m venv venv

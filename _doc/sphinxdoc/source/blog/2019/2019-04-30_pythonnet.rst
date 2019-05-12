@@ -15,3 +15,6 @@
     ::
 
         python setup.py bdist_wheel --xplat
+
+    I finally decide to remove all dependencies to pythonnet.
+    Too complicated to maintain.

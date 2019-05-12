@@ -40,11 +40,7 @@ def create_cs_function(name, code, usings=None, dependencies=None, redirect=Fals
         @see me CS.
     """
     AddReference("System")
-    try:
-        AddReference("System.Collections")
-    except Exception:
-        # Fails on some system, warnings from pythonnet.
-        pass
+    AddReference("System.Collections")
     AddReference("System.Collections.Immutable")
     AddReference("DynamicCS")
     from DynamicCS import DynamicFunction

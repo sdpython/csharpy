@@ -4,7 +4,6 @@
 import unittest
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
-import numpy
 from pyquickhelper.pycode import ExtTestCase
 from csharpy.runtime import create_cs_function
 from csharpy.notebook.csmagics import CsMagics
@@ -15,43 +14,6 @@ class TestDynamicCS(ExtTestCase):
     System.Security.Permissions
     System.Private.CoreLib
     """
-
-    def test_pythonnet(self):
-        import clr  # pylint: disable=E0401
-        clr.AddReference("System")
-        from System import String
-        s = String("example")
-        x = s.Replace("e", "j")
-        self.assertEqual("jxamplj", x)
-
-        from System.Collections.Generic import Dictionary
-        d = Dictionary[String, String]()
-        d["un"] = "1"
-        self.assertEqual(d.Count, 1)
-
-    def test_add_reference_system(self):
-        import clr  # pylint: disable=E0401
-        clr.AddReference("System")
-
-    def test_pythonnet_array(self):
-        import clr  # pylint: disable=E0401
-        clr.AddReference("System")
-        from System import IntPtr, Array, Double, Int64
-        self.assertTrue(Double is not None)
-        self.assertTrue(Array is not None)
-        self.assertTrue(IntPtr is not None)
-
-        array = numpy.ones((2, 2), dtype=int)
-        ar = array.__array_interface__['data'][0]
-        ar2 = Array[Int64]([0, 0, 0, 0] * 2)
-        self.assertEqual(str(type(ar)), "<class 'int'>")
-        self.assertEqual(str(type(ar2)), "<class 'System.Int64[]'>")
-        self.assertEqual(list(ar2), [0, 0, 0, 0, 0, 0, 0, 0])
-        # from System.Runtime.InteropServices import Marshal
-        # try:
-        #     Marshal.Copy(ar, ar2, 0, len(ar2))
-        # except TypeError as e:
-        #     warnings.warn(str(e))
 
     def test_create_cs_function(self):
         code = "public static double SquareX(double x) { return x*x; }"

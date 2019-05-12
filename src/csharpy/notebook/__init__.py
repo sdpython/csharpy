@@ -1,7 +1,7 @@
 # *-* coding: utf-8 -*-
 """
 @file
-@brief Uses `pythonnet <https://github.com/sdpython/pythonnet>`_.
+@brief Shortcot to notebook.
 """
 
 from .csmagics import register_magics
