@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using DynamicCS;
 
 
-
 namespace CSharPyExtension
 {
     public unsafe static partial class CsBridge
@@ -52,6 +51,8 @@ namespace CSharPyExtension
             public void* usingsPointer;
             [FieldOffset(24)]
             public void* dependenciesPointer;
+            [FieldOffset(32)]
+            public void* clrPath;
 #pragma warning restore 649 // never assigned
         }
 
@@ -61,6 +62,7 @@ namespace CSharPyExtension
             Int64* outputPtr = (Int64*)data->outputs;
             string name = BytesToString((sbyte*)inputPtr->namePointer);
             string code = BytesToString((sbyte*)inputPtr->codePointer);
+            string clrPath = BytesToString((sbyte*)inputPtr->clrPath);
 
             sbyte** c_usings = (sbyte**)inputPtr->usingsPointer;
             var usings = new List<string>();
@@ -82,7 +84,7 @@ namespace CSharPyExtension
             MethodInfo meth;
             try
             {
-                meth = DynamicFunction.CreateFunction(name, code, usings.ToArray(), dependencies.ToArray());
+                meth = DynamicFunction.CreateFunction(name, code, usings.ToArray(), dependencies.ToArray(), clrPath);
             }
             catch (Exception exc)
             {

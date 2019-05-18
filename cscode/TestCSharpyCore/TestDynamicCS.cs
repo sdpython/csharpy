@@ -11,7 +11,8 @@ namespace TestCSharpyCore
         [TestMethod]
         public void TestPyDynamicCS()
         {
-            var meth = DynamicFunction.CreateFunction("SquareX", "public static double SquareX(double x){return x * x;}", null, null);
+            var meth = DynamicFunction.CreateFunction("SquareX", "public static double SquareX(double x){return x * x;}",
+                                                      null, null, null);
             var sig = DynamicFunction.MethodSignature(meth);
             Assert.AreEqual(sig, "Double->Double");
             var result = DynamicFunction.RunFunctionRedirectOutput(meth, new object[] { (double)3 });
@@ -21,7 +22,8 @@ namespace TestCSharpyCore
         [TestMethod]
         public void TestListAssemblies()
         {
-            var meth = DynamicFunction.CreateFunction("SquareX", "public static double SquareX(double x){return x * x;}", null, null);
+            var meth = DynamicFunction.CreateFunction("SquareX", "public static double SquareX(double x){return x * x;}",
+                                                      null, null, null);
             var result = DynamicFunction.RunFunctionRedirectOutput(meth, new object[] { (double)3 });
             Assert.AreEqual(result.Item1, 9.0);
 

@@ -77,8 +77,15 @@ def create_cs_function(name, code, usings=None, dependencies=None,
         if dependencies is None:
             dependencies = []
         res = CsCreateFunction(name, code, usings, dependencies)
-        print(res)
-        return res
+
+        from ..csnative.csmain import CallDoubleDouble  # pylint: disable=E0611
+        sigs = {
+            'Double->Double': CallDoubleDouble,
+        }
+
+        fct = res[0]
+        fctpy = sigs[res[1]]
+        return lambda *args: fctpy(fct, *args)
 
 
 def run_cs_function_clr(func, params, redirect=False):

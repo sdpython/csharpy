@@ -79,6 +79,7 @@ public:
     char * code;
     char ** usings;
     char ** dependencies;
+    char * pathClr;
 } CreateFunctionInput;
 
 std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName,
@@ -89,6 +90,9 @@ std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName
     CreateFunctionInput input;
     input.name = (char*)functionName.c_str();
     input.code = (char*)functionCode.c_str();
+    std::string clrPath;
+    retrieve_dotnetcore_path(clrPath);
+    input.pathClr = (char*)clrPath.c_str();
     
     char ** c_usings = new char* [usings.size()+1];
     for(int i = 0; i < usings.size(); ++i)
@@ -114,6 +118,34 @@ std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName
     if (oid == -1)
         throw std::runtime_error(res);
     return std::pair<__int64, std::string>(oid, res);
+}
+
+//////////////////////
+// Undefined functions
+//////////////////////
+
+typedef struct CallDoubleDoubleInput
+{
+public:
+    __int64 fct;
+    double x;    
+} CallDoubleDoubleInput;
+
+DECLARE_FCT_NAME(CallDoubleDouble)
+
+double CallDoubleDouble(__int64 fct, double x)
+{
+    double res;
+    CallDoubleDoubleInput input;
+    input.x = x;
+    input.fct = fct;
+    DataStructure data;
+    data.inputs = &input;
+    data.outputs = &res;
+    data.allocate_fct = (void*)&CallBackMalloc;
+    data.printfw_fct = (void*)&CallPrintfw;    
+    cs_CallDoubleDouble(&data);
+    return res;
 }
 
 
@@ -202,4 +234,7 @@ PYBIND11_MODULE(csmain, m) {
         retrieve_dotnetcore_path(path_clr);
         return path_clr;
     }, "Returns the path for dotnetcore binaries.");
+
+    m.def("CallDoubleDouble", &CallDoubleDouble,
+        "Calls a custom function which takes a double and returns a double.");
 }

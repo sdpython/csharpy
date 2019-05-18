@@ -38,7 +38,8 @@ namespace DynamicCS
 ";
 
         public static MethodInfo CreateFunction(string functionName, string code,
-                                                string[] usings, string[] dependencies)
+                                                string[] usings, string[] dependencies,
+                                                string clrPath)
         {
             Assembly resultAssembly;
             var str_usings = usings == null
@@ -72,11 +73,40 @@ namespace DynamicCS
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
 
             var assemblies = new List<MetadataReference>();
-            var metaadd = MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location);
+            var addDependencies = new List<string>();
+            string metaaddLocation = null;
+            PortableExecutableReference metaadd;
+            if (string.IsNullOrEmpty(clrPath))
+            {
+                metaaddLocation = typeof(object).GetTypeInfo().Assembly.Location;
+                metaadd = MetadataReference.CreateFromFile(metaaddLocation);
+            }
+            else
+            {
+                metaaddLocation = clrPath;
+                if (!metaaddLocation.Contains(".dll"))
+                    metaaddLocation = Path.Combine(metaaddLocation, "System.Private.CoreLib.dll");
+                else
+                    clrPath = Path.GetDirectoryName(clrPath);
+                metaadd = MetadataReference.CreateFromFile(metaaddLocation);
+                var deps = new string[] { "System.dll", "System.Core.dll", "System.Data.dll",
+                                          "System.Data.Common.dll", "System.Linq.dll",
+                                          "System.Runtime.dll", "Microsoft.CSharp.dll",
+                                          "System.Runtime.CompilerServices.VisualC.dll",
+                                        };
+                foreach (var name in deps)
+                {
+                    var full = Path.Combine(clrPath, name);
+                    if (dependencies != null && !dependencies.Contains(full))
+                        addDependencies.Add(full);
+                }
+            }
             assemblies.Add(metaadd);
             if (dependencies != null)
                 foreach (var d in dependencies)
                     assemblies.Add(MetadataReference.CreateFromFile(d));
+            foreach (var d in addDependencies)
+                assemblies.Add(MetadataReference.CreateFromFile(d));
 
             string assemblyName = "...";
 
@@ -100,7 +130,7 @@ namespace DynamicCS
                     sb.AppendLine(string.Format("Compilation Error, status is {0}.", result.ToString()));
                     sb.AppendLine(mes);
                     sb.AppendLine("---------------");
-                    sb.AppendLine(string.Format("ADD: '{0}'", metaadd));
+                    sb.AppendLine(string.Format("ADD: '{0}'", metaaddLocation));
                     sb.AppendLine("---------------");
                     sb.AppendLine(code);
                     throw new InvalidOperationException(sb.ToString());
