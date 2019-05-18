@@ -16,6 +16,7 @@ def get_clr_path():
         from csharpy.csnative import get_clr_path
         print(get_clr_path())
     """
+    # C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.1.9
     from dotnetcore2 import runtime as clr_runtime
     libs_root = os.path.join(clr_runtime._get_bin_folder(), 'shared',  # pylint: disable=W0212
                              'Microsoft.NETCore.App')

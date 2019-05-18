@@ -2,11 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using System.Collections.Immutable;
 
 #if NET4
 #else
@@ -72,7 +72,8 @@ namespace DynamicCS
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
 
             var assemblies = new List<MetadataReference>();
-            assemblies.Add(MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location));
+            var metaadd = MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location);
+            assemblies.Add(metaadd);
             if (dependencies != null)
                 foreach (var d in dependencies)
                     assemblies.Add(MetadataReference.CreateFromFile(d));
@@ -98,6 +99,8 @@ namespace DynamicCS
                     StringBuilder sb = new StringBuilder();
                     sb.AppendLine(string.Format("Compilation Error, status is {0}.", result.ToString()));
                     sb.AppendLine(mes);
+                    sb.AppendLine("---------------");
+                    sb.AppendLine(string.Format("ADD: '{0}'", metaadd));
                     sb.AppendLine("---------------");
                     sb.AppendLine(code);
                     throw new InvalidOperationException(sb.ToString());

@@ -62,41 +62,59 @@ namespace CSharPyExtension
             string name = BytesToString((sbyte*)inputPtr->namePointer);
             string code = BytesToString((sbyte*)inputPtr->codePointer);
 
-            char** c_usings = (char **)inputPtr->usingsPointer;
+            sbyte** c_usings = (sbyte**)inputPtr->usingsPointer;
             var usings = new List<string>();
             while (*c_usings != null)
             {
-                usings.Add(BytesToString((sbyte*)c_usings));
+                usings.Add(BytesToString(*c_usings));
                 c_usings++;
             }
 
-            char** c_dependencies = (char**)inputPtr->usingsPointer;
+            sbyte** c_dependencies = (sbyte**)inputPtr->dependenciesPointer;
             var dependencies = new List<string>();
             while (*c_dependencies != null)
             {
-                usings.Add(BytesToString((sbyte*)c_dependencies));
+                dependencies.Add(BytesToString(*c_dependencies));
                 c_dependencies++;
             }
 
-            string text;
+            string text = "";
             MethodInfo meth;
             try
             {
                 meth = DynamicFunction.CreateFunction(name, code, usings.ToArray(), dependencies.ToArray());
-                text = DynamicFunction.MethodSignature(meth);
             }
             catch (Exception exc)
             {
                 meth = null;
                 text = exc.ToString();
+                text = string.Format("Unable to compile function '{0}' due to {1}\n---CODE---\n{2}\n---USINGS---\n{3}\n---DEPENDENCIES---\n{4}\n---",
+                    name, exc.ToString(), code, string.Join("\n", usings), string.Join("\n", dependencies));
             }
 
-            *outputPtr = meth == null ? ObjectStorage.Inst.AddIncref(meth) : -1;
+            if (meth != null)
+            {
+                try
+                {
+                    text = DynamicFunction.MethodSignature(meth);
+                }
+                catch (Exception exc)
+                {
+                    meth = null;
+                    text = string.Format("Unable to get the signature due to: {0}.", exc.ToString());
+                }
+            }
+            else if (string.IsNullOrEmpty(text))
+                text = string.Format("Method '{0}' is null\n---CODE---\n{1}\n---USINGS---\n{2}\n---DEPENDENCIES---\n{3}\n---",
+                    name, code, string.Join("\n", usings), string.Join("\n", dependencies));
+
+            *outputPtr = meth == null ? -1 : ObjectStorage.Inst.AddIncref(meth);
+            if (meth == null)
+                text = text.Replace("\r", "").Replace("\n\n", "\n");
             var raw = StringToNullTerminatedBytesUTF8(text);
             NativeAllocation allocate = MarshalDelegate<NativeAllocation>(data->allocate_fct);
-            allocate(raw.Length, out data->outputs);
-            data->exc = null;
-            Marshal.Copy(raw, 0, (IntPtr)data->outputs, raw.Length);
+            allocate(raw.Length, out data->exc);
+            Marshal.Copy(raw, 0, (IntPtr)data->exc, raw.Length);
             return 0;
         }
     }

@@ -3,12 +3,24 @@
 @brief
 """
 import sys
+import warnings
 
 
-def AddReference(name):
+def AddReference(name, use_clr):
     """
     Imports a :epkg:`C#` dll.
+
+    @param      name        assembly name
+    @param      use_clr     use :epkg:`pythonnet` or not
+                            (native bridge)
     """
+    try:
+        import clr
+    except ImportError:
+        # pythonnet is not installed
+        warnings.warn("pythonnet is not installed. AddReference does nothing with '{0}'.".format(
+            name))
+        return
     from clr import AddReference as ClrAddReference  # pylint: disable=E0401
     try:
         return ClrAddReference(name)
@@ -47,7 +59,7 @@ def AddReference(name):
                 raise
 
 
-def add_csharp_extension():
+def add_csharp_extension(use_clr):
     """
     Imports *CSharpExtension* into global context.
 
@@ -55,6 +67,9 @@ def add_csharp_extension():
     the system might decide to skip the replacement
     of an assembly because it is in use. You can
     check the version of this by using the following code.
+
+    @param      use_clr     use :epkg:`pythonnet` or not
+                            (native bridge)
 
     .. exref::
         :title: Imports the C# extension into :epkg:`Python`
@@ -65,7 +80,7 @@ def add_csharp_extension():
             from csharpy.binaries import add_csharp_extension
             from csharpy import __version__
 
-            add_csharp_extension()
+            add_csharp_extension(False)
 
             # This line needs to be after the previous one.
             from CSharPyExtension import Constants
@@ -73,4 +88,4 @@ def add_csharp_extension():
             vers = Constants.Version()
             print(__version__, vers)
     """
-    AddReference("CSharPyExtension")
+    AddReference("CSharPyExtension", use_clr)

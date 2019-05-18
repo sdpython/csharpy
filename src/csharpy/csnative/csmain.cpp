@@ -4,6 +4,8 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/numpy.h>
+#include <pybind11/stl.h>
+#include <pybind11/complex.h>
 #include <sysmodule.h>
 #include "stdafx.h"
 #include <string>
@@ -39,6 +41,10 @@ void retrieve_dotnetcore_path(std::string &path_clr)
 
 #include "csmain.hpp"
 
+/////////////////////////////////////////////////
+// Declares functions with all the same signature
+/////////////////////////////////////////////////
+
 DECLARE_FCT_NAME(RandomString)
 
 std::string RandomString()
@@ -64,24 +70,23 @@ std::string CsUpper(const std::string &text)
 }
 
 
-DECLARE_FCT_NAME(CsCreateFunction)
+DECLARE_FCT_NAME(CreateFunction)
 
-typedef struct CsCreateFunctionInput
+typedef struct CreateFunctionInput
 {
 public:
     char * name;
     char * code;
     char ** usings;
     char ** dependencies;
-} CsCreateFunctionInput;
+} CreateFunctionInput;
 
 std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName,
                                                  const std::string& functionCode,
                                                  const std::vector<std::string>& usings,
                                                  const std::vector<std::string>& dependencies)
 {
-    DataStructure data;
-    CsCreateFunctionInput input;
+    CreateFunctionInput input;
     input.name = (char*)functionName.c_str();
     input.code = (char*)functionCode.c_str();
     
@@ -98,15 +103,23 @@ std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName
     input.dependencies = c_dependencies;    
 
     __int64 oid;
+    DataStructure data;
     data.inputs = &input;
     data.outputs = &oid;
-    cs_CsCreateFunction(&data);
+    cs_CreateFunction(&data);
     std::string res = std::string((char*)data.exc);
     delete data.exc;
     delete input.usings;
     delete input.dependencies;
+    if (oid == -1)
+        throw std::runtime_error(res);
     return std::pair<__int64, std::string>(oid, res);
 }
+
+
+////////////////////
+// Module definition
+////////////////////
 
 
 PYBIND11_MODULE(csmain, m) {
@@ -154,7 +167,21 @@ PYBIND11_MODULE(csmain, m) {
     :param dependencies: list of dependencies the code needs
     :return: *(__int64, str)* idendifier, the method is stored as a static
         object in the Bridge, the string contains either an exception message
-        or the signature of the compiled function.)pbdoc");    
+        or the signature of the compiled function.
+    
+    .. faqref::
+        :title: Caught an unknown exception!
+        
+        The DLL needs to be initialized to be able to call
+        C# functions. That's the purpose of method
+        @see fn start otherwise any call to a function
+        calling a C# function will display the following
+        error message:
+        
+        ::
+        
+            Caught an unknown exception!
+    )pbdoc");    
 
     m.def("SquareNumber", &SquareNumber,
         "Returns the square of a number as an example for C#.");

@@ -12,6 +12,8 @@ C#
 
 .. autosignature:: csharpy.csnative.cs_start
 
+.. autosignature:: csharpy.csnative.CsCreateFunction
+
 .. autosignature:: csharpy.csnative.CsUpper
 
 .. autosignature:: csharpy.csnative.RandomString

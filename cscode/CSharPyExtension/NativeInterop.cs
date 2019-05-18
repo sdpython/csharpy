@@ -124,6 +124,36 @@ namespace CSharPyExtension
         }
 
         /// <summary>
+        /// Convert null-terminated UTF8 bytes to a string.
+        /// </summary>
+        public static string CharToString(char* psz)
+        {
+            if (psz == null)
+                return null;
+            int cch = 0;
+            while (psz[cch] != 0)
+                cch++;
+
+            if (cch == 0)
+                return null;
+#if CORECLR
+            return Encoding.ASCII.GetString((byte*)psz, cch);
+#else
+            if (cch <= 0)
+                return "";
+
+            var decoder = Encoding.ASCII.GetDecoder();
+            var chars = new char[decoder.GetCharCount((byte*)psz, cch, true)];
+            int bytesUsed;
+            int charsUsed;
+            bool complete;
+            fixed (char* pchars = chars)
+                decoder.Convert((byte*)psz, cch, pchars, chars.Length, true, out bytesUsed, out charsUsed, out complete);
+            return new string(chars);
+#endif
+        }
+
+        /// <summary>
         /// Converts a string to null-terminated UTF8 bytes.
         /// </summary>
         internal static byte[] StringToNullTerminatedBytesUTF8(string str)
