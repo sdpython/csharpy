@@ -45,8 +45,7 @@ csharpy
 What is it?
 -----------
 Helpers to play with :epkg:`C#`, :epkg:`Python`.
-The module also relies on
-:epkg:`pythonnet` and :epkg:`csharpy`.
+The module also relies on :epkg:`csharpy`.
 
 .. runpython::
     :showcode:

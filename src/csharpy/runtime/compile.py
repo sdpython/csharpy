@@ -2,11 +2,15 @@
 @file
 @brief Dynamically compile a C# function.
 """
+# import os
 import warnings
 from ..binaries import AddReference
+from ..csnative.csmain import CsCreateFunction  # pylint: disable=E0611
+# from ..csnative import get_clr_path
 
 
-def create_cs_function(name, code, usings=None, dependencies=None, redirect=False):
+def create_cs_function(name, code, usings=None, dependencies=None,
+                       redirect=False, use_clr=False):
     """
     Compiles a :epkg:`C#` function.
     Relies on @see fn run_cs_function.
@@ -16,6 +20,7 @@ def create_cs_function(name, code, usings=None, dependencies=None, redirect=Fals
     @param      usings          *using* to add, such as *System*, *System.Linq*, ...
     @param      dependencies    dependencies, can be absolute path file
     @param      redirect        redirect standard output and error
+    @param      has_clr         use :epkg:`pythonnet` or not
     @return                     :epkg:`Python` wrapper on the compiled :epkg:`C#`
 
     Assemblies are expected to be filename with extension.
@@ -38,38 +43,61 @@ def create_cs_function(name, code, usings=None, dependencies=None, redirect=Fals
         Then ``'System.Core'`` must be added the *dependencies* in function
         @see fn create_cs_function or ``-d System.core`` in magic command
         @see me CS.
+
+    The function use dotnet if *use_clr* is False and not :epkg:`pythonnet`.
+    Many assemblies can be found in path returned by @see fn get_clr_path.
     """
-    AddReference("System")
-    try:
-        AddReference("System.Collections")
-    except Exception:
-        # Fails on some system, warnings from pythonnet.
-        pass
-    AddReference("DynamicCS")
-    from DynamicCS import DynamicFunction
-    from System import String
+    if use_clr:
+        AddReference("System", use_clr)
+        AddReference("System.Collections", use_clr)
+        AddReference("System.Collections.Immutable", use_clr)
+        AddReference("DynamicCS", use_clr)
+        from DynamicCS import DynamicFunction
+        from System import String
 
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", DeprecationWarning)
-        from System.Collections.Generic import List
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", DeprecationWarning)
+            from System.Collections.Generic import List
 
-    # dotnet extension is dll even on linux.
-    ext = ".dll"
-    myarray = List[String]()
-    if dependencies:
-        for d in dependencies:
-            if d.endswith(ext):
-                myarray.Add(d)
-            else:
-                myarray.Add(d + ".dll")
-    myarray = myarray.ToArray()
-    obj = DynamicFunction.CreateFunction(name, code, usings, myarray)
-    return lambda *params: run_cs_function(obj, params, redirect=redirect)
+        # dotnet extension is dll even on linux.
+        ext = ".dll"
+        myarray = List[String]()
+        if dependencies:
+            for d in dependencies:
+                if d.endswith(ext):
+                    myarray.Add(d)
+                else:
+                    myarray.Add(d + ".dll")
+        myarray = myarray.ToArray()
+        obj = DynamicFunction.CreateFunction(name, code, usings, myarray)
+        return lambda *params: run_cs_function_clr(obj, params, redirect=redirect)
+    else:
+        if usings is None:
+            usings = []
+        if dependencies is None:
+            dependencies = []
+        res = CsCreateFunction(name, code, usings, dependencies)
+
+        from ..csnative.csmain import CallArrayInt32String  # pylint: disable=E0611
+        from ..csnative.csmain import CallDoubleDouble  # pylint: disable=E0611
+        from ..csnative.csmain import CallArrayDoubleArrayDouble  # pylint: disable=E0611
+        from ..csnative.csmain import CallVoid  # pylint: disable=E0611
+        sigs = {
+            'Double->Double': CallDoubleDouble,
+            'Double[]->Double[]': CallArrayDoubleArrayDouble,
+            'String->Int32[]': CallArrayInt32String,
+            '->Void': CallVoid,
+        }
+
+        fct = res[0]
+        fctpy = sigs[res[1]]
+        return lambda *args: fctpy(fct, redirect, *args)
 
 
-def run_cs_function(func, params, redirect=False):
+def run_cs_function_clr(func, params, redirect=False):
     """
-    Runs a :epkg:`C#` function.
+    Runs a :epkg:`C#` function with
+    :epkg:`pythonnet`.
 
     @param      func            :epkg:`C#` in memory object
     @param      params          parameters
@@ -79,7 +107,7 @@ def run_cs_function(func, params, redirect=False):
     If *redirect* is True, the results is a tuple
     ``(return of :epkg:`C#` function, standard output, standard error)``.
     """
-    AddReference("DynamicCS")
+    AddReference("DynamicCS", True)
     from DynamicCS import DynamicFunction
     from System.Collections.Generic import List
     from System import Object

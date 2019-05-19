@@ -1,10 +1,13 @@
-﻿namespace CSharPyExtension
+﻿using System.Reflection;
+
+
+namespace CSharPyExtension
 {
     public static class Constants
     {
-        public static string Version()
+        public static string GetFullName()
         {
-            return "0.1";
+            return Assembly.GetExecutingAssembly().FullName;
         }
     }
 }

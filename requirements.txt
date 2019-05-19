@@ -1,11 +1,13 @@
 coverage
+dotnetcore2
 jyquickhelper
+git+https://github.com/sdpython/nbconvert.git@fixes
 Pillow
+pybind11
 pycparser
 pyensae
 pylint
 pymyinstall
-pyquickhelper>=1.8.2732
-pythonnet
+pyquickhelper>=1.9
 sphinx_rtd_theme
 wheel

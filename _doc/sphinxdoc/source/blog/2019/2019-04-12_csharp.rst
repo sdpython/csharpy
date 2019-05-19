@@ -1,0 +1,15 @@
+
+.. blogpost::
+    :title: Call C# from C++ with netcore
+    :keywords: C#, netcore
+    :date: 2019-04-12
+    :categories: C#
+
+    I was trying to call a C# function directly from Python.
+    I finally decided to do it from C++ following this article:
+    `Write a custom .NET Core host to control the .NET runtime from your native code
+    <https://docs.microsoft.com/en-us/dotnet/core/tutorials/netcore-hosting>`_.
+    I mixed with some of the code implemented in :epkg:`nimbusml`
+    to finally use :epkg:`pybind11` to write a module which
+    call a C# function. Everything is implemented in `csnative
+    <https://github.com/sdpython/csharpy/tree/master/src/csharpy/csnative>`_.

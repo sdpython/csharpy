@@ -6,7 +6,7 @@ from pyquickhelper.helpgen.default_conf import set_sphinx_variables, get_default
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.split(__file__)[0])))
 
-set_sphinx_variables(__file__, "csharpy", "sdpython", 2018,
+set_sphinx_variables(__file__, "csharpy", "sdpython", 2019,
                      "sphinx_rtd_theme", [
                          sphinx_rtd_theme.get_html_theme_path()],
                      locals(), book=True,
@@ -41,6 +41,11 @@ epkg_dictionary.update({
     'C#': 'https://en.wikipedia.org/wiki/C_Sharp_(programming_language)',
     'C++': 'https://en.wikipedia.org/wiki/C%2B%2B',
     'csharpy': 'http://www.xavierdupre.fr/app/csharpy/helpsphinx/index.html',
+    'dotnetcore': 'https://github.com/dotnet/core',
+    'dotnetcore2': 'https://pypi.org/project/dotnetcore2/',
+    'JIT': 'https://en.wikipedia.org/wiki/Just-in-time_compilation',
+    'mono': 'https://www.mono-project.com/',
+    'nimbusml': 'https://github.com/Microsoft/NimbusML',
     'pythonnet': 'https://github.com/pythonnet/pythonnet',
     'runpython': 'http://www.xavierdupre.fr/app/pyquickhelper/helpsphinx/pyquickhelper/sphinxext/sphinx_runpython_extension.html#pyquickhelper.sphinxext.sphinx_runpython_extension.RunPythonDirective',
 })

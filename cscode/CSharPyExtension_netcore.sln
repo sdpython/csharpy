@@ -7,14 +7,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharPyExtension", "CSharPy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCSharpyCore", "TestCSharpyCore\TestCSharpyCore.csproj", "{12A0B89C-DF71-47D4-A2D0-A04361CB588B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicCS", "DynamicCScore\DynamicCS.csproj", "{8E98337D-932C-4456-A9C6-650FF6F28881}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "debug", "debug\debug.vcxproj", "{4B632AF0-52D7-40AF-8CF6-FF2AC6AE109A}"
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicCS", "DynamicCS\DynamicCS.csproj", "{39B9F633-D67E-4F3C-A5EB-EFAD8EAD165B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8031B28A-6640-4EBA-B85A-F8B66B918211}.Debug|x64.ActiveCfg = Debug|x64
+		{8031B28A-6640-4EBA-B85A-F8B66B918211}.Debug|x64.Build.0 = Debug|x64
+		{8031B28A-6640-4EBA-B85A-F8B66B918211}.Release|x64.ActiveCfg = Release|x64
+		{8031B28A-6640-4EBA-B85A-F8B66B918211}.Release|x64.Build.0 = Release|x64
+		{12A0B89C-DF71-47D4-A2D0-A04361CB588B}.Debug|x64.ActiveCfg = Debug|x64
+		{12A0B89C-DF71-47D4-A2D0-A04361CB588B}.Debug|x64.Build.0 = Debug|x64
+		{12A0B89C-DF71-47D4-A2D0-A04361CB588B}.Release|x64.ActiveCfg = Release|x64
+		{12A0B89C-DF71-47D4-A2D0-A04361CB588B}.Release|x64.Build.0 = Release|x64
+		{8E98337D-932C-4456-A9C6-650FF6F28881}.Debug|x64.ActiveCfg = Debug|x64
+		{8E98337D-932C-4456-A9C6-650FF6F28881}.Debug|x64.Build.0 = Debug|x64
+		{8E98337D-932C-4456-A9C6-650FF6F28881}.Release|x64.ActiveCfg = Release|x64
+		{8E98337D-932C-4456-A9C6-650FF6F28881}.Release|x64.Build.0 = Release|x64
+		{4B632AF0-52D7-40AF-8CF6-FF2AC6AE109A}.Debug|x64.ActiveCfg = Debug|x64
+		{4B632AF0-52D7-40AF-8CF6-FF2AC6AE109A}.Debug|x64.Build.0 = Debug|x64
+		{4B632AF0-52D7-40AF-8CF6-FF2AC6AE109A}.Release|x64.ActiveCfg = Release|x64
+		{4B632AF0-52D7-40AF-8CF6-FF2AC6AE109A}.Release|x64.Build.0 = Release|x64
 		{8031B28A-6640-4EBA-B85A-F8B66B918211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8031B28A-6640-4EBA-B85A-F8B66B918211}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8031B28A-6640-4EBA-B85A-F8B66B918211}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -12,7 +12,6 @@ from setuptools import find_packages
 
 project_var_name = "csharpy"
 project_owner = "sdpython"
-sversion = "0.1"
 versionPython = "%s.%s" % (sys.version_info.major, sys.version_info.minor)
 path = "Lib/site-packages/" + project_var_name
 readme = 'README.rst'
@@ -99,6 +98,24 @@ if "upload" in sys.argv and not subversion and not ask_help():
     raise Exception(
         "Git version is empty, cannot upload, is_local()={0}".format(is_local()))
 
+
+class get_pybind_include(object):
+    """
+    Helper class to determine the pybind11 include path
+    The purpose of this class is to postpone importing pybind11
+    until it is actually installed, so that the ``get_include()``
+    method can be invoked.
+    `Source <https://github.com/pybind/python_example/blob/master/setup.py>`_.
+    """
+
+    def __init__(self, user=False):
+        self.user = user
+
+    def __str__(self):
+        import pybind11
+        return pybind11.get_include(self.user)
+
+
 ##############
 # common part
 ##############
@@ -150,6 +167,7 @@ if not r:
         from pyquickhelper.pycode import process_standard_options_for_setup_help
         process_standard_options_for_setup_help(sys.argv)
     from pyquickhelper.pycode import clean_readme
+    from csharpy import __version__ as sversion
     long_description = clean_readme(long_description)
     root = os.path.abspath(os.path.dirname(__file__))
 
@@ -178,21 +196,18 @@ if not r:
         print('[csharpy.env] DOTNET_CLI_TELEMETRY_OPTOUT={0}'.format(
             os.environ['DOTNET_CLI_TELEMETRY_OPTOUT']))
         cmds = ['dotnet restore CSharPyExtension_netcore.sln',
-                'dotnet restore CSharPyExtension_netframework.sln',
-                'dotnet build -c %s CSharPyExtension_netcore.sln' % version2]
-        if sys.platform.startswith('win'):
-            cmds.append(
-                'dotnet msbuild /p:Configuration=%s CSharPyExtension_netframework.sln' % version2)
-        else:
-            cmds.append(
-                'xbuild /p:Configuration=%s CSharPyExtension_netframework.sln' % version2)
+                #'dotnet restore CSharPyExtension_netframework.sln',
+                'dotnet build -c %s CSharPyExtension_netcore.sln' % version2,
+                'dotnet test -c %s TestCSharpyCore -v n' % version2]
+
         folder = os.path.abspath("cscode")
         outs = []
         for cmd in cmds:
             out, err = run_cmd(cmd, fLOG=print, wait=True, change_path=folder)
             if len(err) > 0:
                 raise RuntimeError(
-                    "Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}".format(cmd, err))
+                    "Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}\n--OUT--\n{2}".format(
+                        cmd, err, out))
             elif len(out) > 0:
                 outs.append(out)
                 print('[csharpy.dotnet] OUT')
@@ -219,28 +234,60 @@ if not r:
                 print("[csharpy.copy] '{0}'".format(name))
                 shutil.copy(name, dest)
             else:
-                print("[csharpy.skip] '{0}'".format(name))
+                # print("[csharpy.skip] '{0}'".format(name))
+                pass
         min_must_copy = min(must_copy.values())
         if copied == 0 or min_must_copy == 0:
             raise RuntimeError(
                 "Missing binaries in '{0}' for version='{1}'".format(folder, version2))
 
-    if sys.platform.startswith("win"):
-        extra_compile_args = None
-    else:
-        extra_compile_args = ['-std=c++11']
+        # additional copies (dependencies)
+        cscode = os.path.join(root, "cscode")
+        deps = os.path.join(cscode, "csdependencies.txt")
+        with open(deps, "r") as f:
+            lines = [_.strip("\n\r ") for _ in f.readlines()]
+        lines = [_ for _ in lines if _]
+        for name in lines:
+            shutil.copy(name, dest)
 
-    # C parts
-    ext_cparts = Extension('src.csharpy.cparts.cmodule',
+    libraries_native = None
+    if sys.platform.startswith("win"):
+        libraries_native = ['kernel32']
+        extra_compile_args = None
+        extra_compile_args_native = ['/EHsc', '-std=c++11', '-DNOMINMAX']
+    elif sys.platform.startswith("darwin"):
+        extra_compile_args = ['-std=c++11', '-lstdc++fs']
+        extra_compile_args_native = [
+            '-stdlib=libc++', '-mmacosx-version-min=10.7', '-DNOMINMAX']
+    else:
+        extra_compile_args = ['-lpthread', '-std=c++11']
+        extra_compile_args_native = ['-std=c++17', '-DNOMINMAX', '-lstdc++fs']
+
+    # C and C++ parts
+
+    ext_cparts = Extension('csharpy.cparts.cmodule',
                            [os.path.join(root, 'src/csharpy/cparts/version.cpp'),
                                os.path.join(root, 'src/csharpy/cparts/cmodule.cpp')],
                            extra_compile_args=extra_compile_args,
                            include_dirs=[os.path.join(root, 'src/csharpy/cparts')])
 
+    ext_native = Extension('csharpy.csnative.csmain',
+                           [os.path.join(root, 'src/csharpy/csnative/csmain.cpp'),
+                            os.path.join(root, 'src/csharpy/csnative/stdafx.cpp')],
+                           extra_compile_args=extra_compile_args_native,
+                           include_dirs=[
+                               # Path to pybind11 headers
+                               get_pybind_include(),
+                               get_pybind_include(user=True),
+                               os.path.join(
+                                   root, 'src/csharpy/csnative')
+                           ],
+                           language='c++', libraries=libraries_native)
+
     # Regular setup.
     setup(
         name=project_var_name,
-        ext_modules=[ext_cparts],
+        ext_modules=[ext_cparts, ext_native],
         version='%s%s' % (sversion, subversion),
         author='Xavier Dupré',
         author_email='xavier.dupre@gmail.com',
@@ -255,5 +302,9 @@ if not r:
         package_dir=package_dir,
         package_data=package_data,
         setup_requires=["pyquickhelper"],
-        install_requires=['pythonnet', 'pyquickhelper'],
+        install_requires=['dotnetcore2'],
+        extras_require={
+            'notebook': ['pyquickhelper'],
+            'sphinxext': ['pyquickhelper'],
+        },
     )

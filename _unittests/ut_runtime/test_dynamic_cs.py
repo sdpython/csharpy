@@ -1,76 +1,72 @@
 """
-@brief      test log(time=2s)
+@brief      test log(time=5s)
 """
-import sys
-import os
 import unittest
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
-import numpy
+from dotnetcore2 import runtime as clr_runtime
 from pyquickhelper.pycode import ExtTestCase
-import clr  # pylint: disable=E0401
+from csharpy.csnative import start, get_clr_path
+from csharpy.runtime import create_cs_function
+from csharpy.notebook.csmagics import CsMagics
 
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
 
-from src.csharpy.runtime import create_cs_function
-from src.csharpy.notebook.csmagics import CsMagics
+def has_clr():
+    try:
+        import clr  # pylint: disable=W0611
+        return True
+    except ImportError:
+        return False
 
 
 class TestDynamicCS(ExtTestCase):
-    """Test dynamic compilation."""
+    """Test dynamic compilation.
+    System.Security.Permissions
+    System.Private.CoreLib
+    """
 
-    def test_src(self):
-        "skip pylint"
-        self.assertFalse(src is None)
+    def setUp(self):
+        start()
 
-    def test_pythonnet(self):
-        clr.AddReference("System")
-        from System import String
-        s = String("example")
-        x = s.Replace("e", "j")
-        self.assertEqual("jxamplj", x)
+    def test_get_clr_path(self):
+        path = get_clr_path()
+        self.assertExists(path)
+        self.assertIn(clr_runtime._get_bin_folder(),  # pylint: disable=W0212
+                      path)
 
-        from System.Collections.Generic import Dictionary
-        d = Dictionary[String, String]()
-        d["un"] = "1"
-        self.assertEqual(d.Count, 1)
-
-    def test_add_reference_system(self):
-        clr.AddReference("System")
-
-    def test_pythonnet_array(self):
-        clr.AddReference("System")
-        from System import IntPtr, Array, Double, Int64
-        self.assertTrue(Double is not None)
-        self.assertTrue(Array is not None)
-        self.assertTrue(IntPtr is not None)
-
-        array = numpy.ones((2, 2), dtype=int)
-        ar = array.__array_interface__['data'][0]
-        ar2 = Array[Int64]([0, 0, 0, 0] * 2)
-        self.assertEqual(str(type(ar)), "<class 'int'>")
-        self.assertEqual(str(type(ar2)), "<class 'System.Int64[]'>")
-        self.assertEqual(list(ar2), [0, 0, 0, 0, 0, 0, 0, 0])
-        # from System.Runtime.InteropServices import Marshal
-        # try:
-        #     Marshal.Copy(ar, ar2, 0, len(ar2))
-        # except TypeError as e:
-        #     warnings.warn(str(e))
+    def test_create_cs_function_fails(self):
+        from csharpy.csnative.csmain import CsNativeExecutionError  # pylint: disable=E0611
+        code = "public static double SquareX(doubles x) { return x*x; }"
+        self.assertRaise(lambda: create_cs_function("SquareX", code, use_clr=False),
+                         CsNativeExecutionError, "'doubles' could not be found")
 
     def test_create_cs_function(self):
         code = "public static double SquareX(double x) { return x*x; }"
-        f = create_cs_function("SquareX", code)
+        f = create_cs_function("SquareX", code, use_clr=False)
+        r = f(2.0)
+        self.assertEqual(r, 4)
+
+    def test_create_cs_function_arraydouble(self):
+        code = """
+        public static double[] SumArrayDouble(double[] xs)
+        {
+            return new double[] { xs.Sum() };
+        }
+        """
+        f = create_cs_function("SumArrayDouble", code, usings=['System.Linq'],
+                               use_clr=False, redirect=False)
+        r = f([2.0, 3.5])
+        self.assertEqual(r, [5.5])
+
+    def test_create_cs_function_void(self):
+        code = "public static void main_void() { }"
+        f = create_cs_function("main_void", code, use_clr=False)
+        f()
+
+    @unittest.skipIf(not has_clr(), "pythonnet is not installed.")
+    def test_create_cs_function_clr(self):
+        code = "public static double SquareX(double x) { return x*x; }"
+        f = create_cs_function("SquareX", code, use_clr=True)
         r = f(2.0)
         self.assertEqual(r, 4)
 
@@ -78,14 +74,23 @@ class TestDynamicCS(ExtTestCase):
         code = 'public static double SquareX(double x) { Console.WriteLine("check output"); return x*x ; }'
         f = create_cs_function(
             "SquareX", code, redirect=True, usings=["System"])
-        r, out, err = f(2.0)
-        self.assertEqual(r, 4)
-        self.assertEqual(out, "check output\n")
-        self.assertEqual(err, "")
+        if has_clr():
+            r, out, err = f(2.0)
+            self.assertEqual(r, 4)
+            self.assertEqual(out, "check output\n")
+            self.assertEqual(err, "")
+        else:
+            stdout = StringIO()
+            with redirect_stdout(stdout):
+                r = f(2.0)
+            self.assertEqual(r, 4)
+            out = stdout.getvalue()
+            self.assertEqual(out.replace("\r", "").replace("\n\n", "\n"),
+                             "check output\n")
 
     def test_magic_cs(self):
         cm = CsMagics()
-        code = "public static double SquareX(double x) {return x*x ; }"
+        # code = "public static double SquareX(double x) { return x*x ; }"
         code = """
                 public static int[] cs_qsortl(int[] li)
                 {
@@ -114,7 +119,7 @@ class TestDynamicCS(ExtTestCase):
                     return cs_qsortl(lis.Split(';').Select(c=>int.Parse(c)).ToArray()) ;
                 }
                 """
-        f = cm.CS("cs_qsort -i System -i System.Linq -d System.Core",
+        f = cm.CS("cs_qsort -i System -i System.Linq",
                   code)
         if f is None:
             raise Exception(code)
@@ -125,7 +130,7 @@ class TestDynamicCS(ExtTestCase):
         self.assertTrue(x is not None)
 
         f = cm.CS("cs_qsort -i System.Linq",
-                  "-i System -d System.Core\n" + code)
+                  "-i System\n" + code)
         if f is None:
             raise Exception(code)
         li = [2, 4, 5, 3, 1]

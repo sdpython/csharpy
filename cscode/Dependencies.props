@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <MicrosoftCodeAnalysisCSharpVersion>3.0.0</MicrosoftCodeAnalysisCSharpVersion>
+    <SystemCollectionsImmutableVersion>1.5.0</SystemCollectionsImmutableVersion>
+    <SystemRuntimeCompilerServicesUnsafeVersion>4.5.2</SystemRuntimeCompilerServicesUnsafeVersion>
+  </PropertyGroup>
+</Project>

@@ -1,9 +1,4 @@
 
-.. _l-README:
-
-README
-======
-
 .. image:: https://travis-ci.org/sdpython/csharpy.svg?branch=master
     :target: https://travis-ci.org/sdpython/csharpy
     :alt: Build status
@@ -37,18 +32,14 @@ README
     :target: http://www.xavierdupre.fr/app/csharpy/helpsphinx/all_notebooks_coverage.html
     :alt: Notebook Coverage
 
-**Links:**
+.. _l-README:
 
-* `GitHub/csharpy <https://github.com/sdpython/csharpy/>`_
-* `documentation <http://www.xavierdupre.fr/app/csharpy/helpsphinx2/index.html>`_
-* `Blog <http://www.xavierdupre.fr/app/csharpy/helpsphinx/blog/main_0000.html#ap-main-0>`_
+csharpy
+=======
 
-Introduction
-------------
-
-Helpers to play with C# and Python.
+Helpers to play with *C#* and *Python*.
 It can easily compile and wrap a C# function
-into Python:
+into *Python*:
 
 ::
 
@@ -57,10 +48,10 @@ into Python:
     SquareX = create_cs_function("SquareX", code)
     print(SquareX(4))
 
-The module relies on `pythonnet <https://github.com/pythonnet/pythonnet>`_.
+It also implements *sphinx* extension to dynamically run *C#* when
+the documentation is built.
 
-Installation
-------------
+**Installation**
 
 *Windows*
 
@@ -72,3 +63,9 @@ Installation
 
 Follow the instructions described in
 `config.yml <https://github.com/sdpython/csharpy/blob/master/.circleci/config.yml>`_.
+
+**Links**
+
+* `GitHub/csharpy <https://github.com/sdpython/csharpy/>`_
+* `documentation <http://www.xavierdupre.fr/app/csharpy/helpsphinx2/index.html>`_
+* `Blog <http://www.xavierdupre.fr/app/csharpy/helpsphinx/blog/main_0000.html#ap-main-0>`_

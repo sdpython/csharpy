@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 sudo: true
 language: python
 git:
@@ -6,20 +6,14 @@ git:
   
 matrix:
   include:
-    - python: 3.6
+    - python: 3.7
       env: &xplat-env
-        - BUILD_OPTS=--xplat
-        - NUNIT_PATH=~/.nuget/packages/nunit.consolerunner/3.*/tools/nunit3-console.exe
       addons: &xplat-addons
         apt:
           sources:
-          - sourceline: deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-trusty-prod trusty main
+          - sourceline: deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main
             key_url: https://packages.microsoft.com/keys/microsoft.asc
-          - sourceline: deb http://download.mono-project.com/repo/ubuntu trusty main
-            key_url: http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA6A19B38D3D831EF
           packages:
-            - mono-devel
-            - ca-certificates-mono 
             - dotnet-sdk-2.1.200
 
 env:
@@ -29,34 +23,12 @@ env:
     - PYTHONUNBUFFERED=True
     - DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-addons:
-  apt:
-    sources:
-      - sourceline: deb http://download.mono-project.com/repo/ubuntu trusty main
-        key_url: http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA6A19B38D3D831EF
-    packages:
-      - mono-devel
-      - ca-certificates-mono
-      - clang
-      - cmake
-      - libunwind8
-      - curl
-      # ubuntu https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x#ubuntu
-      - libunwind8
-      - liblttng-ust0
-      - libcurl3
-      - libssl1.0.0
-      - libuuid1
-      - libkrb5-3
-      - zlib1g
-      - libicu52
-
 before_install:
   # Set-up dll path for embedded tests
   - PY_LIBDIR=$(python -c 'import sysconfig; print(sysconfig.get_config_var("LIBDIR"))')
   - export LD_LIBRARY_PATH=$PY_LIBDIR:$LD_LIBRARY_PATH
   - export DOTNET_CLI_TELEMETRY_OPTOUT=1
-  # Addition to pythonnet build
+  # Addition to build
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update -qq
   - sudo apt-get install -qq g++-5 --allow-unauthenticated
@@ -67,13 +39,9 @@ before_install:
   - pip install -U setuptools wheel
 
 install:
-  # Install pythonnet
   - pip install pycparser
-  - git clone https://github.com/pythonnet/pythonnet.git
-  - cd pythonnet
-  - python setup.py install $BUILD_OPTS
-  - cd ..
   - pip install -r requirements.txt
+  - export PYTHONPATH=src
 
 before_script:
   # Build the package
