@@ -12,6 +12,44 @@
 #include <iostream>
 #include "_filesystem.h"
 
+#if !_MSC_VER
+#include <stdio.h>
+#include <dirent.h>
+#include <sys/types.h>
+
+
+bool fs_exists(const std::string &path)
+{
+    FILE * f = fopen(path.c_str(), "rb");
+    if (f == NULL)
+        return false;
+    fclose(f);
+    return true;
+}
+
+
+void listdir(const std::string& path, std::vector<std::string>& output)
+{
+    output.clear();
+    struct dirent *entry;
+    DIR *dir = opendir(path);
+    if (dir == NULL)
+        return;
+    while ((entry = readdir(dir)) != NULL)
+        output.push_back(entry->d_name);
+    closedir(dir);
+}
+
+
+std::vector<std::string> fs_listdir(const std::string& s)
+{
+    std::vector<std::string> output;
+    listdir(s, output);
+    return output;
+}
+
+#endif
+
 
 void retrieve_dotnetcore_path(std::string &path_clr)
 {
@@ -20,18 +58,20 @@ void retrieve_dotnetcore_path(std::string &path_clr)
     pybind11::module dnc = pybind11::module::import("dotnetcore2.runtime");
     auto fct = dnc.attr("_get_bin_folder");
     std::string value = fct().cast<std::string>();
-    fs::path path = value;
-    path /= std::string("shared");
-    path /= std::string("Microsoft.NETCore.App");
-    fs::path full_path;
-    fs::path look;
+    PATHTYPE path = value;
+    std::cout << "AA:" << path << "\n";
+    PATHIJOIN(path, std::string("shared"));
+    PATHIJOIN(path, std::string("Microsoft.NETCore.App"));
+    PATHTYPE full_path;
+    PATHTYPE look;
     std::string dll("Microsoft.CSharp.dll");
-    for (const auto & full_path : fs::directory_iterator(path)) {
-        look = full_path / dll;
-        if (fs::exists(look)) {
-            fs::path fpath = full_path;
-            auto native = fpath.native();
-            path_clr = std::string(native.begin(), native.end());
+    std::cout << "AA:" << path << "\n";
+    for (const auto & full_path : PATHITER(path)) {
+        look = PATHJOIN(full_path, dll);
+        std::cout << "II:" << look << "\n";
+        if (PATHEXISTS(look)) {
+            PATHTYPE fpath = full_path;
+            PATHTOSTRING(path_clr, fpath)
             return;
         }
     }
