@@ -82,7 +82,7 @@ public:
     char * pathClr;
 } CreateFunctionInput;
 
-std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName,
+std::pair<int64_, std::string> CsCreateFunction(const std::string& functionName,
                                                  const std::string& functionCode,
                                                  const std::vector<std::string>& usings,
                                                  const std::vector<std::string>& dependencies)
@@ -106,7 +106,7 @@ std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName
     c_dependencies[dependencies.size()] = NULL;
     input.dependencies = c_dependencies;    
 
-    __int64 oid;
+    int64_ oid;
     DataStructure data;
     data.inputs = &input;
     data.outputs = &oid;
@@ -117,7 +117,7 @@ std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName
     delete input.dependencies;
     if (oid == -1)
         throw std::runtime_error(res);
-    return std::pair<__int64, std::string>(oid, res);
+    return std::pair<int64_, std::string>(oid, res);
 }
 
 //////////////////////
@@ -126,7 +126,7 @@ std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName
 
 DECLARE_FCT_NAME(CallVoid)
 
-void CallVoid(__int64 fct, bool catchOutput)
+void CallVoid(int64_ fct, bool catchOutput)
 {
     DataStructure data;
     data.inputs = NULL;
@@ -139,7 +139,7 @@ void CallVoid(__int64 fct, bool catchOutput)
 
 DECLARE_FCT_NAME(CallDoubleDouble)
 
-double CallDoubleDouble(__int64 fct, bool catchOutput, double x)
+double CallDoubleDouble(int64_ fct, bool catchOutput, double x)
 {
     double res;
     DataStructure data;
@@ -161,7 +161,7 @@ public:
 
 DECLARE_FCT_NAME(CallArrayInt32String)
 
-std::vector<int> CallArrayInt32String(__int64 fct, bool catchOutput, const std::string& text)
+std::vector<int> CallArrayInt32String(int64_ fct, bool catchOutput, const std::string& text)
 {
     DataStructure data;
     data.inputs = (void*)text.c_str();
@@ -188,7 +188,7 @@ public:
 
 DECLARE_FCT_NAME(CallArrayDoubleArrayDouble)
 
-std::vector<double> CallArrayDoubleArrayDouble(__int64 fct, bool catchOutput,
+std::vector<double> CallArrayDoubleArrayDouble(int64_ fct, bool catchOutput,
                                                const std::vector<double>& vec)
 {
     DataStructure data;
@@ -258,7 +258,7 @@ PYBIND11_MODULE(csmain, m) {
     :param code: function code
     :param usings: list of references the code is usings
     :param dependencies: list of dependencies the code needs
-    :return: *(__int64, str)* idendifier, the method is stored as a static
+    :return: *(int64_, str)* idendifier, the method is stored as a static
         object in the Bridge, the string contains either an exception message
         or the signature of the compiled function.
     

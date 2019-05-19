@@ -43,6 +43,9 @@ typedef unsigned char	BYTE;
 #include <string>
 #include <exception>
 
+#define int64_ int64_t
+
+
 typedef struct DataStructure
 {
 public:
