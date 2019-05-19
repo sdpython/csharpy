@@ -32,11 +32,11 @@ void listdir(const std::string& path, std::vector<std::string>& output)
 {
     output.clear();
     struct dirent *entry;
-    DIR *dir = opendir(path);
+    DIR *dir = opendir(path.c_str());
     if (dir == NULL)
         return;
     while ((entry = readdir(dir)) != NULL)
-        output.push_back(entry->d_name);
+        output.push_back(path + std::string("/") + std::string(entry->d_name));
     closedir(dir);
 }
 
