@@ -1,5 +1,4 @@
 coverage
-cython
 dotnetcore2
 jyquickhelper
 git+https://github.com/sdpython/nbconvert.git@fixes
