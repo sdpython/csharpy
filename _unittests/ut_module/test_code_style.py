@@ -26,7 +26,7 @@ class TestCodeStyle(ExtTestCase):
                          "Unable to import 'DynamicCS'",
                          "csmagics.py:113: W0703",
                          "add_reference.py:14: W0703",
-                         "No name 'version_c' in module 'src.csharpy.cparts.cmodule'",
+                         "No name 'version_c' in module 'csharpy.cparts.cmodule'",
                          "compile.py:45: W0703",
                          ])
 
