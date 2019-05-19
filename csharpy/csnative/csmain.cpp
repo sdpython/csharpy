@@ -59,16 +59,13 @@ void retrieve_dotnetcore_path(std::string &path_clr)
     auto fct = dnc.attr("_get_bin_folder");
     std::string value = fct().cast<std::string>();
     PATHTYPE path = value;
-    std::cout << "AA:" << path << "\n";
     PATHIJOIN(path, std::string("shared"));
     PATHIJOIN(path, std::string("Microsoft.NETCore.App"));
     PATHTYPE full_path;
     PATHTYPE look;
     std::string dll("Microsoft.CSharp.dll");
-    std::cout << "AA:" << path << "\n";
     for (const auto & full_path : PATHITER(path)) {
         look = PATHJOIN(full_path, dll);
-        std::cout << "II:" << look << "\n";
         if (PATHEXISTS(look)) {
             PATHTYPE fpath = full_path;
             PATHTOSTRING(path_clr, fpath)
