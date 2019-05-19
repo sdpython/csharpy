@@ -3,6 +3,8 @@
 #include <string>
 #include <filesystem>
 
+#define SKIP_PYBIND11
+
 #if __cplusplus < 201402L
 namespace fs = std::experimental::filesystem;
 #else
@@ -44,7 +46,7 @@ int main()
     double sq = SquareNumber(3);
     std::cout << "square " << sq << "\n";
     DataStructure data;
-    int res = cs_RandomString(&data);
+    int res = cs_RandomString(&data, false);
     char * pp = (char*)data.outputs;
     std::cout << " Res " << res << " Got '" << pp << "'\n";
     delete data.outputs;

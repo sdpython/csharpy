@@ -78,14 +78,20 @@ def create_cs_function(name, code, usings=None, dependencies=None,
             dependencies = []
         res = CsCreateFunction(name, code, usings, dependencies)
 
+        from ..csnative.csmain import CallArrayInt32String  # pylint: disable=E0611
         from ..csnative.csmain import CallDoubleDouble  # pylint: disable=E0611
+        from ..csnative.csmain import CallArrayDoubleArrayDouble  # pylint: disable=E0611
+        from ..csnative.csmain import CallVoid  # pylint: disable=E0611
         sigs = {
             'Double->Double': CallDoubleDouble,
+            'Double[]->Double[]': CallArrayDoubleArrayDouble,
+            'String->Int32[]': CallArrayInt32String,
+            '->Void': CallVoid,
         }
 
         fct = res[0]
         fctpy = sigs[res[1]]
-        return lambda *args: fctpy(fct, *args)
+        return lambda *args: fctpy(fct, redirect, *args)
 
 
 def run_cs_function_clr(func, params, redirect=False):

@@ -5,33 +5,20 @@ import unittest
 from pyquickhelper.helpgen import rst2html
 from pyquickhelper.pycode import ExtTestCase
 from csharpy.sphinxext import RunCSharpDirective
+from csharpy.csnative import start
 
 
 class TestRunCSharp(ExtTestCase):
     """Test sphinx extension."""
 
-    def test_runcsharp(self):
-        content = """
-                    .. runcsharpthis::
-                        :showcode:
-                        :prefix_unittest: src.
-
-                        Console.WriteLine("{0}", 3 * 3);
-                    """.replace("                    ", "")
-
-        tives = [("runcsharpthis", RunCSharpDirective)]
-
-        res = rst2html(content, layout='sphinx',
-                       writer="rst",
-                       directives=tives)
-        self.assertIn('Console.WriteLine("{0}", 3 * 3)', res)
+    def setUp(self):
+        start()
 
     def test_runcsharp_fct(self):
         content = """
                     .. runcsharpthis::
                         :showcode:
                         :entrypoint: main
-                        :prefix_unittest: src.
 
                         public static double Square(double x) { return x*x; }
 
@@ -50,7 +37,6 @@ class TestRunCSharp(ExtTestCase):
                     .. runcsharpthis::
                         :showcode:
                         :entrypoint: main
-                        :prefix_unittest: src.
 
                         public static class Zoo {
                         public static double Square(double x) { return x*x; }
@@ -70,9 +56,7 @@ class TestRunCSharp(ExtTestCase):
         content = """
                     .. runcsharpthis::
                         :showcode:
-                        :dependency: System.Core
                         :using: System.Linq, System.Text, System.Collections.Generic
-                        :prefix_unittest: src.
 
                         var li = new [] {"a", "b"};
                         var mes = string.Join(",", li.Select(c => c.ToUpper()));

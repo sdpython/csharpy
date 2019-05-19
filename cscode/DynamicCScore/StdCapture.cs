@@ -10,7 +10,7 @@ namespace DynamicCS
     /// <summary>
     /// Captures standard output and error.
     /// </summary>
-    public class StdCapture: IDisposable
+    public class StdCapture : IDisposable
     {
         readonly StringBuilder sbout;
         readonly StringBuilder sberr;

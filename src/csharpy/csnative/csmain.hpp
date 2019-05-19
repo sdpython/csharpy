@@ -121,18 +121,29 @@ MANAGED_CALLBACK(void) CallPrintfw(const wchar_t * msg)
         std::cout << msg;
 }
 
-int CallAgnosticFunction(TypeAgnosticFunction * fct, DataStructure * data)
+MANAGED_CALLBACK(void) CallPythonPrintf(const char * msg)
+{
+#ifdef SKIP_PYBIND11
+    if (msg != NULL)
+        std::cout << "++" << msg;
+#else
+    if (msg != NULL)
+        pybind11::print(msg);
+#endif
+}
+
+int CallAgnosticFunction(TypeAgnosticFunction * fct, DataStructure * data, bool redirect)
 {
     if (data == NULL)
         throw CsNativeExecutionError("data pointer cannot be NULL.");
     data->allocate_fct = (void*)&CallBackMalloc;
-    data->printfw_fct = (void*)&CallPrintfw;
+    data->printf_fct = redirect ? (void*)&CallPythonPrintf : NULL;
     return (*fct)(data);
 }
 
 
 void * cs_start(const std::string& coreclrpath,
-                const std::string& CSharpyPyExtension)
+    const std::string& CSharpyPyExtension)
 {
     _CSharpyPyExtension = CSharpyPyExtension;
     return GetNetInterface(coreclrpath.c_str());
@@ -158,10 +169,10 @@ const char * _core_clr_path_default()
 
 
 #define DECLARE_FCT_NAME(name)\
-    int cs_##name(DataStructure * data)             \
-    {                                               \
-        static TypeAgnosticFunction * fct = NULL;   \
-        if (fct == NULL)                            \
-            fct = GetAgnosticFunction(W(#name));    \
-        return CallAgnosticFunction(fct, data);     \
+    int cs_##name(DataStructure * data, bool redirect)      \
+    {                                                       \
+        static TypeAgnosticFunction * fct = NULL;           \
+        if (fct == NULL)                                    \
+            fct = GetAgnosticFunction(W(#name));            \
+        return CallAgnosticFunction(fct, data, redirect);   \
     }

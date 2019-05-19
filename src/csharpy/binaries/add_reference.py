@@ -13,14 +13,22 @@ def AddReference(name, use_clr):
     @param      name        assembly name
     @param      use_clr     use :epkg:`pythonnet` or not
                             (native bridge)
+
+    This function only works if :epkg:`pythonnet` is installed
+    but the package is not mandatory to call C# functions
+    from python.
     """
     try:
         import clr
     except ImportError:
         # pythonnet is not installed
-        warnings.warn("pythonnet is not installed. AddReference does nothing with '{0}'.".format(
-            name))
-        return
+        if use_clr:
+            raise ImportError("pythonnet is not installed.")
+        else:
+            warnings.warn("pythonnet is not installed. AddReference does nothing with '{0}'.".format(
+                name))
+            return
+
     from clr import AddReference as ClrAddReference  # pylint: disable=E0401
     try:
         return ClrAddReference(name)

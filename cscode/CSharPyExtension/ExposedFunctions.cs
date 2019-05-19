@@ -119,5 +119,34 @@ namespace CSharPyExtension
             Marshal.Copy(raw, 0, (IntPtr)data->exc, raw.Length);
             return 0;
         }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public unsafe delegate int CompiledFunctionDelegate(DataStructure* data);
+
+        public static unsafe int CaptureStdOutput(CompiledFunctionDelegate fct, DataStructure* data)
+        {
+            if (data->printf_fct == null)
+                return fct(data);
+            else
+            {
+                Printf cprint = MarshalDelegate<Printf>(data->printf_fct);
+                int res;
+                var keep = data->printf_fct;
+                data->printf_fct = null;
+                var std = new StdCapture();
+                {
+                    res = fct(data);
+                    string sout = std.StdOut;
+                    if (!string.IsNullOrEmpty(sout))
+                        CPrintf(cprint, sout);
+                    string err = std.StdErr;
+                    if (!string.IsNullOrEmpty(err))
+                        CPrintf(cprint, string.Format("--ERR--\n{0}", err));
+                }
+                std.Dispose();
+                data->printf_fct = keep;
+                return res;
+            }
+        }
     }
 }

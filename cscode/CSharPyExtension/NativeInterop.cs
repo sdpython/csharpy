@@ -32,7 +32,7 @@ namespace CSharPyExtension
 
             // Allocates spaces in C++ world.
             [FieldOffset(0x20)]
-            public void* printfw_fct;
+            public void* printf_fct;
 #pragma warning restore 649 // never assigned
         }
 
@@ -60,7 +60,7 @@ namespace CSharPyExtension
             }
         }
 
-        public static void CPrintfw(Printfw fct, string msg)
+        public static void CPrintfw_(Printfw fct, string msg)
         {
             unsafe
             {

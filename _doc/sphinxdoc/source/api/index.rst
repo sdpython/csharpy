@@ -8,17 +8,25 @@ API
 C#
 ++
 
-.. autosignature:: csharpy.csnative.cs_end
+.. autosignature:: csharpy.csnative.csmain.cs_end
 
-.. autosignature:: csharpy.csnative.cs_start
+.. autosignature:: csharpy.csnative.csmain.cs_start
 
-.. autosignature:: csharpy.csnative.CsCreateFunction
+.. autosignature:: csharpy.csnative.csmain.CallArrayInt32String
 
-.. autosignature:: csharpy.csnative.CsUpper
+.. autosignature:: csharpy.csnative.csmain.CallArrayDoubleArrayDouble
 
-.. autosignature:: csharpy.csnative.RandomString
+.. autosignature:: csharpy.csnative.csmain.CallDoubleDouble
 
-.. autosignature:: csharpy.csnative.SquareNumber
+.. autosignature:: csharpy.csnative.csmain.CallVoid
+
+.. autosignature:: csharpy.csnative.csmain.CsCreateFunction
+
+.. autosignature:: csharpy.csnative.csmain.CsUpper
+
+.. autosignature:: csharpy.csnative.csmain.RandomString
+
+.. autosignature:: csharpy.csnative.csmain.SquareNumber
 
 reference
 +++++++++

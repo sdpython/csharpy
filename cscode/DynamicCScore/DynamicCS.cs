@@ -89,13 +89,13 @@ namespace DynamicCS
                 else
                     clrPath = Path.GetDirectoryName(clrPath);
                 metaadd = MetadataReference.CreateFromFile(metaaddLocation);
-                var deps = new string[] { "System.dll", "System.Core.dll", "System.Data.dll",
-                                          "System.Data.Common.dll", "System.Linq.dll",
-                                          "System.Runtime.dll", "Microsoft.CSharp.dll",
-                                          "System.Runtime.CompilerServices.VisualC.dll",
-                                        };
-                foreach (var name in deps)
+
+                foreach (var name in Directory.EnumerateFiles(clrPath))
                 {
+                    if (!name.Contains("System."))
+                        continue;
+                    if (!name.Contains("Microsoft."))
+                        continue;
                     var full = Path.Combine(clrPath, name);
                     if (dependencies != null && !dependencies.Contains(full))
                         addDependencies.Add(full);

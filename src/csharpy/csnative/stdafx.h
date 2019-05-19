@@ -50,7 +50,7 @@ public:
     void* inputs;       // Inputs.    
     void* outputs;      // Outputs.    
     void* allocate_fct; // Allocates spaces in C++ world: allocate(int size, void** output)
-    void* printfw_fct;  // Printf function: printfw(wchar_t msg)
+    void* printf_fct;   // Printf function: printf(char msg)
 } DataStructure;
 
 typedef int type_agnostic_function(DataStructure *);

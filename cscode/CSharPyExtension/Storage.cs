@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
+
 
 namespace CSharPyExtension
 {
@@ -20,10 +21,88 @@ namespace CSharPyExtension
             }
         }
 
-        internal class Reference
+        public enum ReferenceKind
         {
+            object_ = 1,
+            delegate_ = 2,
+            methodInfo_ = 3
+        };
+
+        public class Reference
+        {
+            public ReferenceKind kind;
             public object ptr;
+            public Delegate del;
             public int count;
+
+            public override string ToString()
+            {
+                switch (kind)
+                {
+                    case ReferenceKind.delegate_:
+                        return string.Format("count={0} kind={1}", count, "delegate");
+                    case ReferenceKind.object_:
+                        return string.Format("count={0} kind={1} type={2}", count, "object", ptr.GetType());
+                    case ReferenceKind.methodInfo_:
+                        return string.Format("count={0} kind={1} type={2}", count, "method", ptr.GetType());
+                    default:
+                        throw new KeyNotFoundException("Unknwon kind.");
+                }
+            }
+
+            public Reference(object p, int c)
+            {
+                kind = ReferenceKind.object_;
+                ptr = p;
+                count = c;
+                del = null;
+            }
+
+            public Reference(MethodInfo p, int c)
+            {
+                kind = ReferenceKind.methodInfo_;
+                ptr = (object)p;
+                count = c;
+                del = null;
+            }
+
+            public Reference(Delegate d, int c)
+            {
+                kind = ReferenceKind.delegate_;
+                del = d;
+                count = c;
+                ptr = null;
+            }
+
+            public object Object
+            {
+                get
+                {
+                    if (kind != ReferenceKind.object_)
+                        throw new InvalidOperationException("This reference is not an object.");
+                    return ptr;
+                }
+            }
+
+            public MethodInfo MethodInfo
+            {
+                get
+                {
+                    if (kind != ReferenceKind.methodInfo_)
+                        throw new InvalidOperationException("This reference is not an MethodInfo.");
+                    return (MethodInfo)ptr;
+                }
+            }
+
+            public object Del
+            {
+                get
+                {
+                    if (kind != ReferenceKind.delegate_)
+                        throw new InvalidOperationException("This reference is not a delegate function.");
+                    return del;
+                }
+            }
         }
 
         private Dictionary<Int64, Reference> _references;
@@ -35,10 +114,10 @@ namespace CSharPyExtension
             _last = 0;
         }
 
-        public object Get(Int64 i)
+        public Reference Get(Int64 i)
         {
-            object res;
-            lock(_references)
+            Reference res;
+            lock (_references)
                 res = _references[i];
             return res;
         }
@@ -53,7 +132,7 @@ namespace CSharPyExtension
         {
             int res;
             lock (_references)
-                res = _references.ContainsKey(i) ? _references[i].count : (int)0;                
+                res = _references.ContainsKey(i) ? _references[i].count : (int)0;
             return res;
         }
 
@@ -72,7 +151,31 @@ namespace CSharPyExtension
             Int64 res;
             lock (_references)
             {
-                _references[_last] = new Reference() { count = 1, ptr = ptr };
+                _references[_last] = new Reference(ptr, 1);
+                res = _last;
+                _last++;
+            }
+            return res;
+        }
+
+        public Int64 AddIncref(MethodInfo methodInfo)
+        {
+            Int64 res;
+            lock (_references)
+            {
+                _references[_last] = new Reference(methodInfo, 1);
+                res = _last;
+                _last++;
+            }
+            return res;
+        }
+
+        public Int64 AddIncref(Delegate del)
+        {
+            Int64 res;
+            lock (_references)
+            {
+                _references[_last] = new Reference(del, 1);
                 res = _last;
                 _last++;
             }

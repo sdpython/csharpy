@@ -132,6 +132,8 @@ def register_magics(ip):
     """
     Registers magics commands.
     """
+    from ..csnative import start
+    start()
     ip.register_magics(CsMagics)
     patch = ("IPython.config.cell_magic_highlight['csmagic'] = "
              "{'reg':[/^%%CS/]};")

@@ -50,7 +50,7 @@ DECLARE_FCT_NAME(RandomString)
 std::string RandomString()
 {
     DataStructure data;
-    cs_RandomString(&data);
+    cs_RandomString(&data, true);
     std::string res = std::string((char*)data.outputs);
     delete data.outputs;
     return res;
@@ -63,7 +63,7 @@ std::string CsUpper(const std::string &text)
 {
     DataStructure data;
     data.inputs = (void*) text.c_str();
-    cs_CsUpper(&data);
+    cs_CsUpper(&data, true);
     std::string res = std::string((char*)data.outputs);
     delete data.outputs;
     return res;
@@ -110,7 +110,7 @@ std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName
     DataStructure data;
     data.inputs = &input;
     data.outputs = &oid;
-    cs_CreateFunction(&data);
+    cs_CreateFunction(&data, true);
     std::string res = std::string((char*)data.exc);
     delete data.exc;
     delete input.usings;
@@ -124,30 +124,91 @@ std::pair<__int64, std::string> CsCreateFunction(const std::string& functionName
 // Undefined functions
 //////////////////////
 
-typedef struct CallDoubleDoubleInput
+DECLARE_FCT_NAME(CallVoid)
+
+void CallVoid(__int64 fct, bool catchOutput)
 {
-public:
-    __int64 fct;
-    double x;    
-} CallDoubleDoubleInput;
+    DataStructure data;
+    data.inputs = NULL;
+    data.outputs = NULL;
+    data.exc = &fct;
+    cs_CallVoid(&data, catchOutput);
+}
+
+///
 
 DECLARE_FCT_NAME(CallDoubleDouble)
 
-double CallDoubleDouble(__int64 fct, double x)
+double CallDoubleDouble(__int64 fct, bool catchOutput, double x)
 {
     double res;
-    CallDoubleDoubleInput input;
-    input.x = x;
-    input.fct = fct;
     DataStructure data;
-    data.inputs = &input;
+    data.inputs = &x;
     data.outputs = &res;
-    data.allocate_fct = (void*)&CallBackMalloc;
-    data.printfw_fct = (void*)&CallPrintfw;    
-    cs_CallDoubleDouble(&data);
+    data.exc = &fct;
+    cs_CallDoubleDouble(&data, catchOutput);
     return res;
 }
 
+///
+
+typedef struct CallArrayInt32StringOutput
+{
+public:
+    void * p;
+    int nb;
+} CallArrayInt32StringOutput;
+
+DECLARE_FCT_NAME(CallArrayInt32String)
+
+std::vector<int> CallArrayInt32String(__int64 fct, bool catchOutput, const std::string& text)
+{
+    DataStructure data;
+    data.inputs = (void*)text.c_str();
+    CallArrayInt32StringOutput output;
+    data.outputs = &output;
+    data.exc = &fct;
+    cs_CallArrayInt32String(&data, catchOutput);
+    if (output.p == NULL)
+        return std::vector<int>();
+    std::vector<int> res(output.nb);
+    memcpy(&(res[0]), output.p, output.nb * sizeof(int));
+    delete[] output.p;
+    return res;
+}
+
+///
+
+typedef struct CallArrayDoubleArrayDoubleIO
+{
+public:
+    void * p;
+    int nb;
+} CallArrayDoubleArrayDoubleIO;
+
+DECLARE_FCT_NAME(CallArrayDoubleArrayDouble)
+
+std::vector<double> CallArrayDoubleArrayDouble(__int64 fct, bool catchOutput,
+                                               const std::vector<double>& vec)
+{
+    DataStructure data;
+    CallArrayDoubleArrayDoubleIO input, output;
+    data.inputs = (void*)&input;
+    data.outputs = (void*)&output;
+    data.exc = &fct;
+
+    input.nb = (int)vec.size();
+    input.p = (void*)&(vec[0]);
+
+    cs_CallArrayDoubleArrayDouble(&data, catchOutput);
+    
+    if (output.p == NULL)
+        return std::vector<double>();
+    std::vector<double> res(output.nb);    
+    memcpy(&(res[0]), output.p, output.nb * sizeof(double));
+    delete[] output.p;
+    return res;
+}
 
 ////////////////////
 // Module definition
@@ -237,4 +298,13 @@ PYBIND11_MODULE(csmain, m) {
 
     m.def("CallDoubleDouble", &CallDoubleDouble,
         "Calls a custom function which takes a double and returns a double.");
+
+    m.def("CallArrayInt32String", &CallArrayInt32String,
+        "Calls a custom function which takes a string and returns an array of int.");
+
+    m.def("CallVoid", &CallVoid,
+        "Calls a custom function which takes no input and output.");
+
+    m.def("CallArrayDoubleArrayDouble", &CallArrayDoubleArrayDouble,
+        "Calls a custom function which takes an array of doubles and returns another one.");
 }

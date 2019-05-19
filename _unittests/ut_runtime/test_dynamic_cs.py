@@ -1,5 +1,5 @@
 """
-@brief      test log(time=2s)
+@brief      test log(time=5s)
 """
 import unittest
 from contextlib import redirect_stdout, redirect_stderr
@@ -9,6 +9,14 @@ from pyquickhelper.pycode import ExtTestCase
 from csharpy.csnative import start, get_clr_path
 from csharpy.runtime import create_cs_function
 from csharpy.notebook.csmagics import CsMagics
+
+
+def has_clr():
+    try:
+        import clr  # pylint: disable=W0611
+        return True
+    except ImportError:
+        return False
 
 
 class TestDynamicCS(ExtTestCase):
@@ -38,6 +46,24 @@ class TestDynamicCS(ExtTestCase):
         r = f(2.0)
         self.assertEqual(r, 4)
 
+    def test_create_cs_function_arraydouble(self):
+        code = """
+        public static double[] SumArrayDouble(double[] xs)
+        {
+            return new double[] { xs.Sum() };
+        }
+        """
+        f = create_cs_function("SumArrayDouble", code, usings=['System.Linq'],
+                               use_clr=False, redirect=False)
+        r = f([2.0, 3.5])
+        self.assertEqual(r, [5.5])
+
+    def test_create_cs_function_void(self):
+        code = "public static void main_void() { }"
+        f = create_cs_function("main_void", code, use_clr=False)
+        f()
+
+    @unittest.skipIf(not has_clr(), "pythonnet is not installed.")
     def test_create_cs_function_clr(self):
         code = "public static double SquareX(double x) { return x*x; }"
         f = create_cs_function("SquareX", code, use_clr=True)
@@ -48,14 +74,23 @@ class TestDynamicCS(ExtTestCase):
         code = 'public static double SquareX(double x) { Console.WriteLine("check output"); return x*x ; }'
         f = create_cs_function(
             "SquareX", code, redirect=True, usings=["System"])
-        r, out, err = f(2.0)
-        self.assertEqual(r, 4)
-        self.assertEqual(out, "check output\n")
-        self.assertEqual(err, "")
+        if has_clr():
+            r, out, err = f(2.0)
+            self.assertEqual(r, 4)
+            self.assertEqual(out, "check output\n")
+            self.assertEqual(err, "")
+        else:
+            stdout = StringIO()
+            with redirect_stdout(stdout):
+                r = f(2.0)
+            self.assertEqual(r, 4)
+            out = stdout.getvalue()
+            self.assertEqual(out.replace("\r", "").replace("\n\n", "\n"),
+                             "check output\n")
 
     def test_magic_cs(self):
         cm = CsMagics()
-        code = "public static double SquareX(double x) {return x*x ; }"
+        # code = "public static double SquareX(double x) { return x*x ; }"
         code = """
                 public static int[] cs_qsortl(int[] li)
                 {
@@ -84,7 +119,7 @@ class TestDynamicCS(ExtTestCase):
                     return cs_qsortl(lis.Split(';').Select(c=>int.Parse(c)).ToArray()) ;
                 }
                 """
-        f = cm.CS("cs_qsort -i System -i System.Linq -d System.Core",
+        f = cm.CS("cs_qsort -i System -i System.Linq",
                   code)
         if f is None:
             raise Exception(code)
@@ -95,7 +130,7 @@ class TestDynamicCS(ExtTestCase):
         self.assertTrue(x is not None)
 
         f = cm.CS("cs_qsort -i System.Linq",
-                  "-i System -d System.Core\n" + code)
+                  "-i System\n" + code)
         if f is None:
             raise Exception(code)
         li = [2, 4, 5, 3, 1]
@@ -118,9 +153,4 @@ class TestDynamicCS(ExtTestCase):
 
 
 if __name__ == "__main__":
-    # print(get_clr_path())
-    # ADD: metaadd = Assembly Path='C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.1.9\System.Private.CoreLib.dll'
-    TestDynamicCS().setUp()
-    TestDynamicCS().test_create_cs_function_fails()
-    TestDynamicCS().test_create_cs_function()
     unittest.main()

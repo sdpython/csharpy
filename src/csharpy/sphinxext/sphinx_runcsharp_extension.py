@@ -80,7 +80,6 @@ class RunCSharpDirective(RunPythonDirective):
 
         .. runcsharp::
             :showcode:
-            :dependency: System.Core
             :language: csharp
             :using: System.Linq, System.Text, System.Collections.Generic
 
@@ -92,7 +91,6 @@ class RunCSharpDirective(RunPythonDirective):
 
     .. runcsharp::
         :showcode:
-        :dependency: System.Core
         :language: csharp
         :using: System.Linq, System.Text, System.Collections.Generic
 
@@ -155,11 +153,7 @@ class RunCSharpDirective(RunPythonDirective):
                   "                         dependencies={0},".format(
                       dependencies),
                   "                        )",
-                  "_, out, err = fct()",
-                  "if err:",
-                  "    print('--OUT--\\n{0}\\n--ERR--\\n{1}'.format(out, err))",
-                  "else:",
-                  "    print(out)",
+                  "_ = fct()",
                   ]
         return "\n".join(script)
 
