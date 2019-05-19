@@ -37,8 +37,9 @@ CLASSIFIERS = [
 #######
 
 
-packages = find_packages('src', exclude='src')
-package_dir = {k: "src/" + k.replace(".", "/") for k in packages}
+here = os.path.dirname(__file__)
+packages = find_packages(where=here)
+package_dir = {k: os.path.join(here, k.replace(".", "/")) for k in packages}
 package_data = {project_var_name + ".binaries": ["*.dll", "*.so"],
                 project_var_name + ".binaries.Debug": ["*.dll", "*.so"],
                 project_var_name + ".binaries.Release": ["*.dll", "*.so"]}
@@ -215,7 +216,7 @@ if not r:
 
         # Copy files.
         from pyquickhelper.filehelper import explore_folder_iterfile
-        dest = os.path.join('src', 'csharpy', 'binaries', version2)
+        dest = os.path.join('csharpy', 'binaries', version2)
         if not os.path.exists(dest):
             os.makedirs(dest)
         init = os.path.join(dest, "__init__.py")
@@ -266,21 +267,21 @@ if not r:
     # C and C++ parts
 
     ext_cparts = Extension('csharpy.cparts.cmodule',
-                           [os.path.join(root, 'src/csharpy/cparts/version.cpp'),
-                               os.path.join(root, 'src/csharpy/cparts/cmodule.cpp')],
+                           [os.path.join(root, 'csharpy/cparts/version.cpp'),
+                               os.path.join(root, 'csharpy/cparts/cmodule.cpp')],
                            extra_compile_args=extra_compile_args,
-                           include_dirs=[os.path.join(root, 'src/csharpy/cparts')])
+                           include_dirs=[os.path.join(root, 'csharpy/cparts')])
 
     ext_native = Extension('csharpy.csnative.csmain',
-                           [os.path.join(root, 'src/csharpy/csnative/csmain.cpp'),
-                            os.path.join(root, 'src/csharpy/csnative/stdafx.cpp')],
+                           [os.path.join(root, 'csharpy/csnative/csmain.cpp'),
+                            os.path.join(root, 'csharpy/csnative/stdafx.cpp')],
                            extra_compile_args=extra_compile_args_native,
                            include_dirs=[
                                # Path to pybind11 headers
                                get_pybind_include(),
                                get_pybind_include(user=True),
                                os.path.join(
-                                   root, 'src/csharpy/csnative')
+                                   root, 'csharpy/csnative')
                            ],
                            language='c++', libraries=libraries_native)
 
