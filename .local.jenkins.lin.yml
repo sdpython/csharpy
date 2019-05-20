@@ -19,8 +19,8 @@ before_script:
   - $PYINT -u setup.py build_ext --inplace Debug
 
 script:
-  - { CMD: "$PYINT -u setup.py unittests", NAME: "UT", TIMEOUT: 3600 }
-  - { CMD: "cd cscode; dotnet test -c Release TestCSharpyCore; dotnet test -c Debug TestCSharpyCore; cd ..", NAME: "UT_CSharp", TIMEOUT: 3600 }
+  - { CMD: "$PYINT -u setup.py unittests", NAME: "UT" }
+  - { CMD: "cd cscode; dotnet test -c Release TestCSharpyCore; dotnet test -c Debug TestCSharpyCore; cd ..", NAME: "UT_CSharp" }
 
 after_script:
   - $PYINT -u setup.py bdist_wheel
