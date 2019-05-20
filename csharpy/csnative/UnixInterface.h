@@ -208,14 +208,14 @@ private:
             if (pathCore.length() >= PATH_MAX)
             {
                 std::stringstream message;
-                message << "dll location at a path longer than maximum allowed: " << pathCore.c_str() << "; max allowed: " << PATH_MAX;
+                message << "dll location at a path longer than maximum allowed: '" << pathCore.c_str() << "'; max allowed: " << PATH_MAX;
                 throw std::runtime_error(message.str().c_str());
             }
 
             _hmodCore = dlopen(pathCore.c_str(), RTLD_NOW | RTLD_LOCAL);
             if (_hmodCore == nullptr) {
                 std::stringstream message;
-                message << "Unable to open dll: " << dlerror();
+                message << "Unable to open dll: '" << pathCore << "' ('" << dlerror() << "')";
                 throw std::runtime_error(message.str().c_str());
             }
         }
