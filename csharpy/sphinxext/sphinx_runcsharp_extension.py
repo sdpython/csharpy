@@ -162,5 +162,7 @@ def setup(app):
     """
     Adds the directive @see cl RunCSharpDirective.
     """
+    from ..csnative import cs_start
+    cs_start()
     app.add_directive('runcsharp', RunCSharpDirective)
     return {'version': sphinx.__display_version__, 'parallel_read_safe': True}
