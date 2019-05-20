@@ -159,7 +159,7 @@ public:
         std::string native_lib(_native_lib);
 
         ICLRRuntimeHost2* host = EnsureClrHost(libsroot.c_str(), coreclrdir.c_str(),
-                                               dll_cs_name, native_lib);
+                                               dll_cs_name, native_lib.c_str());
         if (host == nullptr)
             throw std::runtime_error("Host is NULL.");
 
