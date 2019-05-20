@@ -31,7 +31,7 @@ typedef int HRESULT;
 typedef void* INT_PTR;
 
 
-// Prototype of the coreclr_initialize function from the csnative.so.
+// Prototype of the coreclr_initialize function from the csmain.so.
 typedef int(*FnInitializeCoreCLR)(
     const char* exePath,
     const char* appDomainFriendlyName,
@@ -42,13 +42,13 @@ typedef int(*FnInitializeCoreCLR)(
     DWORD* domainId);
 
 
-// Prototype of the coreclr_shutdown function from the csnative.so.
+// Prototype of the coreclr_shutdown function from the csmain.so.
 typedef int(*FnShutdownCoreCLR)(
     HMODULE hostHandle,
     DWORD domainId);
 
 
-// Prototype of the coreclr_create_delegate function from the csnative.so.
+// Prototype of the coreclr_create_delegate function from the csmain.so.
 typedef int(*FnCreateDelegate)(
     HMODULE hostHandle,
     DWORD domainId,
