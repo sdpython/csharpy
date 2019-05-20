@@ -12,11 +12,11 @@
 #include <unistd.h>
 #include <vector>
 
-#define NATIVE_BRIDGE_LIB "/csnative.so"
+#define NATIVE_BRIDGE_LIB "/csmain.so"
 #ifdef __APPLE__
-#define CORECLR_LIB "/csnative.dylib"
+#define CORECLR_LIB "/libcoreclr.dylib"
 #else
-#define CORECLR_LIB "/csnative.so"
+#define CORECLR_LIB "/libcoreclr.so"
 #endif
 
 #define CORECLR_INIT "coreclr_initialize"

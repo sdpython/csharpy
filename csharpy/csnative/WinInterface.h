@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-
 #include <string>
 #include <cstdlib>
 #include "inc/mscoree.h"
+
+#define CORECLR_LIB "CoreCLR.dll"
 
 
 std::wstring Utf8ToUtf16le(const char* utf8Str)
@@ -105,7 +106,7 @@ private:
         if (_hmodCore == nullptr)
         {
             std::wstring pathCore(path);
-            pathCore.append(W("CoreCLR.dll"));
+            pathCore.append(W(CORECLR_LIB));
 
             // Load CoreCLR from the indicated directory.
             SetDllDirectoryW(path);
