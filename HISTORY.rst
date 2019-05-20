@@ -5,13 +5,13 @@
 History
 =======
 
-current - 2019-05-19 - 0.00Mb
+current - 2019-05-21 - 0.00Mb
 =============================
 
-* `7`: switch to python 3.7.0 with circleci (2019-05-19)
+* `14`: Use netcore, pythonnet is not needed anymore (2019-05-19)
 * `11`: add an example to directly call C# from C++ (2019-05-19)
 * `10`: remove dependency on mono (use CodeAnalysis instead of CodeDom) (2019-05-19)
-* `14`: Use netcore, pythonnet is not needed anymore (2019-05-19)
+* `7`: switch to python 3.7.0 with circleci (2019-05-19)
 
 0.1.116 - 2019-01-08 - 0.10Mb
 =============================
