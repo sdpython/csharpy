@@ -5,8 +5,6 @@
 #include <cstdlib>
 #include "inc/mscoree.h"
 
-#define CORECLR_LIB "CoreCLR.dll"
-
 
 std::wstring Utf8ToUtf16le(const char* utf8Str)
 {
@@ -54,8 +52,11 @@ class WinNetInterface
 {
 private:
     std::string _coreclrpath;
+    std::string _native_lib;
 public:
-    WinNetInterface(const char *coreclrpath) : _coreclrpath(coreclrpath), _host(nullptr), _hmodCore(nullptr)
+    WinNetInterface(const char *coreclrpath, const char* native_lib) :
+        _coreclrpath(coreclrpath), _native_lib(native_lib),
+        _host(nullptr), _hmodCore(nullptr)
     {
     }
 
@@ -73,8 +74,7 @@ private:
         {
             // Unload the app domain, waiting until done.
             HRESULT hr = _host->UnloadAppDomain(_domainId, true);
-            if (FAILED(hr))
-            {
+            if (FAILED(hr)) {
                 // REVIEW: Handle failure.
                 //return false;
             }
@@ -90,23 +90,30 @@ private:
             _host = nullptr;
         }
 
-        if (_hmodCore)
-        {
+        if (_hmodCore) {
             // Free the module. This is done for completeness, but in fact CoreCLR.dll
             // was pinned earlier so this call won't actually free it. The pinning is
             // done because CoreCLR does not support unloading.
             ::FreeLibrary(_hmodCore);
-
             _hmodCore = nullptr;
         }
     }
 
     HMODULE EnsureCoreClrModule(const wchar_t *path)
     {
-        if (_hmodCore == nullptr)
-        {
+        if (_hmodCore == nullptr) {
             std::wstring pathCore(path);
-            pathCore.append(W(CORECLR_LIB));
+            pathCore.append(W("CoreCLR.dll"));
+
+            std::string _pathCode(pathCore.begin(), pathCore.end());
+            
+            FILE * fi = fopen(_pathCode.c_str(), "rb");
+            if (fi == NULL) {
+                std::stringstream message;
+                message << "Unable to find assembly '" << pathCore.c_str() << "'";
+                throw std::runtime_error(message.str().c_str());
+            }
+            fclose(fi);
 
             // Load CoreCLR from the indicated directory.
             SetDllDirectoryW(path);
@@ -142,8 +149,7 @@ private:
         WIN32_FIND_DATA data;
         HANDLE findHandle = FindFirstFile(wildPath.c_str(), &data);
 #endif
-        if (findHandle == INVALID_HANDLE_VALUE)
-        {
+        if (findHandle == INVALID_HANDLE_VALUE) {
             // REVIEW: Report failure somehow.
             return;
         }
@@ -191,15 +197,13 @@ private:
         hr = host->SetStartupFlags((STARTUP_FLAGS)
             (STARTUP_FLAGS::STARTUP_LOADER_OPTIMIZATION_SINGLE_DOMAIN |
                 STARTUP_FLAGS::STARTUP_SINGLE_APPDOMAIN));
-        if (FAILED(hr))
-        {
+        if (FAILED(hr)) {
             host->Release();
             throw new std::runtime_error("Unable to set STARTUP_FLAGS.");
         }
 
         hr = host->Start();
-        if (FAILED(hr))
-        {
+        if (FAILED(hr)) {
             host->Release();
             throw new std::runtime_error("Unable to start domain.");
         }
@@ -256,8 +260,7 @@ private:
             property_keys,
             property_values,
             &_domainId);
-        if (FAILED(hr))
-        {
+        if (FAILED(hr)) {
             host->Release();
             throw new std::runtime_error("Unable to create domain.");
         }
@@ -282,9 +285,7 @@ public:
             ConvertToWinPath(coreclrdir);
         }
         else
-        {
             coreclrdir = libsdir;
-        }
 
         ICLRRuntimeHost2* host = EnsureClrHost(libsdir.c_str(), coreclrdir.c_str(), dll_cs_name);
         if (host == NULL)
@@ -296,12 +297,8 @@ public:
         //    throw std::runtime_error("Issue with COMPlus_gcAllowVeryLargeObjects.");
 
         void* getter = NULL;
-        HRESULT hr = host->CreateDelegate(
-            _domainId,
-            dll_cs_name,
-            class_name,
-            function_name,
-            (INT_PTR*)&getter);
+        HRESULT hr = host->CreateDelegate(_domainId, dll_cs_name, class_name,
+                                          function_name, (INT_PTR*)&getter);
         if (FAILED(hr))
             throw std::runtime_error("Unable to retrieve a function.");
         if (getter == NULL)

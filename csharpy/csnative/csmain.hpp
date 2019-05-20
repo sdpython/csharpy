@@ -26,30 +26,50 @@ private:
 
 
 static std::string _coreclrpath;
+static std::string _native_lib;
 static std::string _coreclrpath_default;
 static std::string _CSharpyPyExtension;
 static NetInterface * _interface = NULL;
 
+#include <Python.h>
+#if _MSC_VER
+#define NATIVE_LIB_NAME "csmain.cp%d%d-win_amd64.pyd"
+#elif __APPLE__
+#define NATIVE_LIB_NAME "csmain.cpython-%d%dm-x86_64-darwin.dylib"
+#else
+#define NATIVE_LIB_NAME "csmain.cpython-%d%dm-x86_64-linux-gnu.so"
+#endif
 
-NetInterface * GetNetInterface(const char *coreclrpath = NULL, bool remove = false)
+
+NetInterface * GetNetInterface(const char *coreclrpath = NULL,
+                               const char *native_lib = NULL,
+                               bool remove = false)
 {
     if (_interface == NULL) {
         if (coreclrpath == NULL || strlen(coreclrpath) == 0)
             retrieve_dotnetcore_path(_coreclrpath);
         else
             _coreclrpath = coreclrpath;
-        int extPos = _coreclrpath.length() - 4;
+        int extPos = (int)_coreclrpath.length() - 4;
         if ((extPos <= 0) || (_coreclrpath.compare(extPos, 4, ".dll") == 0) || 
             (_coreclrpath.compare(extPos + 1, 3, ".so") == 0)) {
             std::stringstream message;
             message << "_coreclrpath is wrong '" << _coreclrpath << "'\n";
             throw CsNativeExecutionError(message.str().c_str());
         }
-        
-        _interface = new NetInterface(_coreclrpath.c_str());
+
+        if (native_lib == NULL || native_lib[0] == 0) {
+            char buffer[100];
+            sprintf(buffer, NATIVE_LIB_NAME, PY_MAJOR_VERSION, PY_MINOR_VERSION);
+            native_lib = buffer;
+        }
+        else
+            _native_lib = native_lib;
+        _interface = new NetInterface(_coreclrpath.c_str(), _native_lib.c_str());
         if (_interface == NULL) {
             std::stringstream message;
-            message << "Cannot not load NetInterface, _coreclrpath='" << _coreclrpath << "'\n";
+            message << "Cannot not load NetInterface, _coreclrpath='" << _coreclrpath 
+                    << "' native_lib='" << native_lib << "'\n";
             throw CsNativeExecutionError(message.str().c_str());
         }
     }
@@ -69,7 +89,7 @@ TypeSquareNumber* GetSquareNumberFunction()
 {
     static TypeSquareNumber* _fct = NULL;
     if (_fct == NULL) {
-        NetInterface * dll = GetNetInterface(_coreclrpath.c_str());
+        NetInterface * dll = GetNetInterface(_coreclrpath.c_str(), _native_lib.c_str());
         if (dll == NULL)
             throw CsNativeExecutionError("Cannot get a pointer to NetInterface.");
         void* fct = dll->CreateDelegate(
@@ -100,7 +120,7 @@ typedef int (STDCALL TypeAgnosticFunction)(DataStructure * data);
 
 TypeAgnosticFunction* GetAgnosticFunction(const FUNCTION_NAME_TYPE function_name)
 {
-    NetInterface * dll = GetNetInterface(_coreclrpath.c_str());
+    NetInterface * dll = GetNetInterface(_coreclrpath.c_str(), _native_lib.c_str());
     if (dll == NULL)
         throw CsNativeExecutionError("Cannot get a pointer to NetInterface.");
     void* fct = dll->CreateDelegate(
@@ -154,16 +174,17 @@ int CallAgnosticFunction(TypeAgnosticFunction * fct, DataStructure * data, bool 
 
 
 void * cs_start(const std::string& coreclrpath,
+    const std::string& native_lib,
     const std::string& CSharpyPyExtension)
 {
     _CSharpyPyExtension = CSharpyPyExtension;
-    return GetNetInterface(coreclrpath.c_str());
+    return GetNetInterface(coreclrpath.c_str(), native_lib.c_str());
 }
 
 
 void cs_end()
 {
-    GetNetInterface(NULL, true);
+    GetNetInterface(NULL, NULL, true);
 }
 
 

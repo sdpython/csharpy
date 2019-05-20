@@ -12,7 +12,6 @@
 #include <unistd.h>
 #include <vector>
 
-#define NATIVE_BRIDGE_LIB "/csmain.so"
 #ifdef __APPLE__
 #define CORECLR_LIB "/libcoreclr.dylib"
 #else
@@ -69,11 +68,19 @@ private:
     FnShutdownCoreCLR shutdownCoreCLR;
 
 public:
-    ICLRRuntimeHost2(HMODULE coreclrLib, std::string dirRoot) : hostHandle(nullptr), pyBridgePath(dirRoot)
+    ICLRRuntimeHost2(HMODULE coreclrLib, std::string dirRoot, std::string native_lib) : hostHandle(nullptr), pyBridgePath(dirRoot)
     {
-        pyBridgePath.append(NATIVE_BRIDGE_LIB);
-        if (coreclrLib != nullptr)
-        {
+        pyBridgePath = native_lib;
+        
+        FILE * fi = fopen(pyBridgePath.c_str(), "rb");
+        if (fi == NULL) {
+            std::stringstream message;
+            message << "Unable to find assembly '" << pyBridgePath.c_str() << "'";
+            throw std::runtime_error(message.str().c_str());
+        }
+        fclose(fi);
+        
+        if (coreclrLib != nullptr) {
             initializeCoreCLR = (FnInitializeCoreCLR)dlsym(coreclrLib, CORECLR_INIT);
             createDelegate = (FnCreateDelegate)dlsym(coreclrLib, CORECLR_DELEGATE);
             shutdownCoreCLR = (FnShutdownCoreCLR)dlsym(coreclrLib, CORECLR_SHUTDOWN);
@@ -118,14 +125,8 @@ public:
     {
         if (initializeCoreCLR == nullptr)
             return -1;
-        return initializeCoreCLR(
-            pyBridgePath.c_str(),
-            friendlyName,
-            numProperties,
-            propertyKeys,
-            propertyValues,
-            &hostHandle,
-            domainId);
+        return initializeCoreCLR(pyBridgePath.c_str(), friendlyName, numProperties,
+                                 propertyKeys, propertyValues, &hostHandle, domainId);
     }
 };
 
@@ -139,9 +140,12 @@ private:
     ICLRRuntimeHost2 *_host;
     DWORD _domainId;
     std::string _coreclrpath;
+    std::string _native_lib;
 
 public:
-    UnixNetInterface(const char *coreclrpath) : _coreclrpath(coreclrpath), _hmodCore(nullptr), _host(nullptr)
+    UnixNetInterface(const char *coreclrpath, const char * native_lib) : 
+        _coreclrpath(coreclrpath), _native_lib(native_lib),
+        _hmodCore(nullptr), _host(nullptr)
     {
     }
 
@@ -152,8 +156,10 @@ public:
     {
         std::string libsroot(dll_lib_path);
         std::string coreclrdir(_coreclrpath);
+        std::string native_lib(_native_lib);
 
-        ICLRRuntimeHost2* host = EnsureClrHost(libsroot.c_str(), coreclrdir.c_str(), dll_cs_name);
+        ICLRRuntimeHost2* host = EnsureClrHost(libsroot.c_str(), coreclrdir.c_str(),
+                                               dll_cs_name, native_lib);
         if (host == nullptr)
             throw std::runtime_error("Host is NULL.");
 
@@ -162,12 +168,8 @@ public:
         // putenv("COMPlus_gcAllowVeryLargeObjects=1");
 
         void* getter = nullptr;
-        HRESULT hr = host->CreateDelegate(
-            _domainId,
-            W(dll_cs_name),
-            W(class_name),
-            W(function_name),
-            (INT_PTR*)&getter);
+        HRESULT hr = host->CreateDelegate(_domainId, W(dll_cs_name), W(class_name),
+                                          W(function_name), (INT_PTR*)&getter);
         if (FAILED(hr))
             throw std::runtime_error("Unable to retrieve a function.");
         if (getter == nullptr)
@@ -178,12 +180,10 @@ public:
 private:
     void Shutdown()
     {
-        if (_host)
-        {
+        if (_host) {
             // Unload the app domain, waiting until done.
             HRESULT hr = _host->UnloadAppDomain(_domainId, true);
-            if (FAILED(hr))
-            {
+            if (FAILED(hr)) {
                 // REVIEW: Handle failure.
                 //return false;
             }
@@ -191,8 +191,7 @@ private:
             _host = nullptr;
         }
 
-        if (_hmodCore)
-        {
+        if (_hmodCore) {
             dlclose(_hmodCore);
             _hmodCore = nullptr;
         }
@@ -200,18 +199,16 @@ private:
 
     HMODULE EnsureCoreClrModule(const char *path)
     {
-        if (_hmodCore == nullptr)
-        {
+        if (_hmodCore == nullptr) {
             std::string pathCore(path);
             pathCore.append(CORECLR_LIB);
 
-            if (pathCore.length() >= PATH_MAX)
-            {
+            if (pathCore.length() >= PATH_MAX) {
                 std::stringstream message;
                 message << "dll location at a path longer than maximum allowed: '" << pathCore.c_str() << "'; max allowed: " << PATH_MAX;
                 throw std::runtime_error(message.str().c_str());
             }
-
+            
             _hmodCore = dlopen(pathCore.c_str(), RTLD_NOW | RTLD_LOCAL);
             if (_hmodCore == nullptr) {
                 std::stringstream message;
@@ -229,8 +226,7 @@ private:
         if (dir == nullptr)
             return;
         struct dirent* entry;
-        while ((entry = readdir(dir)) != nullptr)
-        {
+        while ((entry = readdir(dir)) != nullptr) {
             std::string filename(entry->d_name);
 
             // Check if the extension matches the one we are looking for.
@@ -247,7 +243,8 @@ private:
         closedir(dir);
     }
 
-    ICLRRuntimeHost2* EnsureClrHost(const char * libsRoot, const char * coreclrDirRoot, const char* dll_cs_name)
+    ICLRRuntimeHost2* EnsureClrHost(const char * libsRoot, const char * coreclrDirRoot,
+                                    const char* dll_cs_name, const char * native_lib)
     {
         if (_host != nullptr)
             return _host;
@@ -259,7 +256,7 @@ private:
         // Start the CoreCLR.
         HMODULE hmodCore = EnsureCoreClrModule(coreclrDirRoot);
 
-        ICLRRuntimeHost2 *host = new ICLRRuntimeHost2(hmodCore, libsRoot);
+        ICLRRuntimeHost2 *host = new ICLRRuntimeHost2(hmodCore, libsRoot, native_lib);
         HRESULT hr;
         // App domain flags are not used by UnixCoreConsole.
         DWORD appDomainFlags = 0;

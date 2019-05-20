@@ -3,6 +3,7 @@
 @brielf Shortcut to *csnative*.
 """
 import os
+import sys
 from .dotnetcore_helper import get_clr_path
 
 
@@ -21,7 +22,15 @@ def start():
     csext = os.path.join(loc, "CSharPyExtension.dll")
     if not os.path.exists(csext):
         raise FileNotFoundError("Unable to find DLL '{}'.".format(csext))
-    return cs_start(get_clr_path(), loc)
+    
+    if sys.platform.startswith("win"):
+        native_lib = "csmain.cp%d%d-win_amd64.pyd" % sys.version_info[:2]
+    elif sys.platform.startswith("darwin"):
+        native_lib = "csmain.cpython-%d%dm-x86_64-darwin-gnu.dylib" % sys.version_info[:2]
+    else:
+        native_lib = "csmain.cpython-%d%dm-x86_64-linux-gnu.so" % sys.version_info[:2]
+
+    return cs_start(get_clr_path(), native_lib, loc)
 
 
 def close():

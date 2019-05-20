@@ -276,6 +276,7 @@ PYBIND11_MODULE(csmain, m) {
     sets up the constants to call C# function from this C extension.
 
     :param coreclrpath: path to dotnet, usuall the result of @see fn get_clr_path
+    :param native_lib: path to the compiled csmain file.
     :param CSharpyPyExtension: absolute location of DLL CSharpyPyExtension)pbdoc");
     
     m.def("_core_clr_path", &_core_clr_path,
