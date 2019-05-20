@@ -66,5 +66,17 @@ namespace TestCSharpyCore
             double y2 = (double)fct.Invoke(null, new object[] { x });
             Assert.AreEqual(y, y2);
         }
+
+        [TestMethod]
+        public void TestSystemMemory()
+        {
+            int[] array = new int[] { 1, 2, 3 };
+            var span = Constants.GetSpan(array);
+            Assert.AreEqual(span.Length, 3);
+            span = Constants.GetSpan(array, 1);
+            Assert.AreEqual(span.Length, 2);
+            span = Constants.GetSpan(array, 1, 2);
+            Assert.AreEqual(span.Length, 1);
+        }
     }
 }
