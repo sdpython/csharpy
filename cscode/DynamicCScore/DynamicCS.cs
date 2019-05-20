@@ -92,7 +92,7 @@ namespace DynamicCS
 
                 foreach (var name in Directory.EnumerateFiles(clrPath))
                 {
-                    if (!name.Contains("System.") && !name.Contains("Microsoft.") && !name.EndsWith(".dll"))
+                    if (!name.Contains("System.") || !name.Contains("Microsoft.") || !name.EndsWith(".dll"))
                         continue;
                     var full = Path.Combine(clrPath, name);
                     if (dependencies != null && !dependencies.Contains(full))
