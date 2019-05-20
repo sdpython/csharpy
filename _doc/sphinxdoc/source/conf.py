@@ -41,11 +41,13 @@ epkg_dictionary.update({
     'C#': 'https://en.wikipedia.org/wiki/C_Sharp_(programming_language)',
     'C++': 'https://en.wikipedia.org/wiki/C%2B%2B',
     'csharpy': 'http://www.xavierdupre.fr/app/csharpy/helpsphinx/index.html',
+    'dotnet': 'https://dotnet.microsoft.com/',
     'dotnetcore': 'https://github.com/dotnet/core',
     'dotnetcore2': 'https://pypi.org/project/dotnetcore2/',
     'JIT': 'https://en.wikipedia.org/wiki/Just-in-time_compilation',
     'mono': 'https://www.mono-project.com/',
     'nimbusml': 'https://github.com/Microsoft/NimbusML',
+    'pybind11': 'https://github.com/pybind/pybind11',
     'pythonnet': 'https://github.com/pythonnet/pythonnet',
     'runpython': 'http://www.xavierdupre.fr/app/pyquickhelper/helpsphinx/pyquickhelper/sphinxext/sphinx_runpython_extension.html#pyquickhelper.sphinxext.sphinx_runpython_extension.RunPythonDirective',
 })

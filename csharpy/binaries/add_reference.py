@@ -79,21 +79,7 @@ def add_csharp_extension(use_clr):
     @param      use_clr     use :epkg:`pythonnet` or not
                             (native bridge)
 
-    .. exref::
-        :title: Imports the C# extension into :epkg:`Python`
-
-        .. runpython::
-            :showcode:
-
-            from csharpy.binaries import add_csharp_extension
-            from csharpy import __version__
-
-            add_csharp_extension(False)
-
-            # This line needs to be after the previous one.
-            from CSharPyExtension import Constants
-
-            vers = Constants.Version()
-            print(__version__, vers)
+    The function does not work yet if :epkg:`pythonnet`
+    is not installed.
     """
     AddReference("CSharPyExtension", use_clr)
