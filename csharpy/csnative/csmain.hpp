@@ -38,9 +38,20 @@ NetInterface * GetNetInterface(const char *coreclrpath = NULL, bool remove = fal
             retrieve_dotnetcore_path(_coreclrpath);
         else
             _coreclrpath = coreclrpath;
+        int extPos = _coreclrpath.length() - 4;
+        if ((extPos <= 0) || (_coreclrpath.compare(extPos, 4, ".dll") == 0) || 
+            (_coreclrpath.compare(extPos + 1, 3, ".so") == 0)) {
+            std::stringstream message;
+            message << "_coreclrpath is wrong '" << _coreclrpath << "'\n";
+            throw CsNativeExecutionError(message.str().c_str());
+        }
+        
         _interface = new NetInterface(_coreclrpath.c_str());
-        if (_interface == NULL)
-            throw CsNativeExecutionError("Cannot not load CoreClr.");
+        if (_interface == NULL) {
+            std::stringstream message;
+            message << "Cannot not load NetInterface, _coreclrpath='" << _coreclrpath << "'\n";
+            throw CsNativeExecutionError(message.str().c_str());
+        }
     }
     else if (remove)
     {

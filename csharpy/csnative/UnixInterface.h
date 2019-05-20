@@ -215,7 +215,7 @@ private:
             _hmodCore = dlopen(pathCore.c_str(), RTLD_NOW | RTLD_LOCAL);
             if (_hmodCore == nullptr) {
                 std::stringstream message;
-                message << "Unable to open dll: '" << pathCore << "' ('" << dlerror() << "')";
+                message << "Unable to open dll: " << dlerror();
                 throw std::runtime_error(message.str().c_str());
             }
         }
