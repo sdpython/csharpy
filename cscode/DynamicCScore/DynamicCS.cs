@@ -130,10 +130,18 @@ namespace DynamicCS
                     var failures = result.Diagnostics.Where(diagnostic =>
                         diagnostic.IsWarningAsError ||
                         diagnostic.Severity == DiagnosticSeverity.Error);
-                    var mes = string.Join("\n", failures.Select(diagnostic => string.Format("\t{0}: {1}", diagnostic.Id, diagnostic.GetMessage())));
+                    var mes = string.Join("\n", failures.Select(diagnostic => string.Format("    {0}: {1}", 
+                        diagnostic.Id, diagnostic.GetMessage())));
+                    var mes2 = string.Join("\n", result.Diagnostics.Select(diagnostic => string.Format("    {0}: {1}-{2}-{3}-{4}",
+                        diagnostic.Id, diagnostic.GetMessage(), diagnostic.Descriptor.HelpLinkUri,
+                        diagnostic.Descriptor.Description, diagnostic.Location)));
                     StringBuilder sb = new StringBuilder();
+                    sb.AppendLine("-----");
                     sb.AppendLine(string.Format("Compilation Error, status is {0}.", result.ToString()));
+                    sb.AppendLine("---------------");
                     sb.AppendLine(mes);
+                    sb.AppendLine("---------------");
+                    sb.AppendLine(mes2);
                     sb.AppendLine("---------------");
                     sb.AppendLine(string.Format("ADD: '{0}'", metaaddLocation));
                     sb.AppendLine("---------------");

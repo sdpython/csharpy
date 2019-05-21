@@ -1,7 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DynamicCS;
+using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using DynamicCS;
 
 
 namespace TestCSharpyCore
@@ -18,6 +20,33 @@ namespace TestCSharpyCore
             Assert.AreEqual(sig, "Double->Double");
             var result = DynamicFunction.RunFunctionRedirectOutput(meth, new object[] { (double)3 });
             Assert.AreEqual(result.Item1, 9.0);
+        }
+
+        [TestMethod]
+        public void TestPyDynamicCSFails()
+        {
+            try
+            {
+                DynamicFunction.CreateFunction("SquareX", "public static double SquareX(double x){return x * y;}",
+                                                          null, null, null);
+            }
+            catch (Exception e)
+            {
+                var s = e.ToString();
+                Assert.IsTrue(s.Contains("'y'"));
+            }
+
+        }
+
+        [TestMethod]
+        public void TestHash()
+        {
+            using (var sha = SHA256.Create())
+            {
+                var res = sha.ComputeHash(new byte[] { 0, 1, 2, 3, 4, 5 });
+                Assert.AreEqual(res[0], 23);
+                Assert.AreEqual(res[1], 232);
+            }
         }
 
         [TestMethod]
