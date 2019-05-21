@@ -108,11 +108,18 @@ namespace DynamicCS
 
             string assemblyName = "...";
 
+            var options = new CSharpCompilationOptions(
+                                        OutputKind.DynamicallyLinkedLibrary,
+                                        allowUnsafe: true,
+                                        publicSign: false,
+                                        cryptoKeyContainer: null,
+                                        cryptoKeyFile: null,
+                                        cryptoPublicKey: ImmutableArray<byte>.Empty);
             var compilation = CSharpCompilation.Create(
                             assemblyName,
                             syntaxTrees: new[] { syntaxTree },
                             references: assemblies.ToArray(),
-                            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+                            options: options);
 
             using (var ms = new MemoryStream())
             {

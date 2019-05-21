@@ -1,0 +1,24 @@
+
+.. blogpost::
+    :title: dotnot on travis or circleci is not easy
+    :keywords: dotnet, travis, circleci
+    :date: 2019-05-20
+    :categories: CI
+
+    Even if it runs on a remote machine with linux, or on Windows,
+    I still get this kind of errors:
+
+    ::
+
+        Unable to compile function 'main_140325108017752' due to System.TypeInitializationException:
+        The type initializer for 'Roslyn.Utilities.StringTable' threw an exception. 
+            ---> System.OverflowException: Array dimensions exceeded supported range.
+
+    ::
+
+        Unable to compile function 'main_140700003068728' due to 
+        System.InvalidOperationException: Compilation Error, status is 
+        Microsoft.CodeAnalysis.Emit.EmitResult.
+            CS8113: Invalid hash algorithm name: 'SHA256'
+
+    Difficult to fix. I did not use any encrypting algorithm.
