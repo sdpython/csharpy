@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicCS;
 using System.IO;
+using System.Linq;
 
 
 namespace TestCSharpyCore
@@ -28,6 +29,7 @@ namespace TestCSharpyCore
             Assert.AreEqual(result.Item1, 9.0);
 
             var cslist = BuildHelper.GetAssemblyList();
+            cslist = cslist.OrderBy(c => c).ToArray();
             Assert.IsTrue(cslist.Length > 0);
             var thispath = Path.Combine("..", "..", "..", "..");
             var tpath = Path.Combine(thispath, "csdependencies.txt");

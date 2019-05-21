@@ -20,7 +20,7 @@ namespace DynamicCS
                 {
                     continue;
                 }
-                if (name.Contains("csharpy") && !name.Contains("TestCSharpyCore") && 
+                if (!string.IsNullOrEmpty(name) && !name.Contains("TestCSharpyCore") &&
                     !name.Contains("testplatform") && !name.Contains("mstest"))
                     res.Add(name);
             }
