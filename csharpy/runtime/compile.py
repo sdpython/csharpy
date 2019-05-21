@@ -2,11 +2,9 @@
 @file
 @brief Dynamically compile a C# function.
 """
-# import os
 import warnings
 from ..binaries import AddReference
 from ..csnative.csmain import CsCreateFunction  # pylint: disable=E0611
-# from ..csnative import get_clr_path
 
 
 def create_cs_function(name, code, usings=None, dependencies=None,
@@ -27,23 +25,6 @@ def create_cs_function(name, code, usings=None, dependencies=None,
     If this one is missing, it will be automatically added.
     If *redirect* is True, the results is a tuple
     ``(return of :epkg:`C#` function, standard output, standard error)``.
-
-    .. faqref::
-        :title: Linq is missing
-
-        No dependencies are added by default and many pieces of code
-        relies on standard :epkg:`C#` implemented in ``System.Core``
-        which must be added as a dependency. That's what the following
-        error tells:
-
-        ::
-
-            System.InvalidOperationException: Error (CS0234): Missing 'Linq'
-
-        Then ``'System.Core'`` must be added the *dependencies* in function
-        @see fn create_cs_function or ``-d System.core`` in magic command
-        @see me CS.
-
     The function use dotnet if *use_clr* is False and not :epkg:`pythonnet`.
     Many assemblies can be found in path returned by @see fn get_clr_path.
     """

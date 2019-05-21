@@ -224,8 +224,8 @@ pip-log.txt
 # py* packages
 temp_*
 out_*
-src/csharpy/binaries/*.dll
-src/csharpy/binaries/*.so
+csharpy/binaries/*.dll
+csharpy/binaries/*.so
 */sphinxdoc/source/index_*
 */sphinxdoc/source/readme.*
 */sphinxdoc/source/LICENSE.txt

@@ -42,72 +42,45 @@ csharpy
 :ref:`l-README`,
 :ref:`blog <ap-main-0>`
 
-What is it?
------------
 Helpers to play with :epkg:`C#`, :epkg:`Python`.
-The module also relies on :epkg:`csharpy`.
+The version 0.1 was using :epkg:`pythonnet`
+(so :epkg:`mono` on Linux) but
+as it does not only depends on :epkg:`dotnet`.
+Version :epkg:`0.2` has less functionality but directly
+calls C# functions from C++ and then from :epkg:`Python`.
+It now depends on :epkg:`dotnetcore2`.
 
 .. runpython::
     :showcode:
 
-    from csharpy.runtime import create_cs_function
+    from csharpy.runtime import create_cs_function, start
+    start()  # loads in memory the dotnet DLL released in this package
     code = "public static double SquareX(double x) {return x*x ; }"
     SquareX = create_cs_function("SquareX", code)
     print(SquareX(4))
 
-Documentation
--------------
-
 .. toctree::
     :maxdepth: 1
 
+    csharpcpp
     api/index
-    i_ex
     i_faq
     i_nb
-
-Galleries
----------
-
-.. toctree::
-    :maxdepth: 2
-
     all_notebooks
     blog/blogindex
+    indexmenu
+    HISTORY
+    license
 
-Installation
-------------
-
-*Windows*
-
-::
-
-    pip install csharpy
-
-*Linux*
-
-Follow the instructions described in
-`config.yml <https://github.com/sdpython/csharpy/blob/master/.circleci/config.yml>`_.
-
-Build
------
-
-The package contains :epkg:`C#` and :epkg:`C++` extensions
-which can be built with the following instruction:
+The module can be built on Linux or Windows,
+instructions are described in
+`config.yml <https://github.com/sdpython/csharpy/blob/master/.circleci/config.yml>`_
+or `appveyor.yml <https://github.com/sdpython/csharpy/blob/master/appveyor.yml>`_.
+The main instruction is:
 
 ::
 
     python setup.py build_ext --inplace
-
-Navigation
-----------
-
-.. toctree::
-    :maxdepth: 1
-
-    indexmenu
-    HISTORY
-    license
 
 .. toctree::
     :hidden:

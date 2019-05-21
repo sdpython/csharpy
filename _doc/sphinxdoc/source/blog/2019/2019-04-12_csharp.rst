@@ -12,4 +12,4 @@
     I mixed with some of the code implemented in :epkg:`nimbusml`
     to finally use :epkg:`pybind11` to write a module which
     call a C# function. Everything is implemented in `csnative
-    <https://github.com/sdpython/csharpy/tree/master/src/csharpy/csnative>`_.
+    <https://github.com/sdpython/csharpy/tree/master/csharpy/csnative>`_.
