@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCSharpyCore", "TestCSha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicCS", "DynamicCScore\DynamicCS.csproj", "{8E98337D-932C-4456-A9C6-650FF6F28881}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicCS", "DynamicCS\DynamicCS.csproj", "{39B9F633-D67E-4F3C-A5EB-EFAD8EAD165B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
