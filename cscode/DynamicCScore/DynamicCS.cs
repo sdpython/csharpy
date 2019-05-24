@@ -114,6 +114,7 @@ namespace DynamicCS
                                         publicSign: false,
                                         cryptoKeyContainer: null,
                                         cryptoKeyFile: null,
+                                        delaySign: true,
                                         cryptoPublicKey: ImmutableArray<byte>.Empty);
             var compilation = CSharpCompilation.Create(
                             assemblyName,
@@ -123,14 +124,14 @@ namespace DynamicCS
 
             using (var ms = new MemoryStream())
             {
-                EmitResult result = compilation.Emit(ms);
+                EmitResult result = compilation.Emit(ms, options: new EmitOptions(tolerateErrors: true));
 
                 if (!result.Success)
                 {
                     var failures = result.Diagnostics.Where(diagnostic =>
                         diagnostic.IsWarningAsError ||
                         diagnostic.Severity == DiagnosticSeverity.Error);
-                    var mes = string.Join("\n", failures.Select(diagnostic => string.Format("    {0}: {1}", 
+                    var mes = string.Join("\n", failures.Select(diagnostic => string.Format("    {0}: {1}",
                         diagnostic.Id, diagnostic.GetMessage())));
                     var mes2 = string.Join("\n", result.Diagnostics.Select(diagnostic => string.Format("    {0}: {1}-{2}-{3}-{4}",
                         diagnostic.Id, diagnostic.GetMessage(), diagnostic.Descriptor.HelpLinkUri,
