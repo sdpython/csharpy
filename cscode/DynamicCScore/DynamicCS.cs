@@ -124,7 +124,7 @@ namespace DynamicCS
 
             using (var ms = new MemoryStream())
             {
-                EmitResult result = compilation.Emit(ms, options: new EmitOptions(tolerateErrors: true));
+                EmitResult result = compilation.Emit(ms);
 
                 if (!result.Success)
                 {
