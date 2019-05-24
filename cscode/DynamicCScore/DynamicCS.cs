@@ -106,7 +106,7 @@ namespace DynamicCS
             foreach (var d in addDependencies)
                 assemblies.Add(MetadataReference.CreateFromFile(d));
 
-            string assemblyName = "...";
+            string assemblyName = "CSharpyExtensionDll";
 
             var options = new CSharpCompilationOptions(
                                         OutputKind.DynamicallyLinkedLibrary,
