@@ -28,7 +28,7 @@ namespace DynamicCS
 
         private const string embedCode = @"
 {4}
-namespace DynamicCS
+namespace DynamicCSCustom
 {0}                
     public static class DynamicCSFunctions_{2}
     {0}  
@@ -147,6 +147,18 @@ namespace DynamicCS
                     sb.AppendLine(string.Format("ADD: '{0}'", metaaddLocation));
                     sb.AppendLine("---------------");
                     sb.AppendLine(code);
+                    sb.AppendLine("---------------");
+
+                    var dllpath = Path.GetFullPath(string.Format("custom_{0}.dll", functionName));
+                    var pdbpath = Path.GetFullPath(string.Format("custom_{0}.pdb", functionName));
+                    result = compilation.Emit(dllpath, pdbpath);
+                    sb.AppendLine(string.Format("SECOND COMPILATION {0}", result.Success));
+                    sb.AppendLine("---------------");
+                    sb.AppendLine(string.Format("DLL '{0}'", dllpath));
+                    sb.AppendLine(string.Format("PDB '{0}'", pdbpath));
+                    sb.AppendLine("---------------");
+                    sb.AppendLine(result.ToString());
+
                     throw new InvalidOperationException(sb.ToString());
                 }
                 else
@@ -158,7 +170,7 @@ namespace DynamicCS
             }
 #endif
 
-            Type binaryFunction = resultAssembly.GetType(string.Format("DynamicCS.DynamicCSFunctions_{0}", functionName));
+            Type binaryFunction = resultAssembly.GetType(string.Format("DynamicCSCustom.DynamicCSFunctions_{0}", functionName));
             return binaryFunction.GetMethod(functionName);
         }
 
