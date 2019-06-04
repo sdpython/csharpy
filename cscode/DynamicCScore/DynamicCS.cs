@@ -158,6 +158,13 @@ namespace DynamicCSCustom
                     sb.AppendLine(string.Format("PDB '{0}'", pdbpath));
                     sb.AppendLine("---------------");
                     sb.AppendLine(result.ToString());
+                    sb.AppendLine("---------------");
+                    failures = result.Diagnostics.Where(diagnostic =>
+                        diagnostic.IsWarningAsError ||
+                        diagnostic.Severity == DiagnosticSeverity.Error);
+                    mes = string.Join("\n", failures.Select(diagnostic => string.Format("    {0}: {1}",
+                        diagnostic.Id, diagnostic.GetMessage())));
+                    sb.AppendLine(mes);
 
                     throw new InvalidOperationException(sb.ToString());
                 }
