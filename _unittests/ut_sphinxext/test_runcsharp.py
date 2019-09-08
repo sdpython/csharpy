@@ -1,5 +1,5 @@
 """
-@brief      test log(time=4s)
+@brief      test log(time=6s)
 """
 import unittest
 from pyquickhelper.helpgen import rst2html
