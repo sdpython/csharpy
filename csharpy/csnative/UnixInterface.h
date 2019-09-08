@@ -210,7 +210,7 @@ private:
             }
             
             // See https://linux.die.net/man/3/dlopen
-            _hmodCore = dlopen(pathCore.c_str(), RTLD_LAZY | RTLD_GLOBAL);
+            _hmodCore = dlopen(pathCore.c_str(), RTLD_LAZY | RTLD_GLOBAL | RTLD_NEXT);
             if (_hmodCore == nullptr) {
                 std::stringstream message;
                 message << "Unable to open dll: " << dlerror();
