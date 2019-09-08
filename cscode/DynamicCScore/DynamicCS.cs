@@ -123,7 +123,7 @@ namespace DynamicCSCustom
                             options: options);
 
             System.Console.WriteLine("ASSEMBLIES");
-            System.Console.WriteLine(string.Join(assemblies));
+            System.Console.WriteLine(string.Join("\n", assemblies.Select(a => a.Display)));
 
             using (var ms = new MemoryStream())
             {
