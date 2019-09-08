@@ -122,9 +122,6 @@ namespace DynamicCSCustom
                             references: assemblies.ToArray(),
                             options: options);
 
-            System.Console.WriteLine("ASSEMBLIES");
-            System.Console.WriteLine(string.Join("\n", assemblies.Select(a => a.Display).OrderBy(c => c)));
-
             using (var ms = new MemoryStream())
             {
                 EmitResult result = compilation.Emit(ms);
