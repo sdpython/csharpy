@@ -277,3 +277,4 @@ cscode/packages
 cscode/csdependencies.txt
 _unittests/ut_runtime/*.dll
 _unittests/*.out
+custom_SquareX.dll

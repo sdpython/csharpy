@@ -209,7 +209,8 @@ private:
                 throw std::runtime_error(message.str().c_str());
             }
             
-            _hmodCore = dlopen(pathCore.c_str(), RTLD_NOW | RTLD_LOCAL);
+            // See https://linux.die.net/man/3/dlopen
+            _hmodCore = dlopen(pathCore.c_str(), RTLD_LAZY | RTLD_GLOBAL);
             if (_hmodCore == nullptr) {
                 std::stringstream message;
                 message << "Unable to open dll: " << dlerror();
