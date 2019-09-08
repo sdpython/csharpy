@@ -114,13 +114,16 @@ namespace DynamicCSCustom
                                         publicSign: false,
                                         cryptoKeyContainer: null,
                                         cryptoKeyFile: null,
-                                        delaySign: true,
+                                        delaySign: false,
                                         cryptoPublicKey: ImmutableArray<byte>.Empty);
             var compilation = CSharpCompilation.Create(
                             assemblyName,
                             syntaxTrees: new[] { syntaxTree },
                             references: assemblies.ToArray(),
                             options: options);
+
+            System.Console.WriteLine("ASSEMBLIES");
+            System.Console.WriteLine(string.Join(assemblies));
 
             using (var ms = new MemoryStream())
             {
