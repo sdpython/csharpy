@@ -1,7 +1,6 @@
 coverage
 dotnetcore2
 jyquickhelper
-git+https://github.com/sdpython/nbconvert.git@fixes
 Pillow
 pybind11
 pycparser
