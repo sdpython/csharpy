@@ -6,7 +6,7 @@ from pyquickhelper.helpgen.default_conf import set_sphinx_variables, get_default
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.split(__file__)[0])))
 
-set_sphinx_variables(__file__, "csharpy", "sdpython", 2019,
+set_sphinx_variables(__file__, "csharpy", "sdpython", 2020,
                      "readable", sphinx_readable_theme.get_html_theme_path(),
                      locals(), book=True,
                      add_extensions=[
@@ -48,6 +48,8 @@ epkg_dictionary.update({
     'nimbusml': 'https://github.com/Microsoft/NimbusML',
     'pybind11': 'https://github.com/pybind/pybind11',
     'pythonnet': 'https://github.com/pythonnet/pythonnet',
-    'runpython': 'http://www.xavierdupre.fr/app/pyquickhelper/helpsphinx/pyquickhelper/sphinxext/sphinx_runpython_extension.html#pyquickhelper.sphinxext.sphinx_runpython_extension.RunPythonDirective',
+    'runpython': ('http://www.xavierdupre.fr/app/pyquickhelper/helpsphinx/pyquickhelper/sphinxext/'
+                 'sphinx_runpython_extension.html#pyquickhelper.sphinxext.'
+                 'sphinx_runpython_extension.RunPythonDirective'),
     'unsafe': 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/unsafe',
 })
