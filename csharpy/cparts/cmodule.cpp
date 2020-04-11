@@ -72,7 +72,7 @@ PyInit_cmodule(void)
     
     struct module_state *st = GETSTATE(m);
     if (st == NULL)
-        throw new std::runtime_error("GETSTATE returns null.");
+        return NULL;
 
     st->error = PyErr_NewException("cmodule.Error", NULL, NULL);
     if (st->error == NULL) {
