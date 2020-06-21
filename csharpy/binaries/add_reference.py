@@ -2,22 +2,29 @@
 @file
 @brief
 """
+import os
 import sys
 import warnings
 
 
-def AddReference(name, use_clr):
+def AddReference(name, use_clr, verbose=True):
     """
     Imports a :epkg:`C#` dll.
 
     @param      name        assembly name
     @param      use_clr     use :epkg:`pythonnet` or not
                             (native bridge)
+    @param      verbose     verbose
 
     This function only works if :epkg:`pythonnet` is installed
     but the package is not mandatory to call C# functions
     from python.
     """
+    this = os.path.join(os.path.abspath(os.path.dirname(__file__)), "Release")
+    if os.path.exists(this) and this not in sys.path:
+        if verbose:
+            print("[AddReference] add to sys.path: '{}'".format(this))
+        sys.path.append(this)
     try:
         import clr
     except ImportError:
@@ -32,16 +39,21 @@ def AddReference(name, use_clr):
     from clr import AddReference as ClrAddReference  # pylint: disable=E0401
     try:
         return ClrAddReference(name)
-    except Exception as _:
+    except Exception as e_:
+        if verbose:
+            print('[AddReference1] %r' % e_)
         try:
-            from ..csnative.dotnetcore_helper import get_clr_path
+            from ..csnative.dotnet_helper import get_clr_path
             clr_path = get_clr_path()
             if clr_path not in sys.path:
+                if verbose:
+                    print("[AddReference] add to sys.path: '{}'".format(clr_path))
                 sys.path.append(clr_path)
             return ClrAddReference(name)
         except Exception as e:
+            if verbose:
+                print('[AddReference2] %r' % e)
             if "Unable to find assembly" in str(e):
-                import os
                 this = os.path.abspath(os.path.dirname(__file__))
                 rel = os.path.join(this, "Release")
                 if os.path.exists(os.path.join(rel, '__init__.py')):
@@ -54,6 +66,8 @@ def AddReference(name, use_clr):
                     this = rel
                 if this and os.path.exists(this):
                     sys.path.append(this)
+                    if verbose:
+                        print("[AddReference] add to sys.path: '{}'".format(this))
                     try:
                         res = ClrAddReference(name)
                     except Exception:

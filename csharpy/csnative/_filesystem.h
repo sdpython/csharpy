@@ -5,6 +5,7 @@
     #if _MSC_VER
         #include <iostream>
         #if __cplusplus < 201703L
+        #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
         #include <experimental/filesystem>
         namespace fs = std::experimental::filesystem;
         #else

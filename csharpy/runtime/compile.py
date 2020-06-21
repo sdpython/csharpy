@@ -4,11 +4,10 @@
 """
 import warnings
 from ..binaries import AddReference
-from ..csnative.csmain import CsCreateFunction  # pylint: disable=E0611
 
 
 def create_cs_function(name, code, usings=None, dependencies=None,
-                       redirect=False, use_clr=False):
+                       redirect=False, use_clr=False, verbose=False):
     """
     Compiles a :epkg:`C#` function.
     Relies on @see fn run_cs_function.
@@ -19,6 +18,7 @@ def create_cs_function(name, code, usings=None, dependencies=None,
     @param      dependencies    dependencies, can be absolute path file
     @param      redirect        redirect standard output and error
     @param      has_clr         use :epkg:`pythonnet` or not
+    @param      verbose         verbose
     @return                     :epkg:`Python` wrapper on the compiled :epkg:`C#`
 
     Assemblies are expected to be filename with extension.
@@ -29,12 +29,17 @@ def create_cs_function(name, code, usings=None, dependencies=None,
     Many assemblies can be found in path returned by @see fn get_clr_path.
     """
     if use_clr:
-        AddReference("System", use_clr)
-        AddReference("System.Collections", use_clr)
-        AddReference("System.Collections.Immutable", use_clr)
-        AddReference("DynamicCS", use_clr)
-        from DynamicCS import DynamicFunction
+        AddReference("System", use_clr, verbose=verbose)
+        AddReference("System.Collections", use_clr, verbose=verbose)
+        AddReference("System.Collections.Immutable", use_clr, verbose=verbose)
+        res = AddReference("DynamicCS", use_clr, verbose=verbose)
         from System import String
+        try:
+            from DynamicCS import DynamicFunction
+        except ModuleNotFoundError as e:
+            raise ImportError(
+                "Unable to find 'DynamicFunction' in 'DynamicCS' (imported [{}]"
+                ".".format(res)) from e
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", DeprecationWarning)
@@ -50,13 +55,14 @@ def create_cs_function(name, code, usings=None, dependencies=None,
                 else:
                     myarray.Add(d + ".dll")
         myarray = myarray.ToArray()
-        obj = DynamicFunction.CreateFunction(name, code, usings, myarray)
+        obj = DynamicFunction.CreateFunction(name, code, usings, myarray, None)
         return lambda *params: run_cs_function_clr(obj, params, redirect=redirect)
     else:
         if usings is None:
             usings = []
         if dependencies is None:
             dependencies = []
+        from ..csnative.csmain import CsCreateFunction  # pylint: disable=E0611
         res = CsCreateFunction(name, code, usings, dependencies)
 
         from ..csnative.csmain import CallArrayInt32String  # pylint: disable=E0611

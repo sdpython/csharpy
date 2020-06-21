@@ -53,26 +53,7 @@ std::vector<std::string> fs_listdir(const std::string& s)
 
 void retrieve_dotnetcore_path(std::string &path_clr)
 {
-    // This function assumes dotnetcore2 is installed.
-    //py::scoped_interpreter guard{};
-    pybind11::module dnc = pybind11::module::import("dotnetcore2.runtime");
-    auto fct = dnc.attr("_get_bin_folder");
-    std::string value = fct().cast<std::string>();
-    PATHTYPE path = value;
-    PATHIJOIN(path, std::string("shared"));
-    PATHIJOIN(path, std::string("Microsoft.NETCore.App"));
-    PATHTYPE full_path;
-    PATHTYPE look;
-    std::string dll("Microsoft.CSharp.dll");
-    for (const auto & full_path : PATHITER(path)) {
-        look = PATHJOIN(full_path, dll);
-        if (PATHEXISTS(look)) {
-            PATHTYPE fpath = full_path;
-            PATHTOSTRING(path_clr, fpath)
-            return;
-        }
-    }
-    throw std::runtime_error("Unable to find dotnetcore2.");
+    throw std::runtime_error("Unable to find dotnetcore.");
 }
 
 

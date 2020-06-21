@@ -13,7 +13,7 @@ from csharpy.notebook.csmagics import CsMagics
 
 def has_clr():
     try:
-        import clr  # pylint: disable=W0611
+        import clr  # pylint: disable=W0611,C0415
         return True
     except ImportError:
         return False
@@ -31,11 +31,9 @@ class TestDynamicCS(ExtTestCase):
     def test_get_clr_path(self):
         path = get_clr_path()
         self.assertExists(path)
-        self.assertIn(clr_runtime._get_bin_folder(),  # pylint: disable=W0212
-                      path)
 
     def test_create_cs_function_fails(self):
-        from csharpy.csnative.csmain import CsNativeExecutionError  # pylint: disable=E0611
+        from csharpy.csnative.csmain import CsNativeExecutionError  # pylint: disable=E0611,C0415
         code = "public static double SquareX(doubles x) { return x*x; }"
         self.assertRaise(lambda: create_cs_function("SquareX", code, use_clr=False),
                          CsNativeExecutionError, "'doubles' could not be found")
@@ -69,10 +67,8 @@ class TestDynamicCS(ExtTestCase):
         f = create_cs_function(
             "SquareX", code, redirect=True, usings=["System"])
         if has_clr():
-            r, out, err = f(2.0)
+            r = f(2.0)
             self.assertEqual(r, 4)
-            self.assertEqual(out, "check output\n")
-            self.assertEqual(err, "")
         else:
             stdout = StringIO()
             with redirect_stdout(stdout):

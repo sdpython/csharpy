@@ -19,7 +19,7 @@ class TestCodeStyle(ExtTestCase):
         src_ = os.path.normpath(os.path.join(thi, "..", "..", "csharpy"))
         check_pep8(src_, fLOG=fLOG,
                    pylint_ignore=('C0103', 'C1801', 'R0201', 'R1705', 'W0108', 'W0613',
-                                  'C011111'),
+                                  'C011111', 'C0415'),
                    skip=["Unable to import 'CSharPyExtension'",
                          "Unable to import 'System'",
                          "Unable to import 'System.Collections.Generic'",

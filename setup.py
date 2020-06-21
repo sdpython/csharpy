@@ -255,14 +255,14 @@ if not r:
     if sys.platform.startswith("win"):
         libraries_native = ['kernel32']
         extra_compile_args = None
-        extra_compile_args_native = ['/EHsc', '-std=c++11', '-DNOMINMAX']
+        extra_compile_args_native = ['/EHsc', '-DNOMINMAX']
     elif sys.platform.startswith("darwin"):
         extra_compile_args = ['-std=c++11', '-lstdc++fs']
         extra_compile_args_native = [
             '-stdlib=libc++', '-mmacosx-version-min=10.7', '-DNOMINMAX']
     else:
-        extra_compile_args = ['-lpthread', '-std=c++11']
-        extra_compile_args_native = ['-std=c++17', '-DNOMINMAX', '-lstdc++fs']
+        extra_compile_args = ['-lpthread']
+        extra_compile_args_native = ['-DNOMINMAX', '-lstdc++fs']
 
     # C and C++ parts
 
@@ -303,7 +303,6 @@ if not r:
         package_dir=package_dir,
         package_data=package_data,
         setup_requires=["pyquickhelper"],
-        install_requires=['dotnetcore2'],
         extras_require={
             'notebook': ['pyquickhelper'],
             'sphinxext': ['pyquickhelper'],

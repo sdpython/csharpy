@@ -1,5 +1,4 @@
 coverage
-dotnetcore2
 jyquickhelper
 Pillow
 pybind11
@@ -8,5 +7,6 @@ pyensae
 pylint
 pymyinstall
 pyquickhelper>=1.9
+pythonnet
 sphinx_rtd_theme
 wheel

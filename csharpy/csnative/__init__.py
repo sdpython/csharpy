@@ -4,7 +4,7 @@
 """
 import os
 import sys
-from .dotnetcore_helper import get_clr_path
+from .dotnet_helper import get_clr_path
 
 
 this_location = os.path.abspath(os.path.dirname(__file__))

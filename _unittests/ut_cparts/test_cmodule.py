@@ -7,6 +7,7 @@ will sort all test files by increasing time and run them.
 import unittest
 from pyquickhelper.pycode import ExtTestCase
 from csharpy.cparts import version_c
+from csharpy import __version__
 
 
 class TestCModule(ExtTestCase):
@@ -14,7 +15,7 @@ class TestCModule(ExtTestCase):
 
     def test_version_c(self):
         ver = version_c()
-        self.assertEqual(ver, "0.2")
+        self.assertEqual(ver.split('.')[:2], __version__.split('.')[:2])
 
 
 if __name__ == "__main__":
