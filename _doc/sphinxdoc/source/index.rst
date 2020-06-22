@@ -33,9 +33,13 @@ csharpy
     .. image:: https://codecov.io/github/sdpython/csharpy/coverage.svg?branch=master
         :target: https://codecov.io/github/sdpython/csharpy?branch=master
 
-.. image:: nbcov.png
-    :target: http://www.xavierdupre.fr/app/csharpy/helpsphinx/all_notebooks_coverage.html
-    :alt: Notebook Coverage
+    .. image:: nbcov.png
+        :target: http://www.xavierdupre.fr/app/csharpy/helpsphinx/all_notebooks_coverage.html
+        :alt: Notebook Coverage
+
+    .. image:: https://img.shields.io/github/repo-size/sdpython/csharpy
+        :target: https://github.com/sdpython/csharpy/
+        :alt: size
 
 **Links:** `github <https://github.com/sdpython/csharpy/>`_,
 `documentation <http://www.xavierdupre.fr/app/csharpy/helpsphinx2/index.html>`_

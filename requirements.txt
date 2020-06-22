@@ -9,5 +9,4 @@ pylint
 pymyinstall
 pyquickhelper>=1.9
 pythonnet
-sphinx_rtd_theme
 wheel

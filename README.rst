@@ -32,6 +32,10 @@
     :target: http://www.xavierdupre.fr/app/csharpy/helpsphinx/all_notebooks_coverage.html
     :alt: Notebook Coverage
 
+.. image:: https://img.shields.io/github/repo-size/sdpython/csharpy
+    :target: https://github.com/sdpython/csharpy/
+    :alt: size
+
 .. _l-README:
 
 csharpy
