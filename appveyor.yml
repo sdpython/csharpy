@@ -1,10 +1,15 @@
-image: Visual Studio 2019
+environment:
 
-matrix:
+  image: Visual Studio 2019
 
-  - PYTHON: "C:\\Python37-x64"
-    PYTHON_VERSION: "3.7.x"
-    PYTHON_ARCH: "64"
+  global:
+    WITH_COMPILER: "cmd /E:ON /V:ON /C .\\appveyor\\run_with_compiler.cmd"
+
+  matrix:
+
+    - PYTHON: "C:\\Python37-x64"
+      PYTHON_VERSION: "3.7.x"
+      PYTHON_ARCH: "64"
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
