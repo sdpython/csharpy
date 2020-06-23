@@ -2,9 +2,6 @@ environment:
 
   image: Visual Studio 2019
 
-  global:
-    WITH_COMPILER: "cmd /E:ON /V:ON /C .\\appveyor\\run_with_compiler.cmd"
-
   matrix:
 
     - PYTHON: "C:\\Python37-x64"
