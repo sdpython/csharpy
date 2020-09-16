@@ -23,7 +23,7 @@ def AddReference(name, use_clr, verbose=True):
     this = os.path.join(os.path.abspath(os.path.dirname(__file__)), "Release")
     if os.path.exists(this) and this not in sys.path:
         if verbose:
-            print("[AddReference] add to sys.path: '{}'".format(this))
+            print("[AddReference0] add to sys.path: '{}'".format(this))
         sys.path.append(this)
     try:
         import clr
@@ -32,8 +32,9 @@ def AddReference(name, use_clr, verbose=True):
         if use_clr:
             raise ImportError("pythonnet is not installed.")
         else:
-            warnings.warn("pythonnet is not installed. AddReference does nothing with '{0}'.".format(
-                name))
+            warnings.warn(
+                "pythonnet is not installed. "
+                "AddReference does nothing with '{0}'.".format(name))
             return
 
     from clr import AddReference as ClrAddReference  # pylint: disable=E0401
@@ -47,7 +48,7 @@ def AddReference(name, use_clr, verbose=True):
             clr_path = get_clr_path()
             if clr_path not in sys.path:
                 if verbose:
-                    print("[AddReference] add to sys.path: '{}'".format(clr_path))
+                    print("[AddReference2] add to sys.path: '{}'".format(clr_path))
                 sys.path.append(clr_path)
             return ClrAddReference(name)
         except Exception as e:
@@ -67,7 +68,7 @@ def AddReference(name, use_clr, verbose=True):
                 if this and os.path.exists(this):
                     sys.path.append(this)
                     if verbose:
-                        print("[AddReference] add to sys.path: '{}'".format(this))
+                        print("[AddReference3] add to sys.path: '{}'".format(this))
                     try:
                         res = ClrAddReference(name)
                     except Exception:
@@ -75,10 +76,7 @@ def AddReference(name, use_clr, verbose=True):
                         raise
                     del sys.path[-1]
                     return res
-                else:
-                    raise
-            else:
-                raise
+            raise
 
 
 def add_csharp_extension(use_clr):

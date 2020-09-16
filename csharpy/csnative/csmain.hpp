@@ -43,8 +43,7 @@ static NetInterface * _interface = NULL;
 
 NetInterface * GetNetInterface(const char *coreclrpath = NULL,
                                const char *native_lib = NULL,
-                               bool remove = false)
-{
+                               bool remove = false) {
     if (_interface == NULL) {
         if (coreclrpath == NULL || strlen(coreclrpath) == 0)
             retrieve_dotnetcore_path(_coreclrpath);
@@ -73,8 +72,7 @@ NetInterface * GetNetInterface(const char *coreclrpath = NULL,
             throw CsNativeExecutionError(message.str().c_str());
         }
     }
-    else if (remove)
-    {
+    else if (remove) {
         delete _interface;
         _interface = NULL;
     }
@@ -85,8 +83,7 @@ NetInterface * GetNetInterface(const char *coreclrpath = NULL,
 typedef double (STDCALL TypeSquareNumber)(double);
 
 
-TypeSquareNumber* GetSquareNumberFunction()
-{
+TypeSquareNumber* GetSquareNumberFunction() {
     static TypeSquareNumber* _fct = NULL;
     if (_fct == NULL) {
         NetInterface * dll = GetNetInterface(_coreclrpath.c_str(), _native_lib.c_str());
@@ -105,8 +102,7 @@ TypeSquareNumber* GetSquareNumberFunction()
 }
 
 
-double SquareNumber(double x)
-{
+double SquareNumber(double x) {
     // Exception do not work well.
     // They should be handled in C# as it makes python crash.
     static TypeSquareNumber* fct = (TypeSquareNumber*)GetSquareNumberFunction();
@@ -118,8 +114,7 @@ double SquareNumber(double x)
 typedef int (STDCALL TypeAgnosticFunction)(DataStructure * data);
 
 
-TypeAgnosticFunction* GetAgnosticFunction(const FUNCTION_NAME_TYPE function_name)
-{
+TypeAgnosticFunction* GetAgnosticFunction(const FUNCTION_NAME_TYPE function_name) {
     NetInterface * dll = GetNetInterface(_coreclrpath.c_str(), _native_lib.c_str());
     if (dll == NULL)
         throw CsNativeExecutionError("Cannot get a pointer to NetInterface.");
@@ -134,26 +129,24 @@ TypeAgnosticFunction* GetAgnosticFunction(const FUNCTION_NAME_TYPE function_name
 }
 
 
-MANAGED_CALLBACK(void) CallBackMalloc(int size, void **ptr)
-{
+MANAGED_CALLBACK(void) CallBackMalloc(int size, void **ptr) {
     *ptr = malloc(size);
 }
 
 
-MANAGED_CALLBACK(void) CallPrintf(const char * msg)
-{
+MANAGED_CALLBACK(void) CallPrintf(const char * msg) {
     if (msg != NULL)
         std::cout << msg;
 }
 
-MANAGED_CALLBACK(void) CallPrintfw(const wchar_t * msg)
-{
+
+MANAGED_CALLBACK(void) CallPrintfw(const wchar_t * msg) {
     if (msg != NULL)
         std::cout << msg;
 }
 
-MANAGED_CALLBACK(void) CallPythonPrintf(const char * msg)
-{
+
+MANAGED_CALLBACK(void) CallPythonPrintf(const char * msg) {
 #ifdef SKIP_PYBIND11
     if (msg != NULL)
         std::cout << "++" << msg;
@@ -163,8 +156,8 @@ MANAGED_CALLBACK(void) CallPythonPrintf(const char * msg)
 #endif
 }
 
-int CallAgnosticFunction(TypeAgnosticFunction * fct, DataStructure * data, bool redirect)
-{
+
+int CallAgnosticFunction(TypeAgnosticFunction * fct, DataStructure * data, bool redirect) {
     if (data == NULL)
         throw CsNativeExecutionError("data pointer cannot be NULL.");
     data->allocate_fct = (void*)&CallBackMalloc;
@@ -175,27 +168,23 @@ int CallAgnosticFunction(TypeAgnosticFunction * fct, DataStructure * data, bool 
 
 void * cs_start(const std::string& coreclrpath,
     const std::string& native_lib,
-    const std::string& CSharpyPyExtension)
-{
+    const std::string& CSharpyPyExtension) {
     _CSharpyPyExtension = CSharpyPyExtension;
     return GetNetInterface(coreclrpath.c_str(), native_lib.c_str());
 }
 
 
-void cs_end()
-{
+void cs_end() {
     GetNetInterface(NULL, NULL, true);
 }
 
 
-const char * _core_clr_path()
-{
+const char * _core_clr_path() {
     return _coreclrpath.c_str();
 }
 
 
-const char * _core_clr_path_default()
-{
+const char * _core_clr_path_default() {
     return _coreclrpath_default.c_str();
 }
 

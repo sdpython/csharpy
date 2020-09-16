@@ -20,6 +20,7 @@ class TestDynamicCSSimple(ExtTestCase):
         path = get_clr_path()
         self.assertExists(path)
 
+    @unittest.skipIf(True, reason="use_clr=True too complex to maintain")
     def test_create_cs_function(self):
         code = "public static double SquareX(double x) { return x*x; }"
         f = create_cs_function("SquareX", code, use_clr=False)
@@ -28,7 +29,8 @@ class TestDynamicCSSimple(ExtTestCase):
 
     def test_create_cs_function_clr(self):
         code = "public static double SquareX(double x) { return x*x; }"
-        f = create_cs_function("SquareX", code, use_clr=True)
+        f = create_cs_function("SquareX", code, use_clr=True,
+                               verbose=True)
         r = f(2.0)
         self.assertEqual(r, 4)
 

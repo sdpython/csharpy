@@ -18,8 +18,7 @@
 #include <sys/types.h>
 
 
-bool fs_exists(const std::string &path)
-{
+bool fs_exists(const std::string &path) {
     FILE * f = fopen(path.c_str(), "rb");
     if (f == NULL)
         return false;
@@ -28,8 +27,7 @@ bool fs_exists(const std::string &path)
 }
 
 
-void listdir(const std::string& path, std::vector<std::string>& output)
-{
+void listdir(const std::string& path, std::vector<std::string>& output) {
     output.clear();
     struct dirent *entry;
     DIR *dir = opendir(path.c_str());
@@ -41,8 +39,7 @@ void listdir(const std::string& path, std::vector<std::string>& output)
 }
 
 
-std::vector<std::string> fs_listdir(const std::string& s)
-{
+std::vector<std::string> fs_listdir(const std::string& s) {
     std::vector<std::string> output;
     listdir(s, output);
     return output;
@@ -51,9 +48,8 @@ std::vector<std::string> fs_listdir(const std::string& s)
 #endif
 
 
-void retrieve_dotnetcore_path(std::string &path_clr)
-{
-    throw std::runtime_error("Unable to find dotnetcore.");
+void retrieve_dotnetcore_path(std::string &path_clr) {
+    // throw std::runtime_error("Unable to find dotnetcore.");
 }
 
 
@@ -65,8 +61,7 @@ void retrieve_dotnetcore_path(std::string &path_clr)
 
 DECLARE_FCT_NAME(RandomString)
 
-std::string RandomString()
-{
+std::string RandomString() {
     DataStructure data;
     cs_RandomString(&data, true);
     std::string res = std::string((char*)data.outputs);
@@ -77,8 +72,7 @@ std::string RandomString()
 
 DECLARE_FCT_NAME(CsUpper)
 
-std::string CsUpper(const std::string &text)
-{
+std::string CsUpper(const std::string &text) {
     DataStructure data;
     data.inputs = (void*) text.c_str();
     cs_CsUpper(&data, true);
@@ -90,21 +84,19 @@ std::string CsUpper(const std::string &text)
 
 DECLARE_FCT_NAME(CreateFunction)
 
-typedef struct CreateFunctionInput
-{
-public:
-    char * name;
-    char * code;
-    char ** usings;
-    char ** dependencies;
-    char * pathClr;
+typedef struct CreateFunctionInput {
+    public:
+        char * name;
+        char * code;
+        char ** usings;
+        char ** dependencies;
+        char * pathClr;
 } CreateFunctionInput;
 
 std::pair<int64_, std::string> CsCreateFunction(const std::string& functionName,
                                                 const std::string& functionCode,
                                                 const std::vector<std::string>& usings,
-                                                const std::vector<std::string>& dependencies)
-{
+                                                const std::vector<std::string>& dependencies) {
     CreateFunctionInput input;
     input.name = (char*)functionName.c_str();
     input.code = (char*)functionCode.c_str();
