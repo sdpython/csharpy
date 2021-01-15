@@ -19,7 +19,7 @@ def get_clr_path():
     clr_path = r"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.1.3"
     if os.path.exists(clr_path):
         return clr_path
-    import clr
+    import clr  # pylint: disable=W0611,E0401
     from System import __file__ as dotnetfile
     libs_root = os.path.dirname(dotnetfile)
     if "GAC_MSIL" in libs_root:

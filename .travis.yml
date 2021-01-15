@@ -1,4 +1,4 @@
-dist: xenial
+dist: focal
 sudo: true
 language: python
 git:
@@ -6,15 +6,18 @@ git:
   
 matrix:
   include:
-    - python: 3.7
+    - python: 3.9
       env: &xplat-env
       addons: &xplat-addons
         apt:
           sources:
-          - sourceline: deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main
+          - sourceline: deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod focal main
             key_url: https://packages.microsoft.com/keys/microsoft.asc
           packages:
             - dotnet-sdk-3.1
+            - dotnet-runtime-5.0
+            - aspnetcore-runtime-5.0
+            - apt-transport-https
 
 env:
   global:
@@ -28,24 +31,15 @@ before_install:
   - PY_LIBDIR=$(python -c 'import sysconfig; print(sysconfig.get_config_var("LIBDIR"))')
   - export LD_LIBRARY_PATH=$PY_LIBDIR:$LD_LIBRARY_PATH
   - export DOTNET_CLI_TELEMETRY_OPTOUT=1
-  # Addition to build
-  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq g++-5 --allow-unauthenticated
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 90
   # For python
   - python -m pip install -U pip
   - pip install -U setuptools wheel
 
 install:
-  - pip install pycparser
   - pip install -r requirements.txt
 
 before_script:
   # Build the package
-  - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
-  - gcc --version
   - python setup.py build_ext --inplace Debug
   - python setup.py build_ext --inplace Release
 

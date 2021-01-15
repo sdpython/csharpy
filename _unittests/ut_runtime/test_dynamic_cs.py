@@ -32,7 +32,7 @@ class TestDynamicCS(ExtTestCase):
         self.assertExists(path)
 
     def test_create_cs_function_fails(self):
-        from csharpy.csnative.csmain import CsNativeExecutionError  # pylint: disable=E0611,C0415
+        from csharpy.csnative.csmain import CsNativeExecutionError  # pylint: disable=E0611,C0415,E0401
         code = "public static double SquareX(doubles x) { return x*x; }"
         self.assertRaise(lambda: create_cs_function("SquareX", code, use_clr=False),
                          CsNativeExecutionError, "'doubles' could not be found")

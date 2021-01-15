@@ -14,7 +14,7 @@ def start():
     """
     Loads :epkg:`dotnetcore`.
     """
-    from .csmain import cs_start  # pylint: disable=E0611
+    from .csmain import cs_start  # pylint: disable=E0611,E0401
     from ..binaries import __file__
     loc = os.path.join(os.path.abspath(os.path.dirname(__file__)), "Release")
     if not os.path.exists(loc):
@@ -42,5 +42,5 @@ def close():
     """
     Unloads *dotnetcore*.
     """
-    from .csmain import cs_end  # pylint: disable=E0611
+    from .csmain import cs_end  # pylint: disable=E0611,E0401
     cs_end()

@@ -7,8 +7,8 @@ set pythonexe=%1
 goto start_script:
 
 :default_value_python:
-set pythonexe=c:\Python372_x64\python.exe
-if not exist %pythonexe% set pythonexe="c:\Python370_x64\python.exe"
+set pythonexe=c:\Python387_x64\python.exe
+if not exist %pythonexe% set pythonexe="c:\Python372_x64\python.exe"
 
 @echo ~SET pythonexe=%pythonexe%
 

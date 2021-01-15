@@ -20,8 +20,8 @@ class TestCsNative(ExtTestCase):
     def test_csnative_start(self):
         v = start()
         self.assertNotEmpty(v)
-        from csharpy.csnative.csmain import _core_clr_path  # pylint: disable=E0611,C0415
-        from csharpy.csnative.csmain import _core_clr_path_default  # pylint: disable=E0611,C0415
+        from csharpy.csnative.csmain import _core_clr_path  # pylint: disable=E0611,C0415,E0401
+        from csharpy.csnative.csmain import _core_clr_path_default  # pylint: disable=E0611,C0415,E0401
         p = _core_clr_path()
         self.assertNotEmpty(p)
         p2 = _core_clr_path_default()
@@ -29,19 +29,19 @@ class TestCsNative(ExtTestCase):
             warnings.warn("p2=%r != %r" % (p2, get_clr_path()))
 
     def test_cs_square_number(self):
-        from csharpy.csnative.csmain import SquareNumber  # pylint: disable=E0611,C0415
+        from csharpy.csnative.csmain import SquareNumber  # pylint: disable=E0611,C0415,E0401
         y = SquareNumber(9.)
         self.assertEqual(y, 81)
         y = SquareNumber(4.)
         self.assertEqual(y, 16)
 
     def test_cs_random_string(self):
-        from csharpy.csnative.csmain import RandomString  # pylint: disable=E0611,C0415
+        from csharpy.csnative.csmain import RandomString  # pylint: disable=E0611,C0415,E0401
         y = RandomString()
         self.assertEqual(y, "Français")
 
     def test_cs_square_number_exception(self):
-        from csharpy.csnative.csmain import SquareNumber  # pylint: disable=E0611,C0415
+        from csharpy.csnative.csmain import SquareNumber  # pylint: disable=E0611,C0415,E0401
         try:
             SquareNumber(9.)  # replace by a negative value
             raise Exception("Not implemented yet")
@@ -49,7 +49,7 @@ class TestCsNative(ExtTestCase):
             pass
 
     def test_cs_upper(self):
-        from csharpy.csnative.csmain import CsUpper  # pylint: disable=E0611,C0415
+        from csharpy.csnative.csmain import CsUpper  # pylint: disable=E0611,C0415,E0401
         texts = ['UP', 'Up', 'ùp']
         for text in texts:
             up = CsUpper(text)

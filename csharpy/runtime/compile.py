@@ -62,13 +62,13 @@ def create_cs_function(name, code, usings=None, dependencies=None,
             usings = []
         if dependencies is None:
             dependencies = []
-        from ..csnative.csmain import CsCreateFunction  # pylint: disable=E0611
+        from ..csnative.csmain import CsCreateFunction  # pylint: disable=E0611,E0401
         res = CsCreateFunction(name, code, usings, dependencies)
 
-        from ..csnative.csmain import CallArrayInt32String  # pylint: disable=E0611
-        from ..csnative.csmain import CallDoubleDouble  # pylint: disable=E0611
-        from ..csnative.csmain import CallArrayDoubleArrayDouble  # pylint: disable=E0611
-        from ..csnative.csmain import CallVoid  # pylint: disable=E0611
+        from ..csnative.csmain import CallArrayInt32String  # pylint: disable=E0611,E0401
+        from ..csnative.csmain import CallDoubleDouble  # pylint: disable=E0611,E0401
+        from ..csnative.csmain import CallArrayDoubleArrayDouble  # pylint: disable=E0611,E0401
+        from ..csnative.csmain import CallVoid  # pylint: disable=E0611,E0401
         sigs = {
             'Double->Double': CallDoubleDouble,
             'Double[]->Double[]': CallArrayDoubleArrayDouble,
