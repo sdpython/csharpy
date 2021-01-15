@@ -1,12 +1,14 @@
+autopep8
 coverage
+Cython
 jyquickhelper
-numpy>=1.18
+numpy>=1.19
 Pillow
 pybind11
 pycparser
 pyensae
 pylint
 pymyinstall
-pyquickhelper>=1.9
+pyquickhelper>=1.10
 pythonnet
 wheel
