@@ -40,6 +40,7 @@ before_install:
   - cd pythonnet
   - python setup.py build_dotnet
   - python setup.py install
+  - cd ..
 
 install:
   - pip install -r requirements.txt
@@ -47,6 +48,7 @@ cache: pip
 
 before_script:
   # Build the package
+  - dotnet --info
   - python setup.py build_ext --inplace Debug
   - python setup.py build_ext --inplace Release
 

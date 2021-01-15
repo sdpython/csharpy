@@ -98,8 +98,10 @@ jobs:
           command: |
             . venv/bin/activate
             export DOTNET_CLI_TELEMETRY_OPTOUT=1
+            cd cscode
             dotnet restore CSharPyExtension_netcore.sln
             dotnet build -c Release CSharPyExtension_netcore.sln
+            cd ..
 
       - run:
           name: build extension release
