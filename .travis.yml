@@ -34,9 +34,16 @@ before_install:
   # For python
   - python -m pip install -U pip
   - pip install -U setuptools wheel
+  # pythonnet
+  - python -m pip install wheel
+  - git clone https://github.com/pythonnet/pythonnet
+  - cd pythonnet
+  - python setup.py build_dotnet
+  - python setup.py install
 
 install:
   - pip install -r requirements.txt
+cache: pip
 
 before_script:
   # Build the package

@@ -31,8 +31,15 @@ jobs:
             sudo chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
             sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
             sudo apt-get update 
-            sudo apt-get install dotnet-sdk-3.1
+            sudo apt-get install dotnet-sdk-5.0
+            sudo apt-get install aspnetcore-runtime-5.0
+            sudo apt-get install dotnet-runtime-5.0
 
+      - run:
+          name: dotnet info
+          command: |
+                    dotnet --info
+                    
       - run:
           name: Install pandoc
           command: |
@@ -86,6 +93,14 @@ jobs:
             - ./venv
           key: v3-dependencies-{{ checksum "requirements.txt" }}
         
+      - run:
+          name: build C# release
+          command: |
+            . venv/bin/activate
+            export DOTNET_CLI_TELEMETRY_OPTOUT=1
+            dotnet restore CSharPyExtension_netcore.sln
+            dotnet build -c Release CSharPyExtension_netcore.sln
+
       - run:
           name: build extension release
           command: |
