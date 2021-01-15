@@ -12,4 +12,5 @@ pymyinstall
 pyquickhelper>=1.10
 pythonnet
 sphinx
+sphinxcontrib.imagesvg
 wheel
