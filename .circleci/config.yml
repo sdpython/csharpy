@@ -79,6 +79,8 @@ jobs:
             cd pythonnet
             # python3 setup.py build_dotnet
             python3 setup.py develop
+            # checks pythonnet installation
+            python -c "import clr"
 
       - run:
           name: install dependencies

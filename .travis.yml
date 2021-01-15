@@ -40,6 +40,8 @@ before_install:
   - cd pythonnet
   - python setup.py develop
   - cd ..
+  # checks pythonnet installation
+  - python -c "import clr"
 
 install:
   - pip install -r requirements.txt

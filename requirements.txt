@@ -11,4 +11,5 @@ pylint
 pymyinstall
 pyquickhelper>=1.10
 pythonnet
+sphinx
 wheel
