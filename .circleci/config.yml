@@ -77,8 +77,8 @@ jobs:
             python3 -m pip install wheel
             git clone https://github.com/pythonnet/pythonnet
             cd pythonnet
-            python3 setup.py build_dotnet
-            python3 setup.py install
+            # python3 setup.py build_dotnet
+            python3 setup.py develop
 
       - run:
           name: install dependencies

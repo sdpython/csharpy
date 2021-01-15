@@ -14,7 +14,7 @@ matrix:
           - sourceline: deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-focal-prod focal main
             key_url: https://packages.microsoft.com/keys/microsoft.asc
           packages:
-            - dotnet-sdk-3.1
+            - dotnet-sdk-5.0
             - dotnet-runtime-5.0
             - aspnetcore-runtime-5.0
             - apt-transport-https
@@ -38,8 +38,7 @@ before_install:
   - python -m pip install wheel
   - git clone https://github.com/pythonnet/pythonnet
   - cd pythonnet
-  - python setup.py build_dotnet
-  - python setup.py install
+  - python setup.py develop
   - cd ..
 
 install:
