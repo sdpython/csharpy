@@ -80,6 +80,7 @@ namespace DynamicCSCustom
             {
                 metaaddLocation = typeof(object).GetTypeInfo().Assembly.Location;
                 metaadd = MetadataReference.CreateFromFile(metaaddLocation);
+                clrPath = Path.GetDirectoryName(metaaddLocation);
             }
             else
             {
@@ -89,16 +90,28 @@ namespace DynamicCSCustom
                 else
                     clrPath = Path.GetDirectoryName(clrPath);
                 metaadd = MetadataReference.CreateFromFile(metaaddLocation);
-
-                foreach (var name in Directory.EnumerateFiles(clrPath))
-                {
-                    if (!name.Contains("System.") || !name.Contains("Microsoft.") || !name.EndsWith(".dll"))
-                        continue;
-                    var full = Path.Combine(clrPath, name);
-                    if (dependencies != null && !dependencies.Contains(full))
-                        addDependencies.Add(full);
-                }
             }
+
+            foreach (var name in Directory.EnumerateFiles(clrPath))
+            {
+                if (!name.EndsWith(".dll"))
+                    continue;
+                var full = Path.Combine(clrPath, name);
+                var short_name = Path.GetFileNameWithoutExtension(name);
+                if (short_name.StartsWith("System."))
+                {
+                    addDependencies.Add(full);
+                    continue;
+                }
+                if (short_name.StartsWith("Microsoft.") && !short_name.StartsWith("Microsoft.Dia"))
+                {
+                    addDependencies.Add(full);
+                    continue;
+                }
+                //if (dependencies != null && !dependencies.Contains(short_name))
+                //    addDependencies.Add(full);
+            }
+
             assemblies.Add(metaadd);
             if (dependencies != null)
                 foreach (var d in dependencies)
@@ -139,12 +152,15 @@ namespace DynamicCSCustom
                     StringBuilder sb = new StringBuilder();
                     sb.AppendLine("-----");
                     sb.AppendLine(string.Format("Compilation Error, status is {0}.", result.ToString()));
+                    sb.AppendLine(string.Format("clrPath='{0}'", clrPath));
+                    sb.AppendLine(string.Format("metaaddLocation='{0}'", metaaddLocation));
                     sb.AppendLine("---------------");
                     sb.AppendLine(mes);
                     sb.AppendLine("---------------");
                     sb.AppendLine(mes2);
                     sb.AppendLine("---------------");
-                    sb.AppendLine(string.Format("ADD: '{0}'", metaaddLocation));
+                    foreach (var a in assemblies)
+                        sb.AppendLine(string.Format("+ADD: '{0}'", a));
                     sb.AppendLine("---------------");
                     sb.AppendLine(code);
                     sb.AppendLine("---------------");

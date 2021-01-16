@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicCS;
-using CSharPyExtension;
 
 
 namespace TestCSharpyCore

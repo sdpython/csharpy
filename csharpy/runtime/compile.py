@@ -32,18 +32,21 @@ def create_cs_function(name, code, usings=None, dependencies=None,
         AddReference("System", use_clr, verbose=verbose)
         AddReference("System.Collections", use_clr, verbose=verbose)
         AddReference("System.Collections.Immutable", use_clr, verbose=verbose)
+        AddReference("System.Linq", use_clr, verbose=verbose)
+        AddReference("System.Runtime", use_clr, verbose=verbose)
         res = AddReference("DynamicCS", use_clr, verbose=verbose)
         from System import String
         try:
             from DynamicCS import DynamicFunction
         except ModuleNotFoundError as e:
             raise ImportError(
-                "Unable to find 'DynamicFunction' in 'DynamicCS' (imported [{}]"
+                "Unable to find 'DynamicFunction' in 'DynamicCS' (imported [{}])"
                 ".".format(res)) from e
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", DeprecationWarning)
-            from System.Collections.Generic import List
+            from System.Collections.Generic import List, __file__ as f_col  # pylint: disable=W0611
+            from System.Linq import __file__ as f_linq  # pylint: disable=W0611,E0401
 
         # dotnet extension is dll even on linux.
         ext = ".dll"
@@ -55,8 +58,10 @@ def create_cs_function(name, code, usings=None, dependencies=None,
                 else:
                     myarray.Add(d + ".dll")
         myarray = myarray.ToArray()
-        obj = DynamicFunction.CreateFunction(name, code, usings, myarray, None)
-        return lambda *params: run_cs_function_clr(obj, params, redirect=redirect)
+        obj = DynamicFunction.CreateFunction(
+            name, code, usings, myarray, None)
+        return lambda *params: run_cs_function_clr(
+            obj, params, redirect=redirect)
     else:
         if usings is None:
             usings = []
@@ -64,7 +69,6 @@ def create_cs_function(name, code, usings=None, dependencies=None,
             dependencies = []
         from ..csnative.csmain import CsCreateFunction  # pylint: disable=E0611,E0401
         res = CsCreateFunction(name, code, usings, dependencies)
-
         from ..csnative.csmain import CallArrayInt32String  # pylint: disable=E0611,E0401
         from ..csnative.csmain import CallDoubleDouble  # pylint: disable=E0611,E0401
         from ..csnative.csmain import CallArrayDoubleArrayDouble  # pylint: disable=E0611,E0401
@@ -105,5 +109,4 @@ def run_cs_function_clr(func, params, redirect=False):
     if redirect:
         res = DynamicFunction.RunFunctionRedirectOutput(func, par.ToArray())
         return (res.Item1, str(res.Item2).replace("\r", ""), str(res.Item3))
-    else:
-        return DynamicFunction.RunFunction(func, par.ToArray())
+    return DynamicFunction.RunFunction(func, par.ToArray())

@@ -1,4 +1,3 @@
-
 @echo off
 @echo SCRIPT: windows_prefix
 if "%1"=="" goto default_value_python:
@@ -8,7 +7,7 @@ goto start_script:
 
 :default_value_python:
 set pythonexe=c:\Python387_x64\python.exe
-if not exist %pythonexe% set pythonexe="c:\Python372_x64\python.exe"
+if not exist %pythonexe% set pythonexe="python"
 
 @echo ~SET pythonexe=%pythonexe%
 

@@ -207,8 +207,8 @@ if not r:
             out, err = run_cmd(cmd, fLOG=print, wait=True, change_path=folder)
             if len(err) > 0:
                 raise RuntimeError(
-                    "Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}\n--OUT--\n{2}".format(
-                        cmd, err, out))
+                    "Unable to compile C# code.\nCMD: {0}\n--ERR--\n{1}\n--OUT--\n{2}"
+                    "".format(cmd, err, out))
             elif len(out) > 0:
                 outs.append(out)
                 print('[csharpy.dotnet] OUT')

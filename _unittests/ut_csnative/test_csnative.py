@@ -20,8 +20,8 @@ class TestCsNative(ExtTestCase):
     def test_csnative_start(self):
         v = start()
         self.assertNotEmpty(v)
-        from csharpy.csnative.csmain import _core_clr_path  # pylint: disable=E0611,C0415,E0401
-        from csharpy.csnative.csmain import _core_clr_path_default  # pylint: disable=E0611,C0415,E0401
+        from csharpy.csnative.csmain import (  # pylint: disable=E0611,C0415,E0401
+            _core_clr_path, _core_clr_path_default)
         p = _core_clr_path()
         self.assertNotEmpty(p)
         p2 = _core_clr_path_default()

@@ -14,8 +14,7 @@ void CallVoid(int64_ fct, bool catchOutput)
 
 DECLARE_FCT_NAME(CallDoubleDouble)
 
-double CallDoubleDouble(int64_ fct, bool catchOutput, double x)
-{
+double CallDoubleDouble(int64_ fct, bool catchOutput, double x) {
     double res;
     DataStructure data;
     data.inputs = &x;
@@ -27,17 +26,15 @@ double CallDoubleDouble(int64_ fct, bool catchOutput, double x)
 
 ///
 
-typedef struct CallArrayInt32StringOutput
-{
-public:
-    void * p;
-    int nb;
+typedef struct CallArrayInt32StringOutput {
+    public:
+        void * p;
+        int nb;
 } CallArrayInt32StringOutput;
 
 DECLARE_FCT_NAME(CallArrayInt32String)
 
-std::vector<int> CallArrayInt32String(int64_ fct, bool catchOutput, const std::string& text)
-{
+std::vector<int> CallArrayInt32String(int64_ fct, bool catchOutput, const std::string& text) {
     DataStructure data;
     data.inputs = (void*)text.c_str();
     CallArrayInt32StringOutput output;
@@ -54,18 +51,16 @@ std::vector<int> CallArrayInt32String(int64_ fct, bool catchOutput, const std::s
 
 ///
 
-typedef struct CallArrayDoubleArrayDoubleIO
-{
-public:
-    void * p;
-    int nb;
+typedef struct CallArrayDoubleArrayDoubleIO {
+    public:
+        void * p;
+        int nb;
 } CallArrayDoubleArrayDoubleIO;
 
 DECLARE_FCT_NAME(CallArrayDoubleArrayDouble)
 
 std::vector<double> CallArrayDoubleArrayDouble(int64_ fct, bool catchOutput,
-                                               const std::vector<double>& vec)
-{
+                                               const std::vector<double>& vec) {
     DataStructure data;
     CallArrayDoubleArrayDoubleIO input, output;
     data.inputs = (void*)&input;

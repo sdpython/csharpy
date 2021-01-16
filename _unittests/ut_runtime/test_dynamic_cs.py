@@ -13,9 +13,9 @@ from csharpy.notebook.csmagics import CsMagics
 def has_clr():
     try:
         import clr  # pylint: disable=W0611,C0415
-        return True
     except ImportError:
         return False
+    return True
 
 
 class TestDynamicCS(ExtTestCase):
