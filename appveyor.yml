@@ -14,6 +14,17 @@ install:
   - "%PYTHON%\\Scripts\\pip install wheel"
   - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
   - set DOTNET_CLI_TELEMETRY_OPTOUT=1
+  - "%PYTHON%\\Scripts\\pip uninstall -y pythonnet"
+  # build pythonnet
+  - git clone https://github.com/sdpython/pythonnet.git
+  - cd pythonnet
+  - get checkout jenkins
+  - set PY_VER=%PYTHON_VERSION:.=%
+  - set PYTHON=C:\PYTHON%PY_VER%
+  - if %PLATFORM%==x64 (set PYTHON=%PYTHON%-x64)
+  - python setup.py bdist_wheel
+  - python setup.py develop
+  - cd ..
 
 build: off
 cache:
@@ -39,6 +50,7 @@ test_script:
 
 after_test:
   - "%PYTHON%\\python -u setup.py bdist_wheel"
+  - copy pythonet\dist\*.whl dist
 
 artifacts:
   - path: dist
