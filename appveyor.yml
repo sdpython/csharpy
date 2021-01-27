@@ -21,7 +21,6 @@ install:
   - git checkout jenkins
   - set PY_VER=%PYTHON_VERSION:.=%
   - set PYTHON=C:\PYTHON%PY_VER%
-  - if %PLATFORM%==x64 (set PYTHON=%PYTHON%-x64)
   - python setup.py bdist_wheel
   - python setup.py develop
   - cd ..
