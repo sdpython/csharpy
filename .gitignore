@@ -278,3 +278,5 @@ cscode/csdependencies.txt
 _unittests/ut_runtime/*.dll
 _unittests/*.out
 custom_SquareX.dll
+_doc/sphinxdoc/source/_temp_*
+_doc/sphinxdoc/source/phdoc_static/viz.js

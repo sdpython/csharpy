@@ -18,7 +18,7 @@ install:
   # build pythonnet
   - git clone https://github.com/sdpython/pythonnet.git
   - cd pythonnet
-  - get checkout jenkins
+  - git checkout jenkins
   - set PY_VER=%PYTHON_VERSION:.=%
   - set PYTHON=C:\PYTHON%PY_VER%
   - if %PLATFORM%==x64 (set PYTHON=%PYTHON%-x64)
