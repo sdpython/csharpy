@@ -20,9 +20,8 @@ install:
   - cd pythonnet
   - git checkout jenkins
   - set PY_VER=%PYTHON_VERSION:.=%
-  - set PYTHON=C:\PYTHON%PY_VER%
-  - python setup.py bdist_wheel
-  - python setup.py develop
+  - "%PYTHON% setup.py bdist_wheel"
+  - "%PYTHON% setup.py develop"
   - cd ..
 
 build: off
