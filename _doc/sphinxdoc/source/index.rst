@@ -4,8 +4,8 @@ csharpy
 
 .. only:: html
 
-    .. image:: https://travis-ci.org/sdpython/csharpy.svg?branch=master
-        :target: https://travis-ci.org/sdpython/csharpy
+    .. image:: https://travis-ci.com/sdpython/csharpy.svg?branch=master
+        :target: https://travis-ci.com/sdpython/csharpy
         :alt: Build status
 
     .. image:: https://ci.appveyor.com/api/projects/status/ldrgt6sxeyfwtoo2?svg=true
