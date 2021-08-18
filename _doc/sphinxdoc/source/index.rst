@@ -26,10 +26,6 @@ csharpy
         :alt: MIT License
         :target: http://opensource.org/licenses/MIT
 
-    .. image:: https://requires.io/github/sdpython/csharpy/requirements.svg?branch=master
-         :target: https://requires.io/github/sdpython/csharpy/requirements/?branch=master
-         :alt: Requirements Status
-
     .. image:: https://codecov.io/github/sdpython/csharpy/coverage.svg?branch=master
         :target: https://codecov.io/github/sdpython/csharpy?branch=master
 
